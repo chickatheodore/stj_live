@@ -1,0 +1,63 @@
+{
+    "menu": [
+        {
+            "url": "/admin/home",
+            "name": "Dashboard",
+            "slug": "dashboard",
+            "icon": "feather icon-home",
+            "i18n": "Dashboard"
+        },
+        {
+            "url": "/admin/member",
+            "name": "Member",
+            "slug": "member",
+            "icon": "",
+            "i18n": "Member"
+        },
+        {
+            "url": "/admin/trf-pin",
+            "name": "Transfer PIN",
+            "slug": "trf-pin",
+            "icon": "",
+            "i18n": "Transfer PIN"
+        },
+        {
+            "url": "/admin/unpaid-bonus",
+            "name": "Bonus Belum Dibayar",
+            "slug": "unpaid-bonus",
+            "icon": "",
+            "i18n": "Bonus Belum Dibayar"
+        },
+        {
+            "url": "#",
+            "name": "Laporan",
+            "icon": "",
+            "slug": "reports",
+            "i18n": "Laporan",
+            "dropdown": "1",
+            "submenu": [
+                {
+                    "url": "/admin/paid-bonus",
+                    "name": "Bonus Sudah Dibayar",
+                    "slug": "paid-bonus",
+                    "icon": "",
+                    "i18n": "Bonus Sudah Dibayar"
+                },
+                {
+                    "url": "/admin/tupo",
+                    "name": "List TUPO Expired",
+                    "i18n": "List TUPO Expired",
+                    "icon": "",
+                    "slug": "tupo"
+                },
+                {
+                    "url": "/admin/point-history",
+                    "name": "History Poin",
+                    "i18n": "History Poin",
+                    "icon": "",
+                    "slug": "point-history"
+                }
+            ]
+        }
+    ]
+}

@@ -1,2 +1,2 @@
-# stj_live
-STJ Live
+# stj
+PT. Supra Tirtha Jaya

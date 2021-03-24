@@ -1,0 +1,151 @@
+{
+    "menu": [
+        {
+            "url": "/member/home",
+            "name": "Dashboard",
+            "slug": "dashboard",
+            "icon": "feather icon-home",
+            "i18n": "Dashboard"
+        },
+        {
+            "url": "/member/profile",
+            "name": "Profile",
+            "slug": "profile",
+            "icon": "",
+            "i18n": "Profile"
+        },
+        {
+            "url": "#",
+            "name": "Member Baru",
+            "slug": "new-member",
+            "icon": "",
+            "i18n": "Member Baru",
+            "dropdown": "1",
+            "submenu": [
+                {
+                    "url": "/member/register",
+                    "name": "Register Member",
+                    "slug": "register",
+                    "icon": "",
+                    "i18n": "Register Member"
+                },
+                {
+                    "url": "/member/placement",
+                    "name": "Penempatan Member",
+                    "slug": "placement",
+                    "icon": "",
+                    "i18n": "Penempatan Member"
+                }
+            ]
+        },
+        {
+            "url": "#",
+            "name": "Hierarchy",
+            "slug": "hierarchy",
+            "icon": "",
+            "i18n": "Hirarki",
+            "dropdown": "1",
+            "submenu": [
+                {
+                    "url": "/member/tree",
+                    "name": "Pohon",
+                    "i18n": "Pohon",
+                    "icon": "",
+                    "slug": "tree"
+                },
+                {
+                    "url": "/member/sponsor",
+                    "name": "Sponsor",
+                    "slug": "sponsor",
+                    "icon": "",
+                    "i18n": "Sponsor"
+                }
+            ]
+        },
+        {
+            "url": "#",
+            "name": "Bonus",
+            "slug": "bonus",
+            "i18n": "Bonus",
+            "icon": "",
+            "dropdown": "1",
+            "submenu": [
+                {
+                    "url": "/member/bonus",
+                    "name": "Bonus",
+                    "i18n": "Bonus",
+                    "icon": "",
+                    "slug": "member-bonus"
+                },
+                {
+                    "url": "/member/bonus-history",
+                    "name": "Historical Bonus",
+                    "i18n": "Historical Bonus",
+                    "icon": "",
+                    "slug": "history"
+                }
+            ]
+        },
+        {
+            "url": "#",
+            "name": "Stock PIN",
+            "icon": "",
+            "slug": "pin",
+            "i18n": "Stock PIN",
+            "dropdown": "1",
+            "submenu": [
+                {
+                    "url": "/member/pin",
+                    "name": "PIN Tersisa",
+                    "i18n": "PIN Tersisa",
+                    "icon": "",
+                    "slug": "stock-pin"
+                },
+                {
+                    "url": "/member/transfer-pin",
+                    "name": "Transfer PIN",
+                    "icon": "",
+                    "i18n": "Transfer PIN"
+                },
+                {
+                    "url": "/member/extend",
+                    "name": "Perpanjang Masa Berlaku TUPO",
+                    "i18n": "Perpanjang Masa Berlaku TUPO",
+                    "icon": "",
+                    "slug": "extend"
+                }
+            ]
+        },
+        {
+            "url": "#",
+            "name": "Lain - Lain",
+            "icon": "",
+            "slug": "others",
+            "i18n": "Lain - Lain",
+            "dropdown": "1",
+            "submenu": [
+                {
+                    "url": "/member/upgrade",
+                    "name": "Upgrade Level",
+                    "i18n": "Upgrade Level",
+                    "icon": "",
+                    "slug": "upgrade"
+                },
+                {
+                    "url": "/member/stockiest",
+                    "name": "List Member Stockiest",
+                    "i18n": "List Member Stockiest",
+                    "icon": "",
+                    "slug": "stockiest"
+                },
+                {
+                    "url": "/member/point-history",
+                    "name": "Historical Point",
+                    "i18n": "Historical Point",
+                    "slug": "point-history",
+                    "icon": ""
+                }
+            ]
+        }
+    ]
+}
