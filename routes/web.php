@@ -56,8 +56,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
     Route::get('trf-pin', 'Admins\PinController@showTransferPINForm');
     Route::post('trf-pin', 'Admins\PinController@transferPIN');
 
-    /*Route::get('paid-bonus', 'Admins\AdminController@paidBonus');
-    Route::get('unpaid-bonus', 'Admins\AdminController@unpaidBonus');*/
+    /*Route::get('paid-bonus', 'Admins\AdminController@paidBonus');*/
+    Route::get('unpaid-bonus', 'Admins\AdminController@showUnpaidBonusForm');
 
     Route::get('tupo', 'Admins\DashboardController@expiredPoint');
     Route::get('point-history', 'Admins\DashboardController@pointHistory');
@@ -95,12 +95,15 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
 //Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
 Route::group(['middleware' => 'nodebugbar'], function () {
     Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
+    Route::get('/admin/unpaidBonus', 'Admins\AdminController@unpaidBonus');
 });
 
 Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], function () {
 
     Route::get('/admin/getPointHistory', 'Admins\DashboardController@getPointHistory');
     Route::post('/admin/transferPIN', 'Admins\PinController@transferPIN');
+
+    Route::get('/admin/tupoExpired', 'Admins\DashboardController@expiredPoint');
 
     //Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
     Route::get('/member/getMember/{id}', 'Members\MemberController@getMember');
@@ -109,7 +112,7 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::post('/member/getMemberTree/{id}', 'Members\TreeController@getMemberTree');
     Route::get('/member/getStockiest', 'Members\MemberController@getStockiest');
 
-    Route::post('/member/getBonusHistory', 'Members\PagesController@getMemberTree');
+    Route::post('/member/getBonusHistory', 'Members\PagesController@getBonusHistory');
 
     Route::post('/member/transferPin', 'Members\MemberController@transferPin');
     Route::post('/member/upgradeLevel', 'Members\PagesController@upgradeLevel')->name('member.profile.upgrade');

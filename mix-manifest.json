@@ -126,6 +126,7 @@
     "/js/scripts/forms/validation/form-validation.js": "/js/scripts/forms/validation/form-validation.js",
     "/js/scripts/forms/wizard-steps.js": "/js/scripts/forms/wizard-steps.js",
     "/js/scripts/maintenance.js": "/js/scripts/maintenance.js",
+    "/js/scripts/admins/bonus-unpaid.js": "/js/scripts/admins/bonus-unpaid.js",
     "/js/scripts/admins/user.js": "/js/scripts/admins/user.js",
     "/js/scripts/admins/transfer-pin.js": "/js/scripts/admins/transfer-pin.js",
     "/js/scripts/members/profile.js": "/js/scripts/members/profile.js",

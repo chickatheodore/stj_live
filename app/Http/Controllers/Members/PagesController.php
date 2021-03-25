@@ -379,10 +379,9 @@ class PagesController extends Controller
         $id = auth()->id();
         $member = Member::find($id);
 
-        //$pins = TransactionPoint::where('member_id', '=', $id)->orWhere('user_id', '=', $id)->orderBy('transaction_date')->get();
         $pins = DB::selectOne(
-            DB::raw('select sum(income) as masuk, sum(expense) as keluar from transaction_point where member_id = :my_id'), // or user_id = :us_id
-            array('my_id' => $id)); //, 'us_id' => $id
+            DB::raw('select SUM(IF(pin_amount > 0, pin_amount, 0)) as masuk, SUM(IF(pin_amount < 0, pin_amount, 0)) as keluar from transactions where (type = :pin or type = :all) and member_id = :my_id'), // or user_id = :us_id
+            array('pin' => 'pin', 'all' => 'all', 'my_id' => $id)); //, 'us_id' => $id
 
         return view('members/pin', [
             'member' => $member,
@@ -493,6 +492,20 @@ class PagesController extends Controller
             'levels' => $levels,
             'breadcrumbs' => $breadcrumbs
         ]);
+    }
+
+    public function getBonusHistory(Request $request)
+    {
+        $id = $request->_acc_;
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+
+        $transactions = Transaction::where('member_id', '=', $id)
+            ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
+            ->whereBetween('transaction_date', [$start_date, $end_date])->get();
+
+        $data = json_encode($transactions);
+        return $data;
     }
 
 }

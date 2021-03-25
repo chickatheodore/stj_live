@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -41,15 +42,15 @@ class Transaction extends Model
     protected $fillable = ['member_id', 'user_id', 'status_id', 'transaction_date', 'type', 'trans', 'pin_beginning_balance', 'pin_amount', 'pin_ending_balance', 'left_point_beginning_balance', 'right_point_beginning_balance', 'left_point_amount', 'right_point_amount', 'left_point_ending_balance', 'right_point_ending_balance', 'bonus_beginning_balance', 'bonus_point_amount', 'bonus_sponsor_amount', 'bonus_paid_amount', 'bonus_ending_balance', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function member()
     {
-        return $this->belongsTo('App\Member');
+        return $this->belongsTo('App\Member', 'member_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function transactionStatus()
     {
@@ -57,7 +58,7 @@ class Transaction extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {

@@ -17,9 +17,9 @@ class TimeBasedRestriction
     public function handle($request, Closure $next)
     {
         //stop akses sesuai dengan jam yang telah ditentukan
-        if (now()->isBetween('00:00:01', '06:00:00')) {
-            return response()->view('maintenance', [], 403);
-        }
+        //if (now()->isBetween('00:00:01', '06:00:00')) {
+        //    return response()->view('maintenance', [], 403);
+        //}
         return $next($request);
     }
 }

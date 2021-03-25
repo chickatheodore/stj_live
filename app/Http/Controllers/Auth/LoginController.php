@@ -11,6 +11,8 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -71,6 +73,7 @@ class LoginController extends Controller
         $this->guard()->logout();
 
         $request->session()->invalidate();
+        $this->clearToken();
 
         if ($guard == 'admin' || $guard == 'member')
           return $this->loggedOut($request) ?: redirect('/' . $guard . '/login');
@@ -117,7 +120,8 @@ class LoginController extends Controller
      */
     public function adminLogin(Request $request)
     {
-        if ($this->guardLogin($request, Config::get('constants.guards.admin'))) {
+        if ($token = $this->guardLogin($request, Config::get('constants.guards.admin'))) {
+            $this->setToken();
             return redirect()->intended('/admin/home');
         }
 
@@ -133,10 +137,8 @@ class LoginController extends Controller
     {
         $mem = Config::get('constants.guards.member');
 
-        //$hash = password_hash($request->password,)
-        $hash_make = Hash::make($request->password);
-
-        if ($this->guardLogin($request, $mem)) {
+        if ($token = $this->guardLogin($request, $mem)) {
+            $this->setToken();
             return redirect()->intended('/member/home');
         }
 
@@ -175,6 +177,29 @@ class LoginController extends Controller
           $req,
           $request->get('remember')
         );
+    }
+
+    private function setToken()
+    {
+        $random = Str::random(60);
+        $token = \hash('sha256', $random);
+
+        //$accessToken = auth()->user()->createToken('authToken')->accessToken;
+
+        setcookie('stj_token', $token);
+        Session::put('stj_token', $token);
+
+        return $token;
+    }
+
+    private function clearToken()
+    {
+        if (isset($_COOKIE['stj_token']))
+        {
+            unset($_COOKIE['stj_token']);
+            setcookie('stj_token', null, -1);
+        }
+        Session::forget([ 'stj_token' ]);
     }
 
     public function username()
