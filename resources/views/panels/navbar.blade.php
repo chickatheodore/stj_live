@@ -3,7 +3,8 @@
   <div class="navbar-header d-xl-block d-none">
     <ul class="nav navbar-nav flex-row">
       <li class="nav-item"><a class="navbar-brand" href="home">
-          <div class="brand-logo"></div>
+          <!-- <div class="brand-logo"></div> //-->
+          <img src="{{asset('images/STJ-logo.png') }}" height="24px" width="24px" />
         </a></li>
     </ul>
   </div>
@@ -41,13 +42,13 @@
                   <span class="user-name text-bold-600">Guest</span>
                   <span class="user-status">Available</span>
                   @else
-                  <span class="user-name text-bold-600">{{ auth()->user()->username }}</span>
-                  <span class="user-status">{{ auth()->user()->code }}</span>
+                  <span class="user-name text-bold-600">{{ auth()->user()->code }}</span>
+                  <span class="user-status">{{ auth()->user()->name }}</span>
                   @endif
                 </div>
                 <span>
                   <img class="round"
-                    src="{{asset('images/portrait/small/avatar-s-11.jpg') }}" alt="avatar" height="40"
+                    src="{{asset('images/portrait/small/user.jpg') }}" alt="avatar" height="40"
                     width="40" />
                 </span>
               </a>

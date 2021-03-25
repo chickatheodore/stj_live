@@ -27,6 +27,10 @@
             --main-color: #466289;
         }
 
+        .orgchart .node .content .memberid {
+            display: none;
+        }
+
         .orgchart .node .content .membername {
             display: none;
         }
@@ -95,6 +99,10 @@
             justify-content: center !important;
         }
 
+        #chart-container:not(.minimize) .orgchart .node.no-member .content .memberid {
+            display: none;
+        }
+
         #chart-container:not(.minimize) .orgchart .node.no-member .content .membername {
             display: none;
         }
@@ -136,12 +144,25 @@
             display: none;
         }
 
+        .minimize .orgchart .node.no-member .content div.memberid,
+        .minimize .orgchart .node .content div.memberid {
+            display: block;
+            width: unset;
+            height: unset;
+            font-size: 10px;
+        }
+
         .minimize .orgchart .node.no-member .content div.membername,
         .minimize .orgchart .node .content div.membername {
             display: block;
             width: unset;
             height: unset;
-            font-size: 14px;
+            font-size: 12px;
+            /*BARU*/
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+            white-space: break-spaces;
         }
 
         .minimize .orgchart .node.no-member .content div.membericon,

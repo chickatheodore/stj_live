@@ -168,7 +168,7 @@
                                         <input id="code" type="text" class="form-control" style="border: solid 1px #ff0000;" name="code" placeholder="Member ID" value="{{ $member->code }}" autofocus readonly>
                                         <label for="code">Member ID</label>
                                     </div>
-                                    <div class="form-label-group">
+                                    <div class="form-label-group hidden">
                                         <input id="username" type="text" class="form-control" name="username" placeholder="User Name" value="{{ $member->username }}" autofocus readonly>
                                         <label for="username">Username</label>
                                     </div>

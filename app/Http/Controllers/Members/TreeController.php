@@ -175,8 +175,8 @@ class TreeController extends Controller
     private function getRelationshipValue(Member $member)
     {
         //check if have parent
-        $first = $member->upline_id ? '1' : 0;
-        //$first = $member->hasParent() ? '1' : 0;
+        $first = '0';   //$member->upline_id ? '1' : '0';
+        //$first = $member->hasParent() ? '1' : '0';
 
         $second = '0';
         if ($member->upline_id)
@@ -186,7 +186,7 @@ class TreeController extends Controller
         }
 
         //$third = $member->hasChildren() ? '1' : 0;
-        $third = $member->left_downline_id || $member->right_downline_id ? '1' : 0;
+        $third = $member->left_downline_id || $member->right_downline_id ? '1' : '0';
 
         return $first . $second . $third;
     }

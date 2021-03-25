@@ -39,9 +39,9 @@
                                 </a>
                                 <div class="media-body mt-50">
                                     <h4 class="media-heading">{{ $member->code }}</h4>
-                                    <div class="col-12 d-flex mt-1 px-0">
+                                    <!-- <div class="col-12 d-flex mt-1 px-0">
                                         {{ $member->username }}
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                             <!-- users edit media object ends -->
@@ -63,7 +63,7 @@
                                                        data-validation-required-message="This code field is required">
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group hidden">
                                             <div class="controls">
                                                 <label for="username">Username (kosong utk otomatis)</label>
                                                 <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{ $member->username }}"

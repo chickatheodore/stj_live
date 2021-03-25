@@ -73,27 +73,16 @@ $(document).ready(function () {
     // ag-grid
     /*** COLUMN DEFINE ***/
 
-    var columnDefs = [{
-        headerName: 'ID',
-        field: 'id',
-        width: 125,
-        filter: true,
-        checkboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        headerCheckboxSelection: true,
-    },
+    var columnDefs = [
         {
-            headerName: 'Username',
-            field: 'username',
+            headerName: 'ID',
+            field: 'id',
+            width: 125,
             filter: true,
-            width: 175,
+            checkboxSelection: true,
+            headerCheckboxSelectionFilteredOnly: true,
+            headerCheckboxSelection: true,
         },
-        /*{
-            headerName: 'Email',
-            field: 'email',
-            filter: true,
-            width: 225,
-        },*/
         {
             headerName: 'Name',
             field: 'name',

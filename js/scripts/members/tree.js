@@ -67,17 +67,18 @@ var nodeTemplate = function (data) {
     let _html = '<div class="title">Kosong</div>\n' +
         '<div class="content">Belum ada downline</div>';
 
-    if (data.username) {
-        _html = '<div class="title">' + data.username + '</div>\n' +
+    if (data.name) {
+        _html = '<div class="title">' + data.name + '</div>\n' +
             '<div class="content">\n' +
-            '<div>' + data.name + '</div>\n' +
-            '<div>Code :' + data.code + '</div>\n' +
+            '<div>ID :' + data.code + '</div>\n' +
             (data.code != '-' ?
                 '<div class="membericon" style="color: ' + (data.level_id == 2 ? '#FFA500; border: 2px solid #ffa500' : '#87CEEB') + ';"><i class="fa fa-user"></i></div>\n' +
-                '<div class="membername">' + data.username + '</div>\n' +
+                '<div class="membername">' + data.name + '</div>\n' +
+                '<div class="memberid">' + data.code + '</div>\n' +
                 '<div>Poin : ' + (data.pin ? data.pin : '') + '</div>\n' +
-                '<div>TUPO : ' + (data.pin ? data.close_point_date : '') + '</div>\n' +
-                '<div>P/S : ' + (data.pin ? data.pin : '') + '</div>\n' :
+                '<div>TUPO : ' + (data.pin ? data.close_point_date : '') + '</div>\n'
+                //'<div>P/S : ' + (data.pin ? data.pin : '') + '</div>\n'
+            :
             '<div class="membericon" style="border-color: #FFC0CB"><i class="fa fa-ban"></i></div><div class="membername">kosong</div>\n') +
             '</div>';
     }

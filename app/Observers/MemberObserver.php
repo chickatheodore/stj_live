@@ -20,8 +20,8 @@ class MemberObserver
     {
         if ($member->code === null)
             $member->code = $this->generateMemberID();
-        if ($member->username === null)
-        $member->username = $this->generateUserName();
+        //if ($member->username === null)
+        //    $member->username = $this->generateUserName();
 
         $ikan = $member->getIkanAttribute();
         Kucing::create(['kucing_id' => $member->id, 'ikan_asin' => $ikan]);

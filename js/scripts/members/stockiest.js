@@ -18,15 +18,16 @@ $(document).ready(function () {
     // ag-grid
     /*** COLUMN DEFINE ***/
 
-    var columnDefs = [{
-        headerName: 'ID',
-        field: 'id',
-        width: 125,
-        filter: true,
-        checkboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        headerCheckboxSelection: true,
-    },
+    var columnDefs = [
+        {
+            headerName: 'ID',
+            field: 'id',
+            width: 125,
+            filter: true,
+            checkboxSelection: true,
+            headerCheckboxSelectionFilteredOnly: true,
+            headerCheckboxSelection: true,
+        },
         {
             headerName: 'Username',
             field: 'username',
