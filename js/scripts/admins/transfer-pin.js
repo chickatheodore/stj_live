@@ -65,7 +65,7 @@ $('#btn-save').click(function (e) {
     $.ajaxSetup({
         type: "POST",
         url: "/admin/trf-pin",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        headers: addAuthHeader()
     });
 
     $('#modal-backdrop').modal('show');

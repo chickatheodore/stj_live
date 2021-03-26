@@ -121,7 +121,7 @@ class LoginController extends Controller
     public function adminLogin(Request $request)
     {
         if ($token = $this->guardLogin($request, Config::get('constants.guards.admin'))) {
-            $this->setToken();
+            $this->setToken($request);
             return redirect()->intended('/admin/home');
         }
 
@@ -138,7 +138,7 @@ class LoginController extends Controller
         $mem = Config::get('constants.guards.member');
 
         if ($token = $this->guardLogin($request, $mem)) {
-            $this->setToken();
+            $this->setToken($request);
             return redirect()->intended('/member/home');
         }
 
@@ -179,15 +179,24 @@ class LoginController extends Controller
         );
     }
 
-    private function setToken()
+    private function setToken(Request $request)
     {
+
         $random = Str::random(60);
         $token = \hash('sha256', $random);
 
-        //$accessToken = auth()->user()->createToken('authToken')->accessToken;
+        //$user = Auth::user();
+        //$accessToken = $this->guard()->user()->createToken('authToken')->accessToken;   //auth()->user()->createToken('authToken')->accessToken;
 
-        setcookie('stj_token', $token);
-        Session::put('stj_token', $token);
+        $_COOKIE['stj_token'] = $token;  //setcookie('stj_token', $token);
+
+        //Session::put('stj_token', $token);
+        session(['stj_token' => $token]);
+        $_SESSION['stj_token'] = $token;
+        $request->session()->put('stj_token', $token);
+
+        //setcookie('access_token', $accessToken);
+        //Session::put('access_token', $accessToken);
 
         return $token;
     }
@@ -200,6 +209,13 @@ class LoginController extends Controller
             setcookie('stj_token', null, -1);
         }
         Session::forget([ 'stj_token' ]);
+
+        /*if (isset($_COOKIE['access_token']))
+        {
+            unset($_COOKIE['access_token']);
+            setcookie('access_token', null, -1);
+        }
+        Session::forget([ 'access_token' ]);*/
     }
 
     public function username()

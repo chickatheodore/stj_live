@@ -30,6 +30,23 @@ class MemberController extends Controller
         return json_encode($ids);
     }
 
+    public function getMemberNew(Request $request)
+    {
+        $member = Member::find($request->id);
+
+        $ids = $member->toArray();
+        $ids['left_downline'] = json_encode(new \stdClass());
+        $ids['right_downline'] = json_encode(new \stdClass());
+
+        if ($member->left_downline_id)
+            $ids['left_downline'] = json_encode($member->leftDownLine);
+
+        if ($member->right_downline_id)
+            $ids['right_downline'] = json_encode($member->rightDownLine);
+
+        return json_encode($ids);
+    }
+
     public function getPoint($id)
     {
         $levels = Level::all();

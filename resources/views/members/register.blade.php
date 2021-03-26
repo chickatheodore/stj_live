@@ -151,7 +151,7 @@
                                                     <label for="code">Member ID</label>
                                                     <input id="code" type="text" class="form-control" name="code" placeholder="Member ID" value="{{ old('code') }}" autofocus readonly>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group hidden">
                                                     <label for="username">Username</label>
                                                     <input id="username" type="text" class="form-control" name="username" placeholder="User Name" value="{{ old('username') }}" autofocus readonly>
                                                 </div>
@@ -206,5 +206,5 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/register.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/members/register.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection

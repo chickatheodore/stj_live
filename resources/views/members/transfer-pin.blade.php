@@ -88,5 +88,5 @@
         var counterMax = {{ $member->pin }};
     </script>
 
-    <script src="{{ asset(mix('js/scripts/members/transfer-pin.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/members/transfer-pin.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection

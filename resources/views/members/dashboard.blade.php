@@ -30,6 +30,14 @@
                         {{ $member->code }}
                     </div>
                 </div>
+
+                @php
+                $dt = Carbon\Carbon::now();
+                $date = Carbon\Carbon::parse($member->close_point_date);
+                $selisih = $date->diffInDays();
+                $bv = intval($selisih) >= 0 ? '25 BV' : '0 BV';
+                @endphp
+
                 <div class="card">
                     <div class="card-body text-center">
                         <h4>Tgl berakhir Tutup Poin</h4><br />
@@ -38,12 +46,14 @@
                 </div>
                 <div class="card">
                     <div class="card-body text-center">
+                        <h4>P/S</h4><br />
+                        {{ $bv }}
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body text-center">
                         <h4>Sisa hari masa berlaku Tutup Poin</h4><br />
-                        @php
-                            $dt = Carbon\Carbon::now();
-                            $date = Carbon\Carbon::parse($member->close_point_date);
-                        @endphp
-                        {{ $date->diffInDays() }} Hari
+                        {{ $selisih }} Hari
                     </div>
                 </div>
                 <div class="card">

@@ -13,35 +13,28 @@ use App\Http\Controllers\LanguageController;
 
 
 // Route url
-//Route::get('/', 'DashboardController@dashboardAnalytics');
-Route::get('/', 'Auth\LoginController@showMemberLoginForm');
+Route::group(['middleware' => 'restrictMidnight'], function () {
+    Route::get('/', 'Auth\LoginController@showMemberLoginForm');
 
-Route::get('/admin/images/logo/favicon.ico', function () {
-    return \File::get(public_path() . '/images/logo/favicon.ico');
+    Route::get('/admin/images/logo/favicon.ico', function () {
+        return \File::get(public_path() . '/images/logo/favicon.ico');
+    });
+    Route::get('/member/images/logo/favicon.ico', function () {
+        return \File::get(public_path() . '/images/logo/favicon.ico');
+    });
+
+    Auth::routes();
+
+    Route::get('/admin/login', 'Auth\LoginController@showAdminLoginForm');
+    Route::post('/admin/login', 'Auth\LoginController@adminLogin');
+    Route::get('/admin/logout', 'Auth\LoginController@logout');
+
+    Route::get('/member/login', 'Auth\LoginController@showMemberLoginForm');
+    Route::post('/member/login', 'Auth\LoginController@memberLogin');
+    Route::get('/member/logout', 'Auth\LoginController@logout');
+
+    Route::get('/member/rebuildAllTrees', 'Members\TreeController@rebuildTree');
 });
-Route::get('/member/images/logo/favicon.ico', function () {
-    return \File::get(public_path() . '/images/logo/favicon.ico');
-});
-
-Auth::routes();
-
-Route::get('/admin/login', 'Auth\LoginController@showAdminLoginForm');
-Route::post('/admin/login', 'Auth\LoginController@adminLogin');
-Route::get('/admin/logout', 'Auth\LoginController@logout');
-
-Route::get('/member/login', 'Auth\LoginController@showMemberLoginForm');
-Route::post('/member/login', 'Auth\LoginController@memberLogin');
-Route::get('/member/logout', 'Auth\LoginController@logout');
-
-Route::get('/member/rebuildAllTrees', 'Members\TreeController@rebuildTree');
-
-//Route::get('/member/register', 'Members\PagesController@showMemberRegistrationForm');
-//Route::post('/member/register', 'Members\PagesController@createMember')->name('member.registration');
-
-
-// Route Dashboards
-Route::get('/dashboard-analytics', 'DashboardController@dashboardAnalytics');
-Route::get('/dashboard-ecommerce', 'DashboardController@dashboardEcommerce');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidnight']], function() {
     Route::get('/', 'Admins\DashboardController@index');
@@ -90,13 +83,14 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
     Route::get('stockiest', 'Members\PagesController@stockiest');
 });
 
-//Route::post('/member/testAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.test');
-
-//Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
-Route::group(['middleware' => 'nodebugbar'], function () {
+Route::group(['middleware' => ['nodebugbar', 'restrictMidnight']], function () {
     Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
     Route::get('/admin/unpaidBonus', 'Admins\AdminController@unpaidBonus');
 });
+
+/*Route::group(['middleware' => ['stj_api', 'restrictMidnight', 'nodebugbar']], function () {
+    Route::get('/member/getMember', 'Members\MemberController@getMemberNew');
+});*/
 
 Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], function () {
 
@@ -121,6 +115,7 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::post('/member/profileGeneral', 'Members\PagesController@updateProfileGeneral')->name('member.profile.general');
     Route::post('/member/profileAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.account');
     Route::post('/member/profileInfo', 'Members\PagesController@updateProfileInfo')->name('member.profile.info');
+
 });
 
 Route::get('/clear-cache', function() {

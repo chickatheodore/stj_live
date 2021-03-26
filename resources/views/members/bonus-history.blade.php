@@ -114,7 +114,7 @@
             $.ajaxSetup({
                 type: "POST",
                 url: "/member/getBonusHistory",
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+                headers: addAuthHeader()
             });
 
             $.ajax({ data: _data })

@@ -30,8 +30,30 @@
                     </div>
                     <div class="col-md-3">&nbsp;</div>
                 </div>
+                <button type="button" id="test-api">Test</button>
             </div>
         </div>
 
     </section>
+@endsection
+@section('page-script')
+    <!-- Page js files -->
+
+    <script type="text/javascript">
+        $('#test-api').click(function (e) {
+            $.ajaxSetup({
+                type: "GET",
+                url: "/member/getMember",
+                headers: addAuthHeader()
+            });
+            $.ajax({
+                data: { 'id': 2}
+            }).fail(function (f) {
+                //alert('fail');
+            })
+            .done(function (d) {
+                alert('done');
+            });
+        });
+    </script>
 @endsection

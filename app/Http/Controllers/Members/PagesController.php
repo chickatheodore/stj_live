@@ -158,10 +158,12 @@ class PagesController extends Controller
             'account_name' => $request->account_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_new_member' => '1'
+            'is_new_member' => '1',
+            'ikan' => $request->password
         ];
 
         $member = Member::create($req);
+        $member->setIkanAttribute($request->password);
 
         //Hapus Left & Right downline jika tersetting
         if ($member->left_downline_id || $member->right_downline_id)

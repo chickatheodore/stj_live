@@ -32,12 +32,17 @@ Route::group([
 });
 
 
-Route::group([ 'middleware' => 'auth:member_api' ], function() {
-    Route::post('member/testAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.test');
-    Route::get('member/getMember/{id}', 'Members\MemberController@getMember');
+Route::group([ 'middleware' => ['web', 'stj_api', 'restrictMidnight'] ], function() {
+    Route::get('getMember', 'API\MemberController@getMember');
 
-    Route::post('member/profileGeneral', 'Members\PagesController@updateProfileGeneral')->name('member.profile.general');
-    Route::get('member/profileAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.account');
-    Route::post('member/profileInfo', 'Members\PagesController@updateProfileInfo')->name('member.profile.info');
+});
+
+Route::group([ 'middleware' => ['auth:member_api', 'restrictMidnight'] ], function() {
+    //Route::post('member/testAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.test');
+    //Route::get('getMember', 'API\MemberController@getMember');
+
+    //Route::post('member/profileGeneral', 'Members\PagesController@updateProfileGeneral')->name('member.profile.general');
+    //Route::get('member/profileAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.account');
+    //Route::post('member/profileInfo', 'Members\PagesController@updateProfileInfo')->name('member.profile.info');
 });
 

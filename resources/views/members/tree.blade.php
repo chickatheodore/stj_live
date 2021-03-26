@@ -279,6 +279,6 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/tree.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/members/tree.js')).'?v='.date('Ymdhis') }}"></script>
     <script type="text/javascript">let _mId = {{ auth()->id() }};</script>
 @endsection

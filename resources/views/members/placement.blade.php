@@ -114,8 +114,8 @@ $read_only = isset($saved) || count($newMembers) < 1;
                                                                 <label class="custom-control-label" for="pohonKiri" id="labelKiri">
                                                                     @if(isset($saved))
                                                                         @if($member->upLine)
-                                                                            @if($member->upLine->leftDownLine() != null)
-                                                                    {{ $member->upLine->leftDownLine()->code }}<br />{{ $member->upLine->leftDownLine()->name }}
+                                                                            @if($member->upLine->leftDownLine != null)
+                                                                    {{ $member->upLine->leftDownLine->code }}<br />{{ $member->upLine->leftDownLine->name }}
                                                                             @else
                                                                     A. Tersedia
                                                                             @endif
@@ -137,8 +137,8 @@ $read_only = isset($saved) || count($newMembers) < 1;
                                                                 <label class="custom-control-label" for="pohonKanan" id="labelKanan">
                                                                     @if(isset($saved))
                                                                         @if($member->upLine)
-                                                                            @if($member->upLine->rightDownLine() != null)
-                                                                    {{ $member->upLine->rightDownLine()->code }}<br />{{ $member->upLine->rightDownLine()->name }}
+                                                                            @if($member->upLine->rightDownLine != null)
+                                                                    {{ $member->upLine->rightDownLine->code }}<br />{{ $member->upLine->rightDownLine->name }}
                                                                             @else
                                                                     B. Tersedia
                                                                             @endif
@@ -199,5 +199,5 @@ $read_only = isset($saved) || count($newMembers) < 1;
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/placement.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/members/placement.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection

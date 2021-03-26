@@ -64,7 +64,8 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-        'stj_ajax'=>\App\Http\Middleware\AjaxRequestOnly::class,
+        //'stj_api' => \App\Http\Middleware\STJApi::class,
+        'stj_ajax' => \App\Http\Middleware\AjaxRequestOnly::class,
         'restrictMidnight' => \App\Http\Middleware\TimeBasedRestriction::class,
     ];
 

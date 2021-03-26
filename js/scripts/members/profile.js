@@ -104,7 +104,7 @@ $('#btn-save-level').click(function (e) {
     $.ajaxSetup({
         type: "POST",
         url: "/member/upgradeLevel",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        headers: addAuthHeader()
     });
 
     loadingButton($('#btn-save-level'), 'Save changes', true);
@@ -150,7 +150,7 @@ $('#btn-save-account').click(function (e) {
     $.ajaxSetup({
         type: "POST",
         url: "/member/profileAccount",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        headers: addAuthHeader()
     });
 
     loadingButton($('#btn-save-account'), 'Save changes', true);
@@ -197,7 +197,7 @@ $('#btn-save-info').click(function (e) {
     $.ajaxSetup({
         type: "POST",
         url: "/member/profileInfo",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        headers: addAuthHeader()
     });
 
     loadingButton($('#btn-save-info'), 'Save changes', true);

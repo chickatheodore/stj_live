@@ -28,8 +28,8 @@ function initTree(mId) {
 
     $.ajaxSetup({
         type: "POST",
-        url: _url,
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        //url: _url,
+        headers: addAuthHeader()
     });
 
     $.ajax({
@@ -70,11 +70,11 @@ var nodeTemplate = function (data) {
     if (data.name) {
         _html = '<div class="title">' + data.name + '</div>\n' +
             '<div class="content">\n' +
-            '<div>ID :' + data.code + '</div>\n' +
+            '<div>ID : ' + data.code + '</div>\n' +
             (data.code != '-' ?
                 '<div class="membericon" style="color: ' + (data.level_id == 2 ? '#FFA500; border: 2px solid #ffa500' : '#87CEEB') + ';"><i class="fa fa-user"></i></div>\n' +
                 '<div class="membername">' + data.name + '</div>\n' +
-                '<div class="memberid">' + data.code + '</div>\n' +
+                '<div class="memberid">ID : ' + data.code + '</div>\n' +
                 '<div>Poin : ' + (data.pin ? data.pin : '') + '</div>\n' +
                 '<div>TUPO : ' + (data.pin ? data.close_point_date : '') + '</div>\n'
                 //'<div>P/S : ' + (data.pin ? data.pin : '') + '</div>\n'

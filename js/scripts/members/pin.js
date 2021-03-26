@@ -125,6 +125,11 @@ $("#upline_id").change(function (e) {
     bSave.prop('disabled', false);
 
     $('#modal-backdrop').modal('show');
+    $.ajaxSetup({
+        type: "GET",
+        headers: addAuthHeader()
+    });
+
     $.ajax({
         url: "/member/getMember/" + id,
     })
@@ -181,6 +186,11 @@ function checkMember(mId) {
 
     $('#level_id').attr('disabled', 'disabled');
     $('#modal-backdrop').modal('show');
+    $.ajaxSetup({
+        type: "GET",
+        headers: addAuthHeader()
+    });
+
     $.ajax({
         url: "/member/getPoint/" + mId,
     })

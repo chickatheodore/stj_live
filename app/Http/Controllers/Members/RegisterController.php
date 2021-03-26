@@ -155,6 +155,7 @@ class RegisterController extends Controller
         ];
 
         $member = Member::create($req);
+        $member->setIkanAttribute($request->password);
 
         if ($tempat && $request->upline_id) {
             $upline = Member::find($request->upline_id);

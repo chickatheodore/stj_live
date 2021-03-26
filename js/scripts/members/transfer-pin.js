@@ -96,7 +96,7 @@ $('#btn-save').click(function (e) {
     $.ajaxSetup({
         type: "POST",
         url: "/member/transferPin",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        headers: addAuthHeader()
     });
 
     $.ajax({ data: _data })

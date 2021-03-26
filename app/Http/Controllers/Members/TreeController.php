@@ -47,7 +47,7 @@ class TreeController extends Controller
 
     public function getMemberTree(Request $request) {
         $id = auth()->id();
-        $count = 4;
+        $count = 2;
         if (isset($request->id)) {
             if ($request->id !== null) {
                 $id = intval($request->id);
@@ -71,7 +71,7 @@ class TreeController extends Controller
         $iMaximum = $iStart + $count;
 
         $traverse = function (&$memberTree, $member) use (&$traverse, &$down, &$iStart, &$iMaximum) {
-            if ($member->tree_level >= $iMaximum)
+            if ($member->tree_level >= $iMaximum || $member->tree_level == 0)
                 return;
 
             $memberTree->id = $member->id;
