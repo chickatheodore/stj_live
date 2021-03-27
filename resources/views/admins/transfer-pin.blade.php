@@ -81,5 +81,5 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/admins/transfer-pin.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/admins/transfer-pin.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection

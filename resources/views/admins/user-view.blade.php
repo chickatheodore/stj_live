@@ -250,5 +250,5 @@
 
 @section('page-script')
   {{-- Page js files --}}
-  <script src="{{ asset(mix('js/scripts/pages/app-user.js')) }}"></script>
+  <script src="{{ asset(mix('js/scripts/pages/app-user.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection

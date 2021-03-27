@@ -76,6 +76,7 @@ var nodeTemplate = function (data) {
                 '<div class="membericon" style="color: ' + (data.level_id == 2 ? '#FFA500; border: 2px solid #ffa500' : '#87CEEB') + ';"><i class="fa fa-user"></i></div>\n' +
                 '<div class="membername">' + data.name + '</div>\n' +
                 '<div class="memberid">ID : ' + data.code + '</div>\n' +
+                '<div>PIN : ' + (data.pin ? data.pin : '') + '</div>\n' +
                 '<div>P/S : ' + (data.bv ? data.bv : '') + '</div>\n' +
                 '<div>TUPO : ' + (data.cpd ? data.cpd : '') + '</div>\n' +
                 '<div>Poin : ' + (data.poin ? data.poin : '') + '</div>\n'
@@ -125,4 +126,37 @@ $('.tampil-detail').click(function (e) {
     $(".tampil-ringkas").removeClass("btn-primary");
     $(this).addClass("btn-primary");
     $("#chart-container").removeClass("minimize");
+});
+
+function resetNodeClick() {
+    $('div.node').unbind('click', 'nodeClickHandler');
+    $('div.node').on('click', onNodeClicked.bind(this));
+}
+
+function nodeClicked(node, e) {
+    //preventDefault();
+    let _data = $($(node)[0].parentNode).data().nodeData;
+
+    fillModal(_data);
+    $('#modal-member').modal('show');
+}
+function onNodeClicked(node) {
+    let _data = $(node.currentTarget).data().nodeData;
+    //alert(JSON.stringify(_data));
+
+    fillModal(_data);
+    $('#modal-member').modal('show');
+}
+
+function fillModal(data) {
+    $('#modal-member').find('.modal_name').html(data.name);
+    $('#modal-member').find('.modal_code').html(data.code);
+    $('#modal-member').find('.modal_pin').html(data.pin);
+    $('#modal-member').find('.modal_bv').html(data.bv);
+    $('#modal-member').find('.modal_cpd').html(data.cpd);
+    $('#modal-member').find('.modal_point').html(data.poin);
+}
+
+$('.btn_export').click(function (e) {
+    _orChart.export('STJ_Tree', 'png');
 });

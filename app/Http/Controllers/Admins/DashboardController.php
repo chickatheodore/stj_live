@@ -20,12 +20,10 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function expiredPoint()
+    public function expiredTUPO()
     {
-        $expired = Member::where('close_point_date', '<', Carbon::now()->format('Y-m-d'))->get();
-
         return view('/admins/expired', [
-            'expired' => $expired
+            //'expired' => $expired
         ]);
     }
 

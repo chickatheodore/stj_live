@@ -15,11 +15,6 @@ $(document).ready(function () {
         isRtl = false;
     }
 
-    /*function dateFormatter(params) {
-        var dateAsString = params.data.Tanggal;
-        var dateParts = dateAsString.split('/');
-        return `${dateParts[0]} - ${dateParts[1]} - ${dateParts[2]}`;
-    }*/
     function numericFormatter(params) {
         let id = params.colDef.field;
         if (id === 'BonusPoint' || id === 'BonusSponsor' || id === 'Total')
@@ -115,7 +110,7 @@ $(document).ready(function () {
         /*** GET TABLE DATA FROM URL ***/
         agGrid
             .simpleHttpRequest({
-                url: "/admin/unpaidBonus"
+                url: "/admin/paidBonus"
             })
             .then(function (data) {
                 gridOptions.api.setRowData(data);
@@ -145,35 +140,6 @@ $(document).ready(function () {
         $(".ag-grid-export-btn").on("click", function (params) {
             gridOptions.api.exportDataAsCsv();
         });
-
-        /*** ================================================ ***/
-        $("#btn-pay").on("click", function (params) {
-            params.preventDefault();
-
-            var rows = gridOptions.api.getSelectedNodes();
-            if (rows.length == 0) return;
-
-            $.ajaxSetup({
-                type: "POST",
-                url: "/admin/payBonus",
-                headers: addAuthHeader()
-            });
-
-            $('#modal-backdrop').modal('show');
-            for (var i = 0; i < rows.length; i++)
-            {
-                let _data = [];
-                _data.push(rows[i].data);
-                _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
-
-                $.ajax({ data: _data })
-                .done(function( result ) {
-                });
-            }
-            $('#modal-backdrop').modal('hide');
-
-        });
-        /*** ================================================ ***/
 
         //  filter data function
         var filterData = function agSetColumnFilter(column, val) {

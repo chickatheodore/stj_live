@@ -15,18 +15,59 @@ $(document).ready(function () {
         isRtl = false;
     }
 
-    /*function dateFormatter(params) {
-        var dateAsString = params.data.Tanggal;
-        var dateParts = dateAsString.split('/');
-        return `${dateParts[0]} - ${dateParts[1]} - ${dateParts[2]}`;
-    }*/
-    function numericFormatter(params) {
-        let id = params.colDef.field;
-        if (id === 'BonusPoint' || id === 'BonusSponsor' || id === 'Total')
-        {
-            return $.number(params.value);
+    //  Rendering badge in status column
+    var customBadgeHTML = function (params) {
+        var color = "";
+        if (params.value == "active") {
+            color = "success"
+            return "<div class='badge badge-pill badge-light-" + color + "' >" + params.value + "</div>"
+        } else if (params.value == "blocked") {
+            color = "danger";
+            return "<div class='badge badge-pill badge-light-" + color + "' >" + params.value + "</div>"
+        } else if (params.value == "deactivated") {
+            color = "warning";
+            return "<div class='badge badge-pill badge-light-" + color + "' >" + params.value + "</div>"
         }
-        return params.value;
+    }
+
+    //  Rendering bullet in verified column
+    var customBulletHTML = function (params) {
+        var color = "";
+        if (params.value == true) {
+            color = "success"
+            return "<div class='bullet bullet-sm bullet-" + color + "' >" + "</div>"
+        } else if (params.value == false) {
+            color = "secondary";
+            return "<div class='bullet bullet-sm bullet-" + color + "' >" + "</div>"
+        }
+    }
+
+    // Renering Icons in Actions column
+    var customIconsHTML = function (params) {
+        var usersIcons = document.createElement("span");
+        var editIconHTML = "<a href='member/edit/" + params.data.id + "'><i class='users-edit-icon feather icon-edit-1 mr-50'></i></a>"
+        var deleteIconHTML = document.createElement('i');
+        var attr = document.createAttribute("class")
+        attr.value = "users-delete-icon feather icon-trash-2"
+        deleteIconHTML.setAttributeNode(attr);
+        // selected row delete functionality
+        deleteIconHTML.addEventListener("click", function () {
+            deleteArr = [
+                params.data
+            ];
+            // var selectedData = gridOptions.api.getSelectedRows();
+            gridOptions.api.updateRowData({
+                remove: deleteArr
+            });
+        });
+        usersIcons.appendChild($.parseHTML(editIconHTML)[0]);
+        //usersIcons.appendChild(deleteIconHTML);
+        return usersIcons
+    }
+
+    //  Rendering avatar in username column
+    var customAvatarHTML = function (params) {
+        return "<span class='avatar'><img src='" + params.data.avatar + "' height='32' width='32'></span>" + params.value
     }
 
     // ag-grid
@@ -35,59 +76,21 @@ $(document).ready(function () {
     var columnDefs = [
         {
             headerName: 'ID',
-            field: 'id',
+            field: 'code',
             width: 125,
             filter: true,
-            checkboxSelection: true,
-            headerCheckboxSelectionFilteredOnly: true,
-            headerCheckboxSelection: true,
-        },
-        {
-            headerName: 'Tanggal',
-            field: 'Tanggal',
-            filter: true,
-            width: 175,
-            //valueFormatter: dateFormatter
-        },
-        {
-            headerName: 'Member ID',
-            field: 'MemberID',
-            filter: true,
-            width: 175,
         },
         {
             headerName: 'Name',
-            field: 'Name',
+            field: 'name',
             filter: true,
-            width: 400,
+            //width: 200,
         },
         {
-            headerName: 'Bonus Poin',
-            field: 'BonusPoint',
+            headerName: 'TUPO',
+            field: 'close_point_date',
             filter: true,
-            valueFormatter: numericFormatter,
-            cellStyle: {
-                "text-align": "right"
-            }
-        },
-        {
-            headerName: 'Bonus Sponsor',
-            field: 'BonusSponsor',
-            filter: true,
-            valueFormatter: numericFormatter,
-            cellStyle: {
-                "text-align": "right"
-            }
-            //width: 150,
-        },
-        {
-            headerName: 'Total Bonus',
-            field: 'Total',
-            filter: true,
-            valueFormatter: numericFormatter,
-            cellStyle: {
-                "text-align": "right"
-            }
+            width: 150,
         }
     ];
 
@@ -105,8 +108,8 @@ $(document).ready(function () {
         paginationPageSize: 20,
         pivotPanelShow: "always",
         colResizeDefault: "shift",
-        //animateRows: true,
-        resizable: true,
+        animateRows: true,
+        resizable: true
     };
     if (document.getElementById("myGrid")) {
         /*** DEFINED TABLE VARIABLE ***/
@@ -115,7 +118,7 @@ $(document).ready(function () {
         /*** GET TABLE DATA FROM URL ***/
         agGrid
             .simpleHttpRequest({
-                url: "/admin/unpaidBonus"
+                url: "/admin/expiredTUPO"
             })
             .then(function (data) {
                 gridOptions.api.setRowData(data);
@@ -145,35 +148,6 @@ $(document).ready(function () {
         $(".ag-grid-export-btn").on("click", function (params) {
             gridOptions.api.exportDataAsCsv();
         });
-
-        /*** ================================================ ***/
-        $("#btn-pay").on("click", function (params) {
-            params.preventDefault();
-
-            var rows = gridOptions.api.getSelectedNodes();
-            if (rows.length == 0) return;
-
-            $.ajaxSetup({
-                type: "POST",
-                url: "/admin/payBonus",
-                headers: addAuthHeader()
-            });
-
-            $('#modal-backdrop').modal('show');
-            for (var i = 0; i < rows.length; i++)
-            {
-                let _data = [];
-                _data.push(rows[i].data);
-                _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
-
-                $.ajax({ data: _data })
-                .done(function( result ) {
-                });
-            }
-            $('#modal-backdrop').modal('hide');
-
-        });
-        /*** ================================================ ***/
 
         //  filter data function
         var filterData = function agSetColumnFilter(column, val) {

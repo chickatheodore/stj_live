@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $bonus_partner_amount
  * @property float $bonus_paid_amount
  * @property float $bonus_ending_balance
+ * @property int $reff_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at

@@ -1,6 +1,6 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'Bonus Belum Dibayar')
+@section('title', 'Bonus Sudah Dibayar')
 
 @section('vendor-style')
         {{-- Page Css files --}}
@@ -113,7 +113,6 @@
                           Actions
                         </button>
                         <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#" id="btn-pay"><i class="feather icon-dollar-sign"></i> Proses Pembayaran</a>
                           <a class="dropdown-item" href="#"><i class="feather icon-printer"></i> Print</a>
                           <a class="dropdown-item" href="#"><i class="feather icon-download"></i> CSV</a>
                         </div>
@@ -141,5 +140,5 @@
 
 @section('page-script')
   {{-- Page js files --}}
-  <script src="{{ asset(mix('js/scripts/admins/bonus-unpaid.js')).'?v='.date('Ymdhis') }}"></script>
+  <script src="{{ asset(mix('js/scripts/admins/bonus-paid.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection

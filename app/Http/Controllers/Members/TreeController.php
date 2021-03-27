@@ -82,6 +82,7 @@ class TreeController extends Controller
 
             $memberTree->parentId = $member->upline_id;
 
+            $memberTree->pin = $member->pin;
             $memberTree->bv = '25 BV';
             if (Carbon::parse($member->close_point_date) < Carbon::now())
                 $memberTree->bv = '0 BV';
@@ -95,10 +96,6 @@ class TreeController extends Controller
             $memberTree->left_id = $kiri;
             $memberTree->right_id = $kanan;
 
-            /*if ($iStart == $member->tree_level && $member->upline_id)
-                $memberTree->relationship = 111;
-            else
-                $memberTree->relationship = $member->tree_level;*/
             $memberTree->relationship = $this->getRelationshipValue($member);
 
             $memberTree->className = 'exist' . ($member->level_id == 2 ? ' gold' : '');
@@ -120,6 +117,7 @@ class TreeController extends Controller
                 $treeKiri->level = $memberKiri->tree_level;
                 $treeKiri->level_id = $memberKiri->level_id;
 
+                $treeKiri->pin = $memberKiri->pin;
                 $treeKiri->bv = '25 BV';
                 if (Carbon::parse($memberKiri->close_point_date) < Carbon::now())
                     $treeKiri->bv = '0 BV';
@@ -149,6 +147,7 @@ class TreeController extends Controller
                 $treeKanan->level = $memberKanan->tree_level;
                 $treeKanan->level_id = $memberKanan->level_id;
 
+                $treeKanan->pin = $memberKanan->pin;
                 $treeKanan->bv = '25 BV';
                 if (Carbon::parse($memberKanan->close_point_date) < Carbon::now())
                     $treeKanan->bv = '0 BV';

@@ -24,7 +24,8 @@ class MemberSettingController extends Controller
      */
     public function index()
     {
-        $members = Member::with('sponsor', 'upLine', 'leftDownLine', 'rightDownLine')->get();
+        $members = Member::with('sponsor', 'upLine', 'leftDownLine', 'rightDownLine')
+            ->where('id', '>', '1')->get();
 
         $breadcrumbs = [
             ['link'=>"/",'name'=>"Home"], ['name'=>"User List"]

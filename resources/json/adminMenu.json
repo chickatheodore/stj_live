@@ -44,7 +44,7 @@
                     "i18n": "Bonus Sudah Dibayar"
                 },
                 {
-                    "url": "/admin/tupo",
+                    "url": "/admin/expired",
                     "name": "List TUPO Expired",
                     "i18n": "List TUPO Expired",
                     "icon": "",

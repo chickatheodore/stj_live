@@ -277,7 +277,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
-
+                        <div class="row">
+                            <div class="modal_name"></div>
+                            <div class="modal_code"></div>
+                            <div class="modal_pin"></div>
+                            <div class="modal_bv"></div>
+                            <div class="modal_cpd"></div>
+                            <div class="modal_point"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -303,27 +310,6 @@
 
         $(document).ready(function () {
             initTree(_mId);
-        });
-
-        function resetNodeClick() {
-            $('div.node').unbind('click', 'nodeClickHandler');
-            $('div.node').on('click', onNodeClicked.bind(this));
-        }
-
-        function nodeClicked(node, e) {
-            //preventDefault();
-
-            let _data = $($(node)[0].parentNode).data().nodeData;
-            $('#modal-member').modal('show');
-        }
-        function onNodeClicked(node) {
-            let _data = $(node.currentTarget).data().nodeData;
-            //alert(JSON.stringify(_data));
-            $('#modal-member').modal('show');
-        }
-
-        $('.btn_export').click(function (e) {
-            _orChart.export('STJ_Tree', 'png');
         });
 
     </script>

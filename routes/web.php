@@ -1,5 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,10 +51,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
     Route::get('trf-pin', 'Admins\PinController@showTransferPINForm');
     Route::post('trf-pin', 'Admins\PinController@transferPIN');
 
-    /*Route::get('paid-bonus', 'Admins\AdminController@paidBonus');*/
+    Route::get('paid-bonus', 'Admins\AdminController@showPaidBonusForm');
     Route::get('unpaid-bonus', 'Admins\AdminController@showUnpaidBonusForm');
+    Route::post('payBonus', 'Admins\AdminController@payBonus');
 
-    Route::get('tupo', 'Admins\DashboardController@expiredPoint');
+    Route::get('expired', 'Admins\DashboardController@expiredTUPO');
     Route::get('point-history', 'Admins\DashboardController@pointHistory');
 });
 
@@ -72,7 +75,7 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
     Route::get('sponsor', 'Members\PagesController@sponsor');
 
     Route::get('bonus', 'Members\PagesController@getBonus');
-    Route::get('bonus-history', 'Members\PagesController@bonusHistory');
+    Route::get('bonus-history', 'Members\PagesController@showBonusHistory');
 
     Route::get('pin', 'Members\PagesController@showPin');
     Route::get('transfer-pin', 'Members\PagesController@showTransferPin');
@@ -80,12 +83,15 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
     Route::get('extend', 'Members\PagesController@showExtendTUPO');
     Route::get('upgrade', 'Members\PagesController@showUpgradeLevel');
 
+    Route::get('point-history', 'Members\PagesController@showPINHistory');
     Route::get('stockiest', 'Members\PagesController@stockiest');
 });
 
 Route::group(['middleware' => ['nodebugbar', 'restrictMidnight']], function () {
     Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
     Route::get('/admin/unpaidBonus', 'Admins\AdminController@unpaidBonus');
+    Route::get('/admin/paidBonus', 'Admins\AdminController@paidBonus');
+    Route::get('/admin/expiredTUPO', 'Admins\AdminController@expiredTUPO');
 });
 
 /*Route::group(['middleware' => ['stj_api', 'restrictMidnight', 'nodebugbar']], function () {
@@ -97,7 +103,7 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::get('/admin/getPointHistory', 'Admins\DashboardController@getPointHistory');
     Route::post('/admin/transferPIN', 'Admins\PinController@transferPIN');
 
-    Route::get('/admin/tupoExpired', 'Admins\DashboardController@expiredPoint');
+    //Route::get('/admin/tupoExpired', 'Admins\DashboardController@expiredPoint');
 
     //Route::get('/admin/getMembers', 'Admins\MemberSettingController@getMembers');
     Route::get('/member/getMember/{id}', 'Members\MemberController@getMember');
@@ -107,6 +113,7 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::get('/member/getStockiest', 'Members\MemberController@getStockiest');
 
     Route::post('/member/getBonusHistory', 'Members\PagesController@getBonusHistory');
+    Route::post('/member/getPINHistory', 'Members\PagesController@getPINHistory');
 
     Route::post('/member/transferPin', 'Members\MemberController@transferPin');
     Route::post('/member/upgradeLevel', 'Members\PagesController@upgradeLevel')->name('member.profile.upgrade');

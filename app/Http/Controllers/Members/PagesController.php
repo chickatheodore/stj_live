@@ -192,7 +192,7 @@ class PagesController extends Controller
         }
 
         if ($request->upline_id)
-            $this->dispatch(new ProcessMember($member));
+            $this->dispatch(new ProcessMember($member, 'level'));
 
         //return $member;
         return view('members/registered', [
@@ -435,7 +435,7 @@ class PagesController extends Controller
         ]);
     }
 
-    public function bonusHistory()
+    public function showBonusHistory()
     {
         return view('members/bonus-history');
     }
@@ -508,6 +508,25 @@ class PagesController extends Controller
 
         $transactions = Transaction::where('member_id', '=', $id)
             ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
+            ->whereBetween('transaction_date', [$start_date, $end_date])->get();
+
+        $data = json_encode($transactions);
+        return $data;
+    }
+
+    public function showPINHistory()
+    {
+        return view('members/pin-history');
+    }
+
+    public function getPINHistory(Request $request)
+    {
+        $id = $request->_acc_;
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+
+        $transactions = Transaction::where('member_id', '=', $id)
+            ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'pin');})
             ->whereBetween('transaction_date', [$start_date, $end_date])->get();
 
         $data = json_encode($transactions);

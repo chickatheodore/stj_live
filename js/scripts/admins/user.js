@@ -75,6 +75,12 @@ $(document).ready(function () {
 
     var columnDefs = [
         {
+            headerName: 'Actions',
+            field: 'transactions',
+            width: 150,
+            cellRenderer: customIconsHTML,
+        },
+        /*{
             headerName: 'ID',
             field: 'id',
             width: 125,
@@ -82,7 +88,7 @@ $(document).ready(function () {
             checkboxSelection: true,
             headerCheckboxSelectionFilteredOnly: true,
             headerCheckboxSelection: true,
-        },
+        },*/
         {
             headerName: 'Name',
             field: 'name',
@@ -124,12 +130,6 @@ $(document).ready(function () {
             field: 'close_point_date',
             filter: true,
             width: 150,
-        },
-        {
-            headerName: 'Actions',
-            field: 'transactions',
-            width: 150,
-            cellRenderer: customIconsHTML,
         }
     ];
 

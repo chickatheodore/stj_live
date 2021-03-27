@@ -1,254 +1,144 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'View User Page')
+@section('title', 'TUPO Expired')
+
+@section('vendor-style')
+        {{-- Page Css files --}}
+        <link rel="stylesheet" href="{{ asset(mix('vendors/css/tables/ag-grid/ag-grid.css')) }}">
+        <link rel="stylesheet" href="{{ asset(mix('vendors/css/tables/ag-grid/ag-theme-material.css')) }}">
+@endsection
 
 @section('page-style')
         {{-- Page Css files --}}
         <link rel="stylesheet" href="{{ asset(mix('css/pages/app-user.css')) }}">
+        <link rel="stylesheet" href="{{ asset(mix('css/pages/aggrid.css')) }}">
 @endsection
 
 @section('content')
-<!-- page users view start -->
-<section class="page-users-view">
-  <div class="row">
-    <!-- account start -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-title">Account</div>
-          <div class="row">
-            <div class="col-2 users-view-image">
-              <img src="{{ asset('images/portrait/small/avatar-s-12.jpg') }}" class="w-100 rounded mb-2"
-                alt="avatar">
-              <!-- height="150" width="150" -->
+<!-- users list start -->
+<section class="users-list-wrapper">
+  <!-- users filter start -->
+  <div class="card" style="display: none">
+    <div class="card-header">
+      <h4 class="card-title">Filters</h4>
+      <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
+      <div class="heading-elements">
+        <ul class="list-inline mb-0">
+          <li><a data-action="collapse"><i class="feather icon-chevron-down"></i></a></li>
+          <li><a data-action=""><i class="feather icon-rotate-cw users-data-filter"></i></a></li>
+          <li><a data-action="close"><i class="feather icon-x"></i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-content collapse show">
+      <div class="card-body">
+        <div class="users-list-filter">
+          <form>
+            <div class="row">
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-role">Role</label>
+                <fieldset class="form-group">
+                  <select class="form-control" id="users-list-role">
+                    <option value="">All</option>
+                    <option value="user">User</option>
+                    <option value="staff">Staff</option>
+                  </select>
+                </fieldset>
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-status">Status</label>
+                <fieldset class="form-group">
+                  <select class="form-control" id="users-list-status">
+                    <option value="">All</option>
+                    <option value="Active">Active</option>
+                    <option value="Blocked">Blocked</option>
+                    <option value="deactivated">Deactivated</option>
+                  </select>
+                </fieldset>
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-verified">Verified</label>
+                <fieldset class="form-group">
+                  <select class="form-control" id="users-list-verified">
+                    <option value="">All</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </fieldset>
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-department">Department</label>
+                <fieldset class="form-group">
+                  <select class="form-control" id="users-list-department">
+                    <option value="">All</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Devlopment">Devlopment</option>
+                    <option value="Management">Management</option>
+                  </select>
+                </fieldset>
+              </div>
             </div>
-            <div class="col-sm-4 col-12">
-              <table>
-                <tr>
-                  <td class="font-weight-bold">Username</td>
-                  <td>adoptionism744</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Name</td>
-                  <td>Angelo Sashington</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Email</td>
-                  <td>angelo@sashington.com</td>
-                </tr>
-              </table>
-            </div>
-            <div class="col-md-6 col-12 ">
-              <table class="ml-0 ml-sm-0 ml-lg-0">
-                <tr>
-                  <td class="font-weight-bold">Status</td>
-                  <td>active</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Role</td>
-                  <td>admin</td>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold">Company</td>
-                  <td>WinDon Technologies Pvt Ltd</td>
-                </tr>
-              </table>
-            </div>
-            <div class="col-12">
-              <a href="app-user-edit" class="btn btn-primary mr-1"><i class="feather icon-edit-1"></i> Edit</a>
-              <button class="btn btn-outline-danger"><i class="feather icon-trash-2"></i> Delete</button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
-    <!-- account end -->
-    <!-- information start -->
-    <div class="col-md-6 col-12 ">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-title mb-2">Information</div>
-          <table>
-            <tr>
-              <td class="font-weight-bold">Birth Date </td>
-              <td>28 January 1998
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Mobile</td>
-              <td>+65958951757</td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Website</td>
-              <td>https://rowboat.com/insititious/Angelo
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Languages</td>
-              <td>English, Arabic
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Gender</td>
-              <td>female</td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Contact</td>
-              <td>email, message, phone
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-    <!-- information start -->
-    <!-- social links end -->
-    <div class="col-md-6 col-12 ">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-title mb-2">Social Links</div>
-          <table>
-            <tr>
-              <td class="font-weight-bold">Twitter</td>
-              <td>https://twitter.com/adoptionism744
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Facebook</td>
-              <td>https://www.facebook.com/adoptionism664
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Instagram</td>
-              <td>https://www.instagram.com/adopt-ionism744/
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Github</td>
-              <td>https://github.com/madop818
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">CodePen</td>
-              <td>https://codepen.io/adoptism243
-              </td>
-            </tr>
-            <tr>
-              <td class="font-weight-bold">Slack</td>
-              <td>@adoptionism744
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-    <!-- social links end -->
-    <!-- permissions start -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="table-responsive">
-            <h6 class="border-bottom py-1 mx-1 mb-0 font-medium-2"><i class="feather icon-lock mr-50 "></i>Permission
-            </h6>
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th>Module</th>
-                  <th>Read</th>
-                  <th>Write</th>
-                  <th>Create</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Users</td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox1"
-                        class="custom-control-input" checked>
-                      <label class="custom-control-label" for="users-checkbox1"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox2"
-                        class="custom-control-input"><label class="custom-control-label" for="users-checkbox2"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox3"
-                        class="custom-control-input"><label class="custom-control-label" for="users-checkbox3"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox4"
-                        class="custom-control-input" checked>
-                      <label class="custom-control-label" for="users-checkbox4"></label>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Articles</td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox5"
-                        class="custom-control-input"><label class="custom-control-label" for="users-checkbox5"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox6"
-                        class="custom-control-input" checked>
-                      <label class="custom-control-label" for="users-checkbox6"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox7"
-                        class="custom-control-input"><label class="custom-control-label" for="users-checkbox7"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox8"
-                        class="custom-control-input" checked>
-                      <label class="custom-control-label" for="users-checkbox8"></label>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Staff</td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox9"
-                        class="custom-control-input" checked>
-                      <label class="custom-control-label" for="users-checkbox9"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox10"
-                        class="custom-control-input" checked>
-                      <label class="custom-control-label" for="users-checkbox10"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox11"
-                        class="custom-control-input"><label class="custom-control-label" for="users-checkbox11"></label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" id="users-checkbox12"
-                        class="custom-control-input"><label class="custom-control-label" for="users-checkbox12"></label>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- permissions end -->
   </div>
+  <!-- users filter end -->
+  <!-- Ag Grid users list section start -->
+  <div id="basic-examples">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="ag-grid-btns d-flex justify-content-between flex-wrap mb-1">
+                <div class="dropdown sort-dropdown mb-1 mb-sm-0">
+                  <button class="btn btn-white filter-btn dropdown-toggle border text-dark" type="button"
+                    id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    1 - 20 of 50
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton6">
+                    <a class="dropdown-item" href="#">20</a>
+                    <a class="dropdown-item" href="#">50</a>
+                  </div>
+                </div>
+                <div class="ag-btns d-flex flex-wrap">
+                  <input type="text" class="ag-grid-filter form-control w-50 mr-1 mb-1 mb-sm-0" id="filter-text-box"
+                    placeholder="Search...." />
+                  <div class="action-btns">
+                    <div class="btn-dropdown ">
+                      <div class="btn-group dropdown actions-dropodown">
+                        <button type="button" class="btn btn-white px-2 py-75 dropdown-toggle waves-effect waves-light"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Actions
+                        </button>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="#"><i class="feather icon-printer"></i> Print</a>
+                          <a class="dropdown-item" href="#"><i class="feather icon-download"></i> CSV</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="myGrid" class="aggrid ag-theme-material"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Ag Grid users list section end -->
 </section>
-<!-- page users view end -->
+<!-- users list ends -->
+@endsection
+
+@section('vendor-script')
+  {{-- Vendor js files --}}
+  <script src="{{ asset(mix('vendors/js/tables/ag-grid/ag-grid-community.min.noStyle.js')) }}"></script>
 @endsection
 
 @section('page-script')
   {{-- Page js files --}}
-  <script src="{{ asset(mix('js/scripts/pages/app-user.js')) }}"></script>
+  <script src="{{ asset(mix('js/scripts/admins/expired.js')).'?v='.date('Ymdhis') }}"></script>
 @endsection
