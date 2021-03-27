@@ -301,15 +301,21 @@
         $(document).ready(function () {
             initTree(_mId);
         });
-        function testInit(e) {
-            //alert('init');
+
+        function resetNodeClick() {
+            $('div.node').unbind('click', 'nodeClickHandler');
+            $('div.node').on('click', onNodeClicked.bind(this));
         }
 
+        function nodeClicked(node, e) {
+            //preventDefault();
+
+            let _data = $($(node)[0].parentNode).data().nodeData;
+            $('#modal-member').modal('show');
+        }
         function onNodeClicked(node) {
             let _data = $(node.currentTarget).data().nodeData;
             //alert(JSON.stringify(_data));
-            //this.$chart.find('.focused').removeClass('focused');
-            //$(event.delegateTarget).addClass('focused');
             $('#modal-member').modal('show');
         }
 

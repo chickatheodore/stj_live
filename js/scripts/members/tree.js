@@ -53,9 +53,7 @@ function initTree(mId) {
         });
 
         oc.$chartContainer.on('init.orgchart', function (e) {
-            testInit();
-            $('div.node').unbind('click', 'nodeClickHandler');
-            $('div.node').on('click', onNodeClicked.bind(this));
+            resetNodeClick();
         })
     });
 }
@@ -71,16 +69,16 @@ var nodeTemplate = function (data) {
         '<div class="content">Belum ada downline</div>';
 
     if (data.name) {
-        _html = '<div class="title">' + data.name + '</div>\n' +
-            '<div class="content">\n' +
-            '<div>ID : ' + data.code + '</div>\n' +
+        _html = '<div class="title" onclick="nodeClicked(this)">' + (data.name == '-' ? 'Kosong' : data.name) + '</div>\n' +
+            '<div class="content" onclick="nodeClicked(this)">\n' +
+            '<div>ID : ' + (data.code == '-' ? 'Kosong' : data.code) + '</div>\n' +
             (data.code != '-' ?
                 '<div class="membericon" style="color: ' + (data.level_id == 2 ? '#FFA500; border: 2px solid #ffa500' : '#87CEEB') + ';"><i class="fa fa-user"></i></div>\n' +
                 '<div class="membername">' + data.name + '</div>\n' +
                 '<div class="memberid">ID : ' + data.code + '</div>\n' +
-                '<div>Poin : ' + (data.pin ? data.pin : '') + '</div>\n' +
-                '<div>TUPO : ' + (data.pin ? data.close_point_date : '') + '</div>\n'
-                //'<div>P/S : ' + (data.pin ? data.pin : '') + '</div>\n'
+                '<div>P/S : ' + (data.bv ? data.bv : '') + '</div>\n' +
+                '<div>TUPO : ' + (data.cpd ? data.cpd : '') + '</div>\n' +
+                '<div>Poin : ' + (data.poin ? data.poin : '') + '</div>\n'
             :
             '<div class="membericon" style="border-color: #FFC0CB"><i class="fa fa-ban"></i></div><div class="membername">kosong</div>\n') +
             '</div>';

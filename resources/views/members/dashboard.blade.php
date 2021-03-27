@@ -62,14 +62,14 @@
                         {{ number_format($member->left_point, 0) }} | {{ number_format($member->right_point, 0) }}
                     </div>
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                     <div class="card-body text-center">
                         <h4>Titik Jaringan</h4><br />
                         {{ number_format($child['left_count'], 0) }} | {{ number_format($child['right_count'], 0) }}<br/>
                         <h4>Total</h4><br />
                         {{ number_format(($child['left_count'] + $child['right_count']), 0) }}
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="col-md-3">&nbsp;</div>
         </div>

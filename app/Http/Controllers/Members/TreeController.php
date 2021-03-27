@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Members;
 
+use Carbon\Carbon;
 use App\City;
 use App\Country;
 use App\Http\Controllers\Controller;
@@ -80,6 +81,13 @@ class TreeController extends Controller
             $memberTree->name = $member->name;  //$member->username . ' - ' . $member->name;
 
             $memberTree->parentId = $member->upline_id;
+
+            $memberTree->bv = '25 BV';
+            if (Carbon::parse($member->close_point_date) < Carbon::now())
+                $memberTree->bv = '0 BV';
+            $memberTree->cpd = Carbon::parse($member->close_point_date)->format('d-M-Y');
+            $memberTree->poin = number_format($member->left_point, 0) . ' | ' . number_format($member->right_point, 0);
+
             $childs = [ ];
 
             $kiri = $member->left_downline_id; //$member->getLft();
@@ -112,6 +120,12 @@ class TreeController extends Controller
                 $treeKiri->level = $memberKiri->tree_level;
                 $treeKiri->level_id = $memberKiri->level_id;
 
+                $treeKiri->bv = '25 BV';
+                if (Carbon::parse($memberKiri->close_point_date) < Carbon::now())
+                    $treeKiri->bv = '0 BV';
+                $treeKiri->cpd = Carbon::parse($memberKiri->close_point_date)->format('d-M-Y');
+                $treeKiri->poin = number_format($memberKiri->left_point, 0) . ' | ' . number_format($memberKiri->right_point, 0);
+
                 $treeKiri->className = 'exist' . ($memberKiri->level_id == 2 ? ' gold' : '');
                 $treeKiri->relationship = $this->getRelationshipValue($memberKiri);
 
@@ -134,6 +148,12 @@ class TreeController extends Controller
                 $treeKanan->parentId = $memberKanan->upline_id;
                 $treeKanan->level = $memberKanan->tree_level;
                 $treeKanan->level_id = $memberKanan->level_id;
+
+                $treeKanan->bv = '25 BV';
+                if (Carbon::parse($memberKanan->close_point_date) < Carbon::now())
+                    $treeKanan->bv = '0 BV';
+                $treeKanan->cpd = Carbon::parse($memberKanan->close_point_date)->format('d-M-Y');
+                $treeKanan->poin = number_format($memberKanan->left_point, 0) . ' | ' . number_format($memberKanan->right_point, 0);
 
                 $treeKanan->className = 'exist' . ($memberKanan->level_id == 2 ? ' gold' : '');
                 $treeKanan->relationship = $this->getRelationshipValue($memberKanan);

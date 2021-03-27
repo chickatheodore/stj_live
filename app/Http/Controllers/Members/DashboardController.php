@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $member = Member::find($id);
 
         $child = [ 'left_count' => 0, 'right_count' => 0 ];
-        if ($member->left_downline_id !== null)
+        /*if ($member->left_downline_id !== null)
         {
             $left = MemberCount::where('id', '=', $member->left_downline_id)->get();
             if ($left != null) {
@@ -32,7 +32,7 @@ class DashboardController extends Controller
             if ($right != null) {
                 $child['right_count'] = $right[0]->child_count;
             }
-        }
+        }*/
 
         return view('/members/dashboard', [
             'pageConfigs' => $pageConfigs,
