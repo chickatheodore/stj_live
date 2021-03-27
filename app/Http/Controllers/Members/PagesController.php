@@ -305,7 +305,11 @@ class PagesController extends Controller
         $my_id = auth()->id();
         $levels = Level::all();
         $member = Member::find($my_id);
-        $newMembers = Member::where('id', '>', 1)->where(function ($query){ return $query->whereNull('sponsor_id')->orWhereNull('upline_id');})->get();
+        $newMembers = Member::where('id', '>', 1)
+            ->where(function ($query){ return $query->whereNull('sponsor_id')->orWhereNull('upline_id');})
+            //->whereNull('upline_id')
+            ->get();
+
         $allMembers = Member::where('id', '>', 1)->get();
 
         return view('/members/placement', [

@@ -139,7 +139,7 @@
                                                         <div class="controls">
                                                             <label for="account-bonus_point">Bonus Poin</label>
                                                             <input type="text" class="form-control" id="account-bonus_point" placeholder="Bonus Poin"
-                                                                   value="{{ number_format($member->left_bonus_point, 0) }} | {{ number_format($member->right_bonus_point, 0) }}" readonly>
+                                                                   value="{{ number_format($member->left_point, 0) }} | {{ number_format($member->right_point, 0) }}" readonly>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -6,6 +6,7 @@ use App\Jobs\ProcessMember;
 use App\Member;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
 class MemberCommand extends Command
@@ -45,17 +46,24 @@ class MemberCommand extends Command
          * Mencari posisi pada tree pada member baru
          * beserta update jumlah member pada uplink sampai level ke satu
          */
-        $new_members = Member::where('tree_level', '=', 0);
+
+        /*$new_members = Member::where('tree_level', '=', 0);
         foreach ($new_members as $member) {
             dispatch(new ProcessMember($member, 'level'));
-        }
+        }*/
 
         /*
          * Mencari member yang masa TUPO sudah lewat
          */
-        $overdue_members = Member::where('close_point_date', '<', Carbon::now()->format('Y-m-d'));
+
+        dispatch(new ProcessMember(null, 'overdue'));
+
+        dispatch(new ProcessMember(null, 'bonus'));
+
+        /*$overdue_members = Member::where('close_point_date', '<', Carbon::now()->format('Y-m-d'));
         foreach ($overdue_members as $overdue_member) {
             dispatch(new ProcessMember($overdue_member, 'overdue'));
-        }
+        }*/
     }
+
 }

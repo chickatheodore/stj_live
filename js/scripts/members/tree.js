@@ -7,10 +7,6 @@
 	Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-$(document).ready(function () {
-    initTree(_mId);
-});
-
 var ajaxURLs = {
     'children': '/member/getMemberTree/',
     'parent': '/orgchart/parent/',
@@ -48,12 +44,19 @@ function initTree(mId) {
             'ajaxURL': ajaxURLs,
             'pan': true,
             //'zoom': true,
-            //'createNode': createNode
+            //'createNode': createNode,
+            //nodeMouseClick: onNodeClicked
         });
 
         oc.$chartContainer.on('touchmove', function(event) {
             event.preventDefault();
         });
+
+        oc.$chartContainer.on('init.orgchart', function (e) {
+            testInit();
+            $('div.node').unbind('click', 'nodeClickHandler');
+            $('div.node').on('click', onNodeClicked.bind(this));
+        })
     });
 }
 

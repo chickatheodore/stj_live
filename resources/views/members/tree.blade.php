@@ -266,6 +266,21 @@
             </div>
         </div>
 
+        <div class="modal text-left show" id="modal-member" tabindex="-1" role="dialog" aria-modal="true" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary white">
+                        <h5 class="modal-title" id="myModalLabel160">Data Member</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 @endsection
 
@@ -280,5 +295,23 @@
 @section('page-script')
     <!-- Page js files -->
     <script src="{{ asset(mix('js/scripts/members/tree.js')).'?v='.date('Ymdhis') }}"></script>
-    <script type="text/javascript">let _mId = {{ auth()->id() }};</script>
+    <script type="text/javascript">
+        let _mId = {{ auth()->id() }};
+
+        $(document).ready(function () {
+            initTree(_mId);
+        });
+        function testInit(e) {
+            //alert('init');
+        }
+
+        function onNodeClicked(node) {
+            let _data = $(node.currentTarget).data().nodeData;
+            //alert(JSON.stringify(_data));
+            //this.$chart.find('.focused').removeClass('focused');
+            //$(event.delegateTarget).addClass('focused');
+            $('#modal-member').modal('show');
+        }
+
+    </script>
 @endsection
