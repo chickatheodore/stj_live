@@ -244,6 +244,7 @@
                                     <div class="btn-group" role="group" aria-label="Tampilan" style="color: #ffffff">
                                         <button type="button" class="btn btn-sm border-primary tampil-ringkas btn-primary">Tampil ringkas</button>
                                         <button type="button" class="btn btn-sm border-primary tampil-detail">Tampil detail</button>
+                                        <button type="button" class="btn btn-sm border-primary btn_export">Export</button>
                                     </div>
                                     <div class="mt-3">
                                         <div class="text-center font-weight-bold">Tipe Level Member :</div>
@@ -291,12 +292,14 @@
     <script src="{{ asset(mix('vendors/js/extensions/sweetalert2.all.min.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/extensions/toastr.min.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/charts/jquery.orgchart.min.js')) }}"></script>
+    <script src="https://dabeng.github.io/OrgChart/js/html2canvas.min.js"></script>
 @endsection
 @section('page-script')
     <!-- Page js files -->
     <script src="{{ asset(mix('js/scripts/members/tree.js')).'?v='.date('Ymdhis') }}"></script>
     <script type="text/javascript">
         let _mId = {{ auth()->id() }};
+        let _orChart = null;
 
         $(document).ready(function () {
             initTree(_mId);
@@ -318,6 +321,10 @@
             //alert(JSON.stringify(_data));
             $('#modal-member').modal('show');
         }
+
+        $('.btn_export').click(function (e) {
+            _orChart.export('STJ_Tree', 'png');
+        });
 
     </script>
 @endsection

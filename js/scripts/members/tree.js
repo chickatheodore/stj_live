@@ -37,7 +37,7 @@ function initTree(mId) {
         //$('#modal-backdrop').modal('hide');
         let result = sanitizeData(JSON.parse(data));
 
-        var oc = $('#chart-container').orgchart({
+        _orChart = $('#chart-container').orgchart({
             'chartClass': mId,
             'data' : result,
             'nodeTemplate': nodeTemplate,
@@ -48,11 +48,11 @@ function initTree(mId) {
             //nodeMouseClick: onNodeClicked
         });
 
-        oc.$chartContainer.on('touchmove', function(event) {
+        _orChart.$chartContainer.on('touchmove', function(event) {
             event.preventDefault();
         });
 
-        oc.$chartContainer.on('init.orgchart', function (e) {
+        _orChart.$chartContainer.on('init.orgchart', function (e) {
             resetNodeClick();
         })
     });
