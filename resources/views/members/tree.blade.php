@@ -162,7 +162,7 @@
             overflow-wrap: break-word;
             word-wrap: break-word;
             hyphens: auto;
-            white-space: break-spaces;
+            /*white-space: break-spaces;*/
         }
 
         .minimize .orgchart .node.no-member .content div.membericon,
@@ -220,6 +220,9 @@
             background: none;
         }
         /*# sourceMappingURL=PohonPenempatan.css.map */
+
+        /*.orgchart .node .verticalEdge, .orgchart .node .horizontalEdge { display: none; }*/
+
     </style>
 @endsection
 
@@ -278,12 +281,34 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="modal_name"></div>
-                            <div class="modal_code"></div>
-                            <div class="modal_pin"></div>
-                            <div class="modal_bv"></div>
-                            <div class="modal_cpd"></div>
-                            <div class="modal_point"></div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"><h4>Nama</h4></div>
+                            <div class="col-md-6 modal_name"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"><h4>ID</h4></div>
+                            <div class="col-md-6 modal_code"></div>
+                       </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"><h4>PIN</h4></div>
+                            <div class="col-md-6 modal_pin"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"><h4>P/S</h4></div>
+                            <div class="col-md-6 modal_bv"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"><h4>TUPO</h4></div>
+                            <div class="col-md-6 modal_cpd"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"><h4>Point</h4></div>
+                            <div class="col-md-6 modal_point"></div>
                         </div>
                     </div>
                 </div>
@@ -298,7 +323,8 @@
     <script src="{{ asset(mix('vendors/js/forms/validation/jqBootstrapValidation.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/extensions/sweetalert2.all.min.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/extensions/toastr.min.js')) }}"></script>
-    <script src="{{ asset(mix('vendors/js/charts/jquery.orgchart.min.js')) }}"></script>
+    <script src="{{ asset(mix('vendors/js/charts/jquery.orgchart.min.js')).'?v='.date('Ymdhis') }}"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.1.1/js/jquery.orgchart.js"></script> -->
     <script src="https://dabeng.github.io/OrgChart/js/html2canvas.min.js"></script>
 @endsection
 @section('page-script')
@@ -311,6 +337,24 @@
         $(document).ready(function () {
             initTree(_mId);
         });
+
+        function cobaSaja(e, f) {
+            let _a = '';
+            //e.target
+            resetNodeClick();
+
+            /*$('div.node').each(function (a) {
+                let _me = $(this);
+
+                var childrenState = _orChart.getNodeState($(this), 'children');
+
+                _me.unbind('click', 'nodeClickHandler');
+                _me.on('click', onNodeClicked.bind(this));
+
+                _me.unbind('mouseenter', 'nodeEnterLeaveHandler');
+                _me.unbind('mouseleave', 'nodeEnterLeaveHandler');
+            });*/
+        }
 
     </script>
 @endsection

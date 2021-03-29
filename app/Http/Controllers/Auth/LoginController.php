@@ -137,6 +137,17 @@ class LoginController extends Controller
     {
         $mem = Config::get('constants.guards.member');
 
+        /*$pass = Hash::make($request->password);
+        $_pass = Hash::make($request->password, [ 'rounds' => 10 ]);
+
+        $pass0 = bcrypt($request->password);
+        $pass1 = password_hash ($request->password, PASSWORD_DEFAULT);
+        $pass2 = password_hash ($request->password, PASSWORD_BCRYPT);
+
+        $cocok = password_hash('123456',PASSWORD_DEFAULT, [ 'cost' => 10 ]);
+        $pass3 = password_hash ($request->password, PASSWORD_ARGON2I);
+        $pass4 = password_hash ($request->password, PASSWORD_ARGON2ID);*/
+
         if ($token = $this->guardLogin($request, $mem)) {
             $this->setToken($request);
             return redirect()->intended('/member/home');

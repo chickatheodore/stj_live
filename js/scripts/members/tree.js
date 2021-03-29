@@ -54,7 +54,11 @@ function initTree(mId) {
 
         _orChart.$chartContainer.on('init.orgchart', function (e) {
             resetNodeClick();
-        })
+        });
+
+        _orChart.$chartContainer.on('load-children.orgchart', function (e, f) {
+            cobaSaja(e, f);
+        });
     });
 }
 
@@ -69,8 +73,8 @@ var nodeTemplate = function (data) {
         '<div class="content">Belum ada downline</div>';
 
     if (data.name) {
-        _html = '<div class="title" onclick="nodeClicked(this)">' + (data.name == '-' ? 'Kosong' : data.name) + '</div>\n' +
-            '<div class="content" onclick="nodeClicked(this)">\n' +
+        _html = '<div class="title">' + (data.name == '-' ? 'Kosong' : data.name) + '</div>\n' +
+            '<div class="content">\n' +
             '<div>ID : ' + (data.code == '-' ? 'Kosong' : data.code) + '</div>\n' +
             (data.code != '-' ?
                 '<div class="membericon" style="color: ' + (data.level_id == 2 ? '#FFA500; border: 2px solid #ffa500' : '#87CEEB') + ';"><i class="fa fa-user"></i></div>\n' +
@@ -131,6 +135,35 @@ $('.tampil-detail').click(function (e) {
 function resetNodeClick() {
     $('div.node').unbind('click', 'nodeClickHandler');
     $('div.node').on('click', onNodeClicked.bind(this));
+
+    $('div.node').each(function() {
+        this.removeEventListener('mouseover', _orChart.nodeEnterLeaveHandler)
+        $(this).unbind('mouseover', 'nodeEnterLeaveHandler');
+    });
+    $('div.node').each(function() {
+        this.removeEventListener('mouseout', _orChart.nodeEnterLeaveHandler)
+        $(this).unbind('mouseout', 'nodeEnterLeaveHandler');
+    });
+
+    //Munculkan panah samping dan bawah
+    $('div.node').each(function(node) {
+        addArrow($(this));
+    });
+
+    /*
+    $('i.leftEdge').each(function (a) {
+        if (!$(this).hasClass('oci-chevron-right'))
+            $(this).addClass('oci-chevron-right');
+    });
+    $('i.rightEdge').each(function (a) {
+        if (!$(this).hasClass('oci-chevron-left'))
+            $(this).addClass('oci-chevron-left');
+    });
+    $('i.bottomEdge').each(function (a) {
+        if (!$(this).hasClass('oci-chevron-up'))
+            $(this).addClass('oci-chevron-up');
+    });
+    */
 }
 
 function nodeClicked(node, e) {
@@ -149,14 +182,49 @@ function onNodeClicked(node) {
 }
 
 function fillModal(data) {
-    $('#modal-member').find('.modal_name').html(data.name);
-    $('#modal-member').find('.modal_code').html(data.code);
-    $('#modal-member').find('.modal_pin').html(data.pin);
-    $('#modal-member').find('.modal_bv').html(data.bv);
-    $('#modal-member').find('.modal_cpd').html(data.cpd);
-    $('#modal-member').find('.modal_point').html(data.poin);
+    $('#modal-member').find('.modal_name').html(': ' + data.name);
+    $('#modal-member').find('.modal_code').html(': ' + data.code);
+    $('#modal-member').find('.modal_pin').html(': ' + data.pin);
+    $('#modal-member').find('.modal_bv').html(': ' + data.bv);
+    $('#modal-member').find('.modal_cpd').html(': ' + data.cpd);
+    $('#modal-member').find('.modal_point').html(': ' + data.poin);
 }
 
 $('.btn_export').click(function (e) {
     _orChart.export('STJ_Tree', 'png');
 });
+
+function addArrow($node) {
+    var flag = false;
+    if ($node.closest('.nodes.vertical').length) {
+        var $toggleBtn = $node.children('.toggleBtn');
+        //if (event.type === 'mouseenter') {
+            if ($node.children('.toggleBtn').length) {
+                flag = _orChart.getNodeState($node, 'children').visible;
+                $toggleBtn.toggleClass('oci-plus-square', !flag).toggleClass('oci-minus-square', flag);
+            }
+        //} else {
+        //    $toggleBtn.removeClass('oci-plus-square oci-minus-square');
+        //}
+    } else {
+        var $topEdge = $node.children('.topEdge');
+        var $rightEdge = $node.children('.rightEdge');
+        var $bottomEdge = $node.children('.bottomEdge');
+        var $leftEdge = $node.children('.leftEdge');
+        //if (event.type === 'mouseenter') {
+            if ($topEdge.length) {
+                flag = _orChart.getNodeState($node, 'parent').visible;
+                $topEdge.toggleClass('oci-chevron-up', !flag).toggleClass('oci-chevron-down', flag);
+            }
+            if ($bottomEdge.length) {
+                flag = _orChart.getNodeState($node, 'children').visible;
+                $bottomEdge.toggleClass('oci-chevron-down', !flag).toggleClass('oci-chevron-up', flag);
+            }
+            //if ($leftEdge.length) {
+            //    _orChart.switchHorizontalArrow($node);
+            //}
+        //} else {
+        //    $node.children('.edge').removeClass('oci-chevron-up oci-chevron-down oci-chevron-right oci-chevron-left');
+        //}
+    }
+}

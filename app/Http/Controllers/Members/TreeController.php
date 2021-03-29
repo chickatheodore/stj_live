@@ -82,7 +82,7 @@ class TreeController extends Controller
 
             $memberTree->parentId = $member->upline_id;
 
-            $memberTree->pin = $member->pin;
+            $memberTree->pin = number_format($member->pin, 0);
             $memberTree->bv = '25 BV';
             if (Carbon::parse($member->close_point_date) < Carbon::now())
                 $memberTree->bv = '0 BV';
@@ -117,7 +117,7 @@ class TreeController extends Controller
                 $treeKiri->level = $memberKiri->tree_level;
                 $treeKiri->level_id = $memberKiri->level_id;
 
-                $treeKiri->pin = $memberKiri->pin;
+                $treeKiri->pin = number_format($memberKiri->pin, 0);
                 $treeKiri->bv = '25 BV';
                 if (Carbon::parse($memberKiri->close_point_date) < Carbon::now())
                     $treeKiri->bv = '0 BV';
@@ -147,7 +147,7 @@ class TreeController extends Controller
                 $treeKanan->level = $memberKanan->tree_level;
                 $treeKanan->level_id = $memberKanan->level_id;
 
-                $treeKanan->pin = $memberKanan->pin;
+                $treeKanan->pin = number_format($memberKanan->pin, 0);
                 $treeKanan->bv = '25 BV';
                 if (Carbon::parse($memberKanan->close_point_date) < Carbon::now())
                     $treeKanan->bv = '0 BV';
