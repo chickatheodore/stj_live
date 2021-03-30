@@ -63,7 +63,7 @@ class TreeController extends Controller
         //$teams = Member::children()->toTree();
         $down = new MemberTree();
 
-        $has_children = $cm->left_downline_id ||$cm->right_downline_id;
+        $has_children = $cm->left_downline_id != null ||$cm->right_downline_id != null;
         if (!$has_children)  //$my_teams->count() == 0
             return json_encode($this->buildEmptyMember($down));
 

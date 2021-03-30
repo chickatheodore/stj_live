@@ -15,7 +15,12 @@
     <style>
         .orgchart .node .title { width: 200px; }
         .orgchart .node .content { height: 80px; }
-        .orgchart { background-image: none; }
+        .orgchart {
+            /*background-image: none;*/ background-color:#f8f8f8;
+            background-image: linear-gradient(
+                90deg
+                , rgba(102,102,153,.10) 10%, rgba(0,0,0,0) 10%),linear-gradient(rgba(102,102,153,.10) 10%,rgba(0,0,0,0) 10%);
+        }
 
         .orgchart .exist .title { background-color: #006699; }
         .orgchart .exist .content { border-color: #006699; }
@@ -130,7 +135,7 @@
 
         .minimize .orgchart .node.no-member .content,
         .minimize .orgchart .node .content {
-            width: 100px;
+            min-width: 100px;
             min-height: 50px;
             border-radius: 3px;
             text-align: center;
