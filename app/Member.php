@@ -47,6 +47,7 @@ use Laravel\Passport\HasApiTokens;
  * @property string $close_point_date
  * @property string $remember_token
  * @property int $tree_level
+ * @property string $tree_position
  * @property int $left_downline_count
  * @property int $right_downline_count
  * @property bool $is_stockiest

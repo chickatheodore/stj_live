@@ -300,6 +300,8 @@ class TreeController extends Controller
 
         $traverse($member);
         */
+
+        /*
         $members = Member::where('id', '>', '1')->get();
         foreach ($members as $member) {
             $item = Member::find($member->upline_id);
@@ -308,6 +310,33 @@ class TreeController extends Controller
                 DB::statement('update members set tree_level = ' . (intval($item->tree_level) + 1) . ' where id = ' . $member->id);
             }
         }
+        */
+
+        $i = 3;
+        while ($i < 34)
+        {
+            $members = Member::where('tree_level', '=', $i)->get();
+            foreach ($members as $member) {
+                if ($member->upline_id == null)
+                    continue;
+
+                $id = $member->id;
+                $upline = $member->upLine;
+                $pos = doubleval($upline->tree_position);
+
+                $my_pos = 0;
+                if ($id === $upline->left_downline_id)
+                    $my_pos = ($pos * 2) - 1;
+                elseif ($id === $upline->right_downline_id)
+                    $my_pos = ($pos * 2);
+
+                $member->tree_position = strval($my_pos);
+                $member->save();
+            }
+
+            $i++;
+        }
+
     }
 
 }
