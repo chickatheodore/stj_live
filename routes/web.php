@@ -129,3 +129,9 @@ Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
+
+Route::group(['prefix' => 'system'], function() {
+    Route::get('/processBonus', function() {
+        Artisan::call('cache:clear');
+    });
+});

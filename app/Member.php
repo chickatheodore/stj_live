@@ -61,8 +61,8 @@ use Laravel\Passport\HasApiTokens;
  * @property Province $province
  * @property Member $sponsor
  * @property Member $upLine
- * @property TransactionPoint[] $myInternalTransactions
- * @property TransactionPoint[] $myExternalTransactions
+ * @property Transaction[] $myInternalTransactions
+ * @property Transaction[] $myExternalTransactions
  */
 class Member extends Authenticatable
 {
@@ -85,12 +85,23 @@ class Member extends Authenticatable
     /**
      * @var array
      */
-    protected $fillable = [
+    /*protected $fillable = [
         'city_id', 'province_id', 'country_id', 'level_id', 'sponsor_id', 'upline_id', 'code', 'username', 'name', 'email', 'password',
         'nik', 'address', 'phone', 'postal_code', 'bank', 'account_number', 'account_name', 'left_downline_id', 'right_downline_id', 'pin',
         'left_point', 'left_bonus_point', 'left_bonus_partner', 'right_point', 'right_bonus_point', 'right_bonus_partner', 'sponsor_bonus',
         'activation_date', 'close_point_date',
-        'remember_token', 'tree_level', 'left_downline_count', 'right_downline_count', 'is_stockiest', 'created_at', 'updated_at', 'deleted_at'];
+        'remember_token', 'tree_level', 'left_downline_count', 'right_downline_count', 'is_stockiest', 'created_at', 'updated_at', 'deleted_at'];*/
+
+    protected $fillable = [
+        'code', 'username', 'name', 'email', 'password', 'nik', 'address', 'phone', 'postal_code',
+        'city_id', 'province_id', 'country_id', 'level_id',
+        'bank', 'account_number', 'account_name', 'remember_token',
+        'sponsor_id', 'upline_id', 'left_downline_id', 'right_downline_id',
+        'pin', 'left_point', 'left_bonus_point', 'left_bonus_partner', 'right_point', 'right_bonus_point', 'right_bonus_partner', 'point_bonus', 'sponsor_bonus', 'pair_bonus',
+        'activation_date', 'close_point_date', 'tree_level', 'tree_position',
+        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member',
+        'created_at', 'updated_at', 'deleted_at'
+    ];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -163,7 +174,7 @@ class Member extends Authenticatable
      */
     public function myInternalTransactions()
     {
-        return $this->hasMany('App\TransactionPoint');
+        return $this->hasMany('App\Transaction');
     }
 
     /**
@@ -171,7 +182,7 @@ class Member extends Authenticatable
      */
     public function myExternalTransactions()
     {
-        return $this->hasMany('App\TransactionPoint', 'user_id');
+        return $this->hasMany('App\Transaction', 'user_id');
     }
 
     protected $ikan = '';

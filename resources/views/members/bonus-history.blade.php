@@ -8,6 +8,9 @@
 @endsection
 
 @section('content')
+    <style rel="stylesheet">
+        #bonustable { font-size: 80%; }
+    </style>
     <section id="register-layout">
         <div class="row">
             <div class="col-md-12">
@@ -17,8 +20,8 @@
                     <div class="form-body">
                         <div class="row">
 
-                            <div class="col-md-3"></div>
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8 col-12">
                                 <div class="card">
                                     <div class="card-header pt-50 pb-1">
                                         <div class="card-title">
@@ -57,25 +60,31 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-12 d-flex justify-content-center">
-                                    <table id="bonustable" class="table table-bordered mt-2 small">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center align-middle">Tgl</th>
-                                            <th class="text-center align-middle" style="min-width: 50px">Poin</th>
-                                            <th class="text-center align-middle" style="min-width: 60px">Poin Balance</th>
-                                            <th class="text-center align-middle">Bonus Poin</th>
-                                            <th class="text-center align-middle">Bonus Sponsor</th>
-                                            <th class="text-center align-middle">Bonus Dibayar</th>
-                                            <th class="text-center align-middle">Saldo Bonus</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="col-md-12 col-12 table-responsive">
+
+                                            <table id="bonustable" class="table table-sm table-striped table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th class="text-center align-middle" style="min-width:100px;">Tgl</th>
+                                                        <th class="text-center align-middle" style="min-width: 100px">Poin</th>
+                                                        <th class="text-center align-middle" style="min-width: 100px">Poin Balance</th>
+                                                        <th class="text-center align-middle">Bonus Poin</th>
+                                                        <th class="text-center align-middle">Bonus Sponsor</th>
+                                                        <th class="text-center align-middle">Bonus Dibayar</th>
+                                                        <th class="text-center align-middle">Saldo Bonus</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3"></div>
+                            <div class="col-md-2"></div>
 
                         </div>
                     </div>
@@ -119,7 +128,17 @@
 
             $.ajax({ data: _data })
             .fail(function (e) {
+                $('#modal-backdrop').modal('hide');
 
+                Swal.fire({
+                    title: "Warning!",
+                    text: "Terjadi kesalahan pada saat memproses.",
+                    type: "warning",
+                    confirmButtonClass: 'btn btn-primary',
+                    buttonsStyling: false,
+                    animation: false,
+                    customClass: 'animated tada',
+                });
             })
             .done(function( data ) {
                 $('#modal-backdrop').modal('hide');
