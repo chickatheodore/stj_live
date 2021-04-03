@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
- * @property TransactionPoint[] $transactionPoints
+ * @property Transaction[] $transactions
  */
 class TransactionStatus extends Model
 {
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'transaction_status';
@@ -26,8 +26,8 @@ class TransactionStatus extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactionPoints()
+    public function transactions()
     {
-        return $this->hasMany('App\TransactionPoint', 'status_id');
+        return $this->hasMany('App\Transaction', 'status_id');
     }
 }

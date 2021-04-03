@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Member;
-use App\TransactionPoint;
+use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,10 +29,10 @@ class DashboardController extends Controller
 
     public function pointHistory()
     {
-        $members = Member::all();
+        //$members = Member::all();
 
-        return view('/admins/history', [
-            'members' => $members
+        return view('/admins/point-history', [
+            //'members' => $members
         ]);
     }
 
@@ -43,14 +43,24 @@ class DashboardController extends Controller
 
     public function getPointHistory(Request $request)
     {
-        $transactions = TransactionPoint::where('member_id', '=', $request->id);
+        $start = Carbon::parse($request->start_date)->format('Y-m-d') . ' 00:00:00';
+        $end = Carbon::parse($request->end_date)->format('Y-m-d') . ' 23:59:59';
 
-        if (isset($request->from_date))
-            $transactions = $transactions->whereBetween('transaction_date', [$request->start_date,$request->end_date]);
+        $transactions = Transaction::with('member')
+            ->whereBetween('transaction_date', [$start, $end])
+            ->orderBy('transaction_date');
 
+        $trans = [];
         $result = $transactions->get();
+        foreach ($result as $transaction)
+        {
+            $arr = $transaction->toArray();
+            $arr['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
+            $arr['member_name'] = $transaction->member->code . ' - ' . $transaction->member->name;
+            array_push($trans, $arr);
+        }
 
-        return json_encode($result);
+        return json_encode($trans);
     }
 }
 

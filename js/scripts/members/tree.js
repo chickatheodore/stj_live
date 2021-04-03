@@ -135,6 +135,10 @@ $('.tampil-detail').click(function (e) {
     $("#chart-container").removeClass("minimize");
 });
 
+$('#btn_reset').click(function(e) {
+    _orChart.css('transform');
+});
+
 function resetNodeClick() {
     $('div.node').unbind('click', 'nodeClickHandler');
     $('div.node').on('click', onNodeClicked.bind(this));

@@ -266,6 +266,9 @@
                                 <div class="card-content">
                                     <div id="chart-container" class="minimize"></div>
                                 </div>
+                                <div class="card-footer">
+                                    <button type="button" class="btn btn-sm border-primary btn_reset">Reset</button>
+                                </div>
                             </div>
                         </div>
 
