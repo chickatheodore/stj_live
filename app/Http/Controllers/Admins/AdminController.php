@@ -106,9 +106,52 @@ class AdminController extends Controller
         //DB::statement('update transactions set status_id = 3, bonus_paid_amount = bonus_point_amount
         //    where id in (:my_id)', array('my_id', $request->ids));
 
-        $member = Member::find($request->MemberID);
+        $datas = json_decode($request->rows);
+        foreach ($datas as $data) {
+            $transaction = Transaction::find($data);
+            $member = Member::find($transaction->member_id);
 
-        $begin_balance = $member->point_bonus + $member->sponsor_bonus + $member->partner_bonus;
+            $amount = $transaction->bonus_point_amount + $transaction->bonus_sponsor_amount + $transaction->bonus_partner_amount;
+            $member_amount = $member->point_bonus + $member->sponsor_bonus  + $member->pair_bonus;
+
+            //Set status transaksi = 3
+            $transaction->status_id = 3;
+            $transaction->save();
+
+            //Simpan perubahan nilai bonus di table Member
+            $member->point_bonus = $member->point_bonus - $transaction->bonus_point_amount;
+            $member->sponsor_bonus = $member->sponsor_bonus - $transaction->bonus_sponsor_amount;
+            $member->pair_bonus = $member->pair_bonus - $transaction->bonus_partner_amount;
+            try {
+                $member->save();
+            } catch (\Exception $e)
+            {
+                $a = $e->getMessage();
+            }
+
+            //Buat transaksi baru untuk proses pembayarannya
+            try {
+                Transaction::create([
+                    'member_id' => $member->id,
+                    'user_id' => 1,
+                    'type' => 'point',
+                    'trans' => 'PAYMENT',
+                    'bonus_beginning_balance' => $member_amount,
+                    'bonus_paid_amount' => $amount,
+                    'bonus_ending_balance' => $member_amount - $amount,
+                    'status_id' => 3,
+                    'reff_id' => $transaction->id
+                ]);
+            } catch (\Exception $e)
+            {
+                $a = $e->getMessage();
+            }
+
+        }
+
+        /*$member = Member::find($request->MemberID);
+
+        $begin_balance = $member->point_bonus + $member->sponsor_bonus + $member->pair_bonus;
 
         $amount = 0;
         $end_balance = $begin_balance;
@@ -136,8 +179,8 @@ class AdminController extends Controller
 
         $member->point_bonus = 0;
         $member->sponsor_bonus = 0;
-        $member->partner_bonus = 0;
-        $member->save();
+        $member->pair_bonus = 0;
+        $member->save();*/
 
         return json_encode([ 'success' => true ]);
     }

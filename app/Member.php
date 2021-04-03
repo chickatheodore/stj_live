@@ -42,7 +42,7 @@ use Laravel\Passport\HasApiTokens;
  * @property float $right_bonus_partner
  * @property float $point_bonus
  * @property float $sponsor_bonus
- * @property float $partner_bonus
+ * @property float $pair_bonus
  * @property string $activation_date
  * @property string $close_point_date
  * @property string $remember_token

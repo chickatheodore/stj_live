@@ -160,16 +160,31 @@ $(document).ready(function () {
             });
 
             $('#modal-backdrop').modal('show');
-            for (var i = 0; i < rows.length; i++)
+            let _data = [];
+            /*for (var i = 0; i < rows.length; i++)
             {
-                let _data = [];
                 _data.push(rows[i].data);
                 _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
 
                 $.ajax({ data: _data })
                 .done(function( result ) {
                 });
+            }*/
+
+            let _rows = [];
+            for (var i = 0; i < rows.length; i++)
+            {
+                _rows.push(rows[i].data.id);
             }
+
+            _data.push({ 'name': 'rows', 'value': JSON.stringify(_rows) });
+            _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
+
+            $.ajax({ data: _data })
+            .done(function( result ) {
+                $('#modal-backdrop').modal('hide');
+            });
+
             $('#modal-backdrop').modal('hide');
 
         });

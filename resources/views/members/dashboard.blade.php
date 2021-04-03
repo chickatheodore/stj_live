@@ -62,6 +62,14 @@
                         {{ number_format($member->left_point, 0) }} | {{ number_format($member->right_point, 0) }}
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>Bonus</h4><br />
+                        Poin : {{ number_format($member->point_bonus, 0) }}<br />
+                        Sponsor : {{ number_format($member->sponsor_bonus, 0) }}<br />
+                        Pasangan : {{ number_format($member->pair_bonus, 0) }}<br />
+                    </div>
+                </div>
                 <!-- <div class="card">
                     <div class="card-body text-center">
                         <h4>Titik Jaringan</h4><br />

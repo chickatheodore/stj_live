@@ -88,6 +88,9 @@ class TreeController extends Controller
                 $memberTree->bv = '0 BV';
             $memberTree->cpd = Carbon::parse($member->close_point_date)->format('d-M-Y');
             $memberTree->poin = number_format($member->left_point, 0) . ' | ' . number_format($member->right_point, 0);
+            $memberTree->point_bonus = number_format($member->point_bonus, 0);
+            $memberTree->sponsor_bonus = number_format($member->sponsor_bonus, 0);
+            $memberTree->pair_bonus = number_format($member->pair_bonus, 0);
 
             $childs = [ ];
 
@@ -123,6 +126,9 @@ class TreeController extends Controller
                     $treeKiri->bv = '0 BV';
                 $treeKiri->cpd = Carbon::parse($memberKiri->close_point_date)->format('d-M-Y');
                 $treeKiri->poin = number_format($memberKiri->left_point, 0) . ' | ' . number_format($memberKiri->right_point, 0);
+                $treeKiri->point_bonus = number_format($memberKiri->point_bonus, 0);
+                $treeKiri->sponsor_bonus = number_format($memberKiri->sponsor_bonus, 0);
+                $treeKiri->pair_bonus = number_format($memberKiri->pair_bonus, 0);
 
                 $treeKiri->className = 'exist' . ($memberKiri->level_id == 2 ? ' gold' : '');
                 $treeKiri->relationship = $this->getRelationshipValue($memberKiri);
@@ -153,6 +159,9 @@ class TreeController extends Controller
                     $treeKanan->bv = '0 BV';
                 $treeKanan->cpd = Carbon::parse($memberKanan->close_point_date)->format('d-M-Y');
                 $treeKanan->poin = number_format($memberKanan->left_point, 0) . ' | ' . number_format($memberKanan->right_point, 0);
+                $treeKanan->point_bonus = number_format($memberKanan->point_bonus, 0);
+                $treeKanan->sponsor_bonus = number_format($memberKanan->sponsor_bonus, 0);
+                $treeKanan->pair_bonus = number_format($memberKanan->pair_bonus, 0);
 
                 $treeKanan->className = 'exist' . ($memberKanan->level_id == 2 ? ' gold' : '');
                 $treeKanan->relationship = $this->getRelationshipValue($memberKanan);

@@ -77,14 +77,14 @@ $(document).ready(function () {
         {
             headerName: 'ID',
             field: 'code',
-            width: 125,
+            width: 200,
             filter: true,
         },
         {
             headerName: 'Name',
             field: 'name',
             filter: true,
-            //width: 200,
+            width: 400,
         },
         {
             headerName: 'TUPO',

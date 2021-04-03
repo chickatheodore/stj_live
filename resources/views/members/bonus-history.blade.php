@@ -130,12 +130,12 @@
                     let item = histories[i];
                     $('#bonustable tbody').append('<tr>' +
                         '<td>' + item.transaction_date + '</td>' +
-                        '<td>' + $.number(item.left_point_amount) + ' | ' + $.number(item.right_point_amount) + '</td>' +
-                        '<td>' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
-                        '<td>' + $.number(item.bonus_point_amount) + '</td>' +
-                        '<td>' + $.number(item.bonus_sponsor_amount) + '</td>' +
-                        '<td>' + $.number(item.bonus_paid_amount) + '</td>' +
-                        '<td>' + $.number(item.bonus_ending_balance) + '</td>' +
+                        '<td class="text-center">' + $.number(item.left_point_amount) + ' | ' + $.number(item.right_point_amount) + '</td>' +
+                        '<td class="text-center">' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
+                        '<td class="text-right">' + $.number(item.bonus_point_amount) + '</td>' +
+                        '<td class="text-right">' + $.number(item.bonus_sponsor_amount) + '</td>' +
+                        '<td class="text-right">' + $.number(item.bonus_paid_amount) + '</td>' +
+                        '<td class="text-right">' + $.number(item.bonus_ending_balance) + '</td>' +
                         '</tr>');
                 }
             });

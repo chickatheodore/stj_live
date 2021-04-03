@@ -80,10 +80,13 @@ var nodeTemplate = function (data) {
                 '<div class="membericon" style="color: ' + (data.level_id == 2 ? '#FFA500; border: 2px solid #ffa500' : '#87CEEB') + ';"><i class="fa fa-user"></i></div>\n' +
                 '<div class="membername">' + data.name + '</div>\n' +
                 '<div class="memberid">ID : ' + data.code + '</div>\n' +
-                '<div>PIN : ' + (data.pin ? data.pin : '') + '</div>\n' +
+                '<div>PIN : ' + (data.pin ? data.pin : '0') + '</div>\n' +
                 '<div>P/S : ' + (data.bv ? data.bv : '') + '</div>\n' +
                 '<div>TUPO : ' + (data.cpd ? data.cpd : '') + '</div>\n' +
-                '<div>Poin : ' + (data.poin ? data.poin : '') + '</div>\n'
+                '<div>Poin : ' + (data.poin ? data.poin : '0') + '</div>\n' +
+                '<div>Bonus Poin : ' + (data.point_bonus ? data.point_bonus : '0') + '</div>\n' +
+                '<div>Bonus Sponsor : ' + (data.sponsor_bonus ? data.sponsor_bonus : '0') + '</div>\n' +
+                '<div>Bonus Pasangan : ' + (data.pair_bonus ? data.pair_bonus : '0') + '</div>\n'
             :
             '<div class="membericon" style="border-color: #FFC0CB"><i class="fa fa-ban"></i></div><div class="membername">kosong</div>\n') +
             '</div>';

@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset(mix('css/plugins/extensions/toastr.css')) }}">
     <style>
         .orgchart .node .title { width: 200px; }
-        .orgchart .node .content { height: 80px; }
+        .orgchart .node .content { height: 104px; }
         .orgchart {
             /*background-image: none;*/ background-color:#f8f8f8;
             background-image: linear-gradient(
