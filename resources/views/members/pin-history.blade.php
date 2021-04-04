@@ -57,19 +57,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-12 d-flex justify-content-center">
-                                    <table id="bonustable" class="table table-bordered mt-2 small">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center align-middle">Tgl</th>
-                                            <th class="text-center align-middle" style="min-width: 50px">PIN</th>
-                                            <th class="text-center align-middle" style="min-width: 60px">PIN Balance</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                <!-- =================== //-->
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="col-md-12 col-12 table-responsive">
+
+                                            <table id="bonustable" class="table table-sm table-striped table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle">Tgl</th>
+                                                    <th class="text-center align-middle" style="min-width: 50px">PIN</th>
+                                                    <th class="text-center align-middle" style="min-width: 60px">PIN Balance</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
                                 </div>
+                                <!-- =================== //-->
                             </div>
                             <div class="col-md-3"></div>
 
@@ -115,7 +123,7 @@
 
             $.ajax({ data: _data })
             .fail(function (e) {
-
+                $('#modal-backdrop').modal('hide');
             })
             .done(function( data ) {
                 $('#modal-backdrop').modal('hide');
@@ -125,9 +133,9 @@
                 for (let i = 0; i < histories.length; i++) {
                     let item = histories[i];
                     $('#bonustable tbody').append('<tr>' +
-                        '<td>' + item.transaction_date + '</td>' +
-                        '<td>' + $.number(item.pin_amount) + '</td>' +
-                        '<td>' + $.number(item.pin_ending_balance) + '</td>' +
+                        '<td class="text-center">' + item.transaction_date + '</td>' +
+                        '<td class="text-center">' + $.number(item.pin_amount) + '</td>' +
+                        '<td class="text-center">' + $.number(item.pin_ending_balance) + '</td>' +
                         '</tr>');
                 }
             });

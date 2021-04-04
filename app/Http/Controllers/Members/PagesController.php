@@ -537,7 +537,13 @@ class PagesController extends Controller
             ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'pin');})
             ->whereBetween('transaction_date', [$start_date, $end_date])->get();
 
-        $data = json_encode($transactions);
+        $lists = [];
+        foreach ($transactions as $transaction) {
+            $tran = $transaction->toArray();
+            $tran['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
+            array_push($lists, $tran);
+        }
+        $data = json_encode($lists);
         return $data;
     }
 

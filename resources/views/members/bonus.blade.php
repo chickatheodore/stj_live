@@ -29,20 +29,29 @@
                         </div>
                         <div class="card">
                             <div class="card-body text-center">
-                                Pasangan Poin<br />
-                                0
+                                Poin<br />
+                                {{ number_format($member->point_bonus, 0) }}
                             </div>
                         </div>
                         <div class="card">
                             <div class="card-body text-center">
                                 Sponsor<br />
-                                0
+                                {{ number_format($member->sponsor_bonus, 0) }}
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body text-center">
+                                Pasangan<br />
+                                {{ number_format($member->pair_bonus, 0) }}
                             </div>
                         </div>
                         <div class="card">
                             <div class="card-body text-center">
                                 Total Bonus<br />
-                                0
+                                @php
+                                $total = floatval($member->point_bonus) + floatval($member->sponsor_bonus) + floatval($member->pair_bonus);
+                                @endphp
+                                {{ number_format($total, 0) }}
                             </div>
                         </div>
                     </div>
