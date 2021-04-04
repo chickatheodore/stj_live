@@ -29,7 +29,7 @@ class MenuServiceProvider extends ServiceProvider
         $verticalMenuData = json_decode($verticalMenuJson);
 
         $guard = $this->menuName();
-        $horMenu = 'memberMenu.json';   //'horizontalMenu.json';
+        $horMenu = 'homeMenu.json';   //'horizontalMenu.json';
         if ($guard == 'admin')
             $horMenu = 'adminMenu.json';
         if ($guard == 'member')

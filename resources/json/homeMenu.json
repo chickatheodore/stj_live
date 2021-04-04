@@ -1,0 +1,53 @@
+{
+    "menu": [
+        {
+            "url": "#hero",
+            "name": "Home",
+            "slug": "dashboard",
+            "icon": "",
+            "i18n": "Home"
+        },
+        {
+            "url": "#featured-services",
+            "name": "Featured",
+            "slug": "featured",
+            "icon": "",
+            "i18n": "Featured"
+        },
+        {
+            "url": "#about",
+            "name": "About",
+            "slug": "about",
+            "icon": "",
+            "i18n": "About"
+        },
+        {
+            "url": "#testimonials",
+            "name": "Testimonials",
+            "icon": "",
+            "slug": "testimonials",
+            "i18n": "Testimonials"
+        },
+        {
+            "url": "#team",
+            "name": "Team",
+            "icon": "",
+            "slug": "team",
+            "i18n": "Team"
+        },
+        {
+            "url": "#contact",
+            "name": "Contact",
+            "icon": "",
+            "slug": "contact",
+            "i18n": "Contact"
+        },
+        {
+            "url": "/member/home",
+            "name": "Member Login",
+            "icon": "",
+            "slug": "member",
+            "i18n": "Member Login"
+        }
+    ]
+}

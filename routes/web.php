@@ -16,7 +16,7 @@ use App\Http\Controllers\LanguageController;
 
 // Route url
 Route::group(['middleware' => 'restrictMidnight'], function () {
-    Route::get('/', 'Auth\LoginController@showMemberLoginForm');
+    Route::get('/', 'DashboardController@dashboardSPA')->name('home');
 
     Route::get('/admin/images/logo/favicon.ico', function () {
         return \File::get(public_path() . '/images/logo/favicon.ico');

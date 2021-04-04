@@ -27,5 +27,10 @@ class DashboardController extends Controller
             'pageConfigs' => $pageConfigs
         ]);
     }
+
+    // Dashboard - SPA
+    public function dashboardSPA() {
+        return view('/home');
+    }
 }
 
