@@ -4,7 +4,16 @@
 
 @section('page-style')
     {{-- Page Css files --}}
+    <link href="{{ asset(mix('css/plugins/bootstrap-icons/bootstrap-icons.css')) }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/plugins/aos/aos.css')) }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/plugins/boxicons/css/boxicons.min.css')) }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/plugins/glightbox/glightbox.min.css')) }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/plugins/swiper/swiper-bundle.min.css')) }}" rel="stylesheet">
+
     <style type="text/css">
+        .horizontal-menu.navbar-sticky .app-content {
+            padding-top: 2.5rem;
+        }
         .horizontal-menu.navbar-sticky .horizontal-menu-wrapper .navbar-horizontal.header-navbar.fixed-top {
             top: 0px;
         }
@@ -23,7 +32,7 @@
         #hero {
             width: 100%;
             height: 75vh;
-            background: url(../img/hero-bg.jpg) top left;
+            background: url('/images/one/hero-bg.jpg') top left;
             background-size: cover;
             position: relative;
         }
@@ -146,7 +155,11 @@
             margin-right: 8px;
         }
 
-        /*.section-bg {
+        section {
+            padding: 60px 0;
+            overflow: hidden;
+        }
+        .section-bg {
             background-color: #f6f9fe;
         }
         .section-title {
@@ -177,7 +190,41 @@
         .section-title p {
             margin: 15px auto 0 auto;
             font-weight: 600;
-        }*/
+        }
+
+        .featured-services .icon-box {
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 0 29px 0 rgb(68 88 144 / 12%);
+            transition: all 0.3s ease-in-out;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        .featured-services .title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .featured-services .icon {
+            margin-bottom: 15px;
+        }
+        .featured-services .icon i {
+            font-size: 48px;
+            line-height: 1;
+            color: #106eea;
+            transition: all 0.3s ease-in-out;
+        }
+        .featured-services .title a {
+            color: #111;
+        }
+        .featured-services .description {
+            font-size: 15px;
+            line-height: 28px;
+            margin-bottom: 0;
+        }
+
         /*@media (min-width: 1024px) {
             .section-title p {
                 width: 50%;
@@ -271,10 +318,19 @@
 
         .testimonials {
             padding: 80px 0;
-            background: url(../img/testimonials-bg.jpg) no-repeat;
+            background: url('/images/one/testimonials-bg.jpg') no-repeat;
             background-position: center center;
             background-size: cover;
             position: relative;
+        }
+        .testimonials::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
         }
         .testimonials .testimonial-item {
             text-align: center;
@@ -421,8 +477,8 @@
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="d-flex align-items-center">
         <div class="container" data-aos="zoom-out" data-aos-delay="100">
-            <h1>Welcome to <span>BizLand</span></h1>
-            <h2>We are team of talented designers making websites with Bootstrap</h2>
+            <h1>PT. SUPRA TIRTHA JAYA</h1>
+            <h2>Terobosan Baru di Dunia Pengobatan Tradisional</h2>
             <div class="d-flex">
                 <a href="/member/login" class="btn-get-started scrollto">Member Login</a>
                 <a href="https://youtu.be/WoAXea8Mg5Q" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
@@ -486,7 +542,7 @@
 
                 <div class="row">
                     <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
-                        <img src="assets/img/about.jpg" class="img-fluid" alt="">
+                        <img src="/images/one/about.jpg" class="img-fluid" alt="">
                     </div>
                     <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="100">
                         <h3>Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</h3>
@@ -521,49 +577,6 @@
             </div>
         </section><!-- End About Section -->
 
-        <!-- ======= Counts Section ======= -->
-        <section id="counts" class="counts">
-            <div class="container" data-aos="fade-up">
-
-                <div class="row">
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="count-box">
-                            <i class="bi bi-emoji-smile"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Happy Clients</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
-                        <div class="count-box">
-                            <i class="bi bi-journal-richtext"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Projects</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-                        <div class="count-box">
-                            <i class="bi bi-headset"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Hours Of Support</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-                        <div class="count-box">
-                            <i class="bi bi-people"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="15" data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Hard Workers</p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section><!-- End Counts Section -->
-
         <!-- ======= Testimonials Section ======= -->
         <section id="testimonials" class="testimonials">
             <div class="container" data-aos="zoom-in">
@@ -573,7 +586,7 @@
 
                         <div class="swiper-slide">
                             <div class="testimonial-item">
-                                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+                                <img src="/images/one/testimonials-1.jpg" class="testimonial-img" alt="">
                                 <h3>Saul Goodman</h3>
                                 <h4>Ceo &amp; Founder</h4>
                                 <p>
@@ -586,7 +599,7 @@
 
                         <div class="swiper-slide">
                             <div class="testimonial-item">
-                                <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
+                                <img src="/images/one/testimonials-2.jpg" class="testimonial-img" alt="">
                                 <h3>Sara Wilsson</h3>
                                 <h4>Designer</h4>
                                 <p>
@@ -599,7 +612,7 @@
 
                         <div class="swiper-slide">
                             <div class="testimonial-item">
-                                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+                                <img src="/images/one/testimonials-3.jpg" class="testimonial-img" alt="">
                                 <h3>Jena Karlis</h3>
                                 <h4>Store Owner</h4>
                                 <p>
@@ -612,7 +625,7 @@
 
                         <div class="swiper-slide">
                             <div class="testimonial-item">
-                                <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
+                                <img src="/images/one/testimonials-4.jpg" class="testimonial-img" alt="">
                                 <h3>Matt Brandon</h3>
                                 <h4>Freelancer</h4>
                                 <p>
@@ -625,7 +638,7 @@
 
                         <div class="swiper-slide">
                             <div class="testimonial-item">
-                                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
+                                <img src="/images/one/testimonials-5.jpg" class="testimonial-img" alt="">
                                 <h3>John Larson</h3>
                                 <h4>Entrepreneur</h4>
                                 <p>
@@ -658,7 +671,7 @@
                     <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
                         <div class="member">
                             <div class="member-img">
-                                <img src="assets/img/team/team-1.jpg" class="img-fluid" alt="">
+                                <img src="/images/one/team-1.jpg" class="img-fluid" alt="">
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -676,7 +689,7 @@
                     <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
                         <div class="member">
                             <div class="member-img">
-                                <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+                                <img src="/images/one/team-2.jpg" class="img-fluid" alt="">
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -694,7 +707,7 @@
                     <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
                         <div class="member">
                             <div class="member-img">
-                                <img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
+                                <img src="/images/one/team-3.jpg" class="img-fluid" alt="">
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -712,7 +725,7 @@
                     <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
                         <div class="member">
                             <div class="member-img">
-                                <img src="assets/img/team/team-4.jpg" class="img-fluid" alt="">
+                                <img src="/images/one/team-4.jpg" class="img-fluid" alt="">
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -747,7 +760,7 @@
                         <div class="info-box mb-4">
                             <i class="bx bx-map"></i>
                             <h3>Our Address</h3>
-                            <p>A108 Adam Street, New York, NY 535022</p>
+                            <p>Jl. Hasanuddin No 59 Gedung Darma Lantai 2 Pemecutan Denpasar</p>
                         </div>
                     </div>
 
@@ -755,7 +768,7 @@
                         <div class="info-box  mb-4">
                             <i class="bx bx-envelope"></i>
                             <h3>Email Us</h3>
-                            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f7c70716b7e7c6b5f7a677e726f737a317c7072">[email&#160;protected]</a></p>
+                            <p><a href="mailto:supratirthajaya@gmail.com">supratirthajaya@gmail.com</a></p>
                         </div>
                     </div>
 
@@ -763,7 +776,7 @@
                         <div class="info-box  mb-4">
                             <i class="bx bx-phone-call"></i>
                             <h3>Call Us</h3>
-                            <p>+1 5589 55488 55</p>
+                            <p>+62 361 9070612</p>
                         </div>
                     </div>
 
@@ -772,7 +785,7 @@
                 <div class="row" data-aos="fade-up" data-aos-delay="100">
 
                     <div class="col-lg-6 ">
-                        <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
+                        <iframe class="mb-4 mb-lg-0" src="https://maps.google.com/maps?width=100%25&amp;height=384&amp;hl=en&amp;q=Jl.%20Hasanuddin%20No%2059%20Gedung%20Darma%20Lantai%202%20Pemecutan%20Denpasar+(PT.%20Supra%20Tirtha%20Jaya)&amp;t=&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
                     </div>
 
                     <div class="col-lg-6">
@@ -796,7 +809,7 @@
                                 <div class="error-message"></div>
                                 <div class="sent-message">Your message has been sent. Thank you!</div>
                             </div>
-                            <div class="text-center"><button type="submit">Send Message</button></div>
+                            <div class="text-center"><button type="submit" disabled>Send Message</button></div>
                         </form>
                     </div>
 
@@ -806,4 +819,11 @@
         </section><!-- End Contact Section -->
 
     </main><!-- End #main -->
+@endsection
+
+@section('page-script')
+    <script src="{{ asset(mix('js/scripts/aos/aos.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/glightbox/glightbox.min.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/swiper/swiper-bundle.min.js')) }}"></script>
+    <script src="{{ asset(mix('js/scripts/single.js')) }}"></script>
 @endsection

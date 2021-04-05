@@ -165,4 +165,11 @@ return [
     "Bonus Sudah Dibayar" => "Bonus Sudah Dibayar",
     "List TUPO Expired" => "List TUPO Expired",
     "History Poin" => "History Poin",
+    "Home" => "Home",
+    "Featured" => "Featured",
+    "About" => "About",
+    "Testimonials" => "Testimonials",
+    "Team" => "Team",
+    "Contact" => "Contact",
+    "Member Login" => "Member Login",
 ];

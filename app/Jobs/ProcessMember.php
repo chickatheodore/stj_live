@@ -24,6 +24,7 @@ class ProcessMember implements ShouldQueue
      */
     protected $member;
     protected $operation;
+    protected $date;
 
     /**
      * Create a new job instance.
@@ -45,6 +46,7 @@ class ProcessMember implements ShouldQueue
      */
     public function handle()
     {
+        $this->date = Carbon::now()->format('Y-m-d') . ' 00:00:00';
         /*
         $ops = $this->operation;
         if ($ops == 'level')
@@ -61,7 +63,7 @@ class ProcessMember implements ShouldQueue
 
     function processOverdueMember()
     {
-        $now = Carbon::now()->format('Y-m-d') . ' 00:00:00';
+        //$now = Carbon::now()->format('Y-m-d') . ' 00:00:00';
 
         //$find_expired_tupo = 'SELECT * FROM members WHERE close_point_date < :now' . $now;
 
@@ -73,9 +75,9 @@ class ProcessMember implements ShouldQueue
             -(left_point) AS left_point_amount, -(right_point) AS right_point_amount, 0 AS left_point_ending_balance, 
             0 AS right_point_ending_balance, 3 AS status_id
         FROM members
-        WHERE close_point_date < :now', array('now' => $now));
+        WHERE close_point_date < :now', array('now' => $this->date));
 
-        DB::statement('UPDATE members SET left_point = 0, right_point = 0 WHERE close_point_date < :now', array('now' => $now));
+        DB::statement('UPDATE members SET left_point = 0, right_point = 0 WHERE close_point_date < :now', array('now' => $this->date));
 
     }
 
@@ -91,18 +93,12 @@ class ProcessMember implements ShouldQueue
             //Cari Tree Level untuk Member baru, dan set is_new_member = false
             $new_member->tree_level = $upline->tree_level + 1;
             $new_member->is_new_member = 0;
+            $new_member->tree_position = $this->setMemberPosition($new_member, $upline);
             $new_member->save();
-
-            $my_level = $new_member->tree_level;
-
-            //Buat Transaksi untuk Upline
-            $transaction = $this->initTransaction($upline);
 
             //Berikan bonus untuk sponsor, untuk
             if ($new_member->sponsor_id !== null)
-            {
-                $transaction = $this->createSponsorBonus($upline, $transaction);
-            }
+                $this->createSponsorBonus($upline);
 
             $uid = $new_member->upline_id;
             $temp_member = $new_member;
@@ -112,21 +108,22 @@ class ProcessMember implements ShouldQueue
             {
                 $position = 'left';
 
-                $transaction = $this->processUpline($transaction, $temp_member, $upline, $position);
+                //Ubah Poin ke Bonus Poin
+                if ($upline->left_point > 0 && $upline->right_point > 0)
+                    $upline = $this->convertPointToBonusPoint($upline);
 
-                if ($upline->left_downline_id != null && $upline->right_downline_id)
-                {
-                    //Bonus Pasangan
-                    $transaction = $this->createPartnerBonus($upline, $transaction, $my_level);
-                }
+                $this->processUpline($upline, $temp_member, $position);
 
-                $transaction->save();
+                //Bonus Pasangan
+                //if ($upline->left_downline_id != null && $upline->right_downline_id)
+                //{
+                    $this->createPairBonus($upline, $new_member);
+                //}
 
                 if ($upline->upline_id == null)
                     $uid = 0;
                 else {
                     $upline = $upline->upLine;
-                    $transaction = $this->initTransaction($upline);
                 }
 
                 $temp_member = $upline;
@@ -134,33 +131,50 @@ class ProcessMember implements ShouldQueue
         }
     }
 
-    private function processUpline($transaction, $downline, $upline, $position)
+    private function setMemberPosition($member, $upline)
     {
+        $position = 0;
+        if ($upline->left_downline_id == $member->id) {
+            $kiri = floatval($upline->tree_position);
+            $position = ($kiri * 2) - 1;
+        } elseif ($upline->right_downline_id == $member->id) {
+            $kanan = floatval($upline->tree_position);
+            $position = ($kanan * 2);
+        }
+        return $position;
+    }
+
+    private function processUpline($upline, $downline, $position)
+    {
+        $transaction = Transaction::where('transaction_date', '=', $this->date)
+            ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
+            //->where('trans', '<>', 'PAYMENT')
+            ->get();
+
+        if ($transaction === null) {
+            $transaction = new Transaction();
+
+            $transaction->member_id = $upline->id;
+            $transaction->user_id = 1;
+            $transaction->type = 'all';
+            $transaction->trans = 'SYSTEM';
+        }
+
         //Upline dapat Bonus Point (untuk member baru)
-        if ($upline->left_downline_id == $downline->id)
+        if ($upline->left_downline_id == $downline->id) {
             $upline->left_point = $upline->left_point + 25;
+        }
 
         if ($upline->right_downline_id == $downline->id) {
             $position = 'right';
             $upline->right_point = $upline->right_point + 25;
         }
 
+        $upline->save();
+
         //Berikan Bonus untuk Upline
         $transaction = $this->createPointBonus($upline, $transaction, $position);
-
-        return $transaction;
-    }
-
-    private function initTransaction($upline)
-    {
-        $transaction = new Transaction();
-
-        $transaction->member_id = $upline->id;
-        $transaction->user_id = 1;
-        $transaction->type = 'point';
-        $transaction->trans = 'POINT';
-
-        return $transaction;
+        $transaction->save();
     }
 
     private function createPointBonus($upline, $transaction, $position)
@@ -183,29 +197,141 @@ class ProcessMember implements ShouldQueue
         return $transaction;
     }
 
-    private function createSponsorBonus($upline, $transaction)
+    private function convertPointToBonusPoint($upline)
     {
+        $max = 0;
+        if ($upline->left_point >= $upline->right_point)
+            $max = $upline->right_point;
+        elseif ($upline->left_point < $upline->right_point)
+            $max = $upline->left_point;
+
+        $jumlah_point = ($max * 2) / 25;
+
+        $faktor_kali = intval($upline->level->minimum_point);
+        $nilai_point = floatval($upline->level->point_value);
+
+        $transaction = Transaction::where('transaction_date', '=', $this->date)
+            ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
+            //->where('trans', '<>', 'PAYMENT')
+            ->get();
+
+        if ($transaction === null) {
+            $transaction = new Transaction();
+
+            $transaction->member_id = $upline->id;
+            $transaction->user_id = 1;
+            $transaction->type = 'all';
+            $transaction->trans = 'SYSTEM';
+        }
+
+        $transaction->bonus_point_amount = $jumlah_point * ($faktor_kali * $nilai_point);
+        $transaction->save();
+
+        $upline->left_point = $upline->left_point - $max;
+        $upline->right_point = $upline->right_point - $max;
+        $upline->save();
+
+        return $upline;
+    }
+
+    private function createSponsorBonus($upline)
+    {
+        $transaction = Transaction::where('transaction_date', '=', $this->date)
+            ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
+            //->where('trans', '<>', 'PAYMENT')
+            ->get();
+
+        if ($transaction === null) {
+            $transaction = new Transaction();
+
+            $transaction->member_id = $upline->id;
+            $transaction->user_id = 1;
+            $transaction->type = 'all';
+            $transaction->trans = 'SYSTEM';
+        }
+
         $faktor_kali = intval($upline->level->minimum_point);
         $nilai_point = floatval($upline->level->point_value);
 
         $transaction->bonus_sponsor_amount = $faktor_kali * $nilai_point;
-        return $transaction;
+        $transaction->save();
     }
 
-    private function createPartnerBonus($upline, $transaction, $my_level)
+    private function createPairBonus($upline, $new_member)
     {
         //Cari pasangan dari semua downline pada level $my_level
+        $upline_level = $upline->tree_level;
+        $my_tree_level = $new_member->tree_level;
 
-        $faktor_kali = intval($upline->level->minimum_point);
-        $nilai_point = floatval($upline->level->point_value);
+        $position = floatval($upline->tree_position);
+        $my_position = floatval($new_member->tree_position);
 
-        $transaction->bonus_partner_amount = $faktor_kali * $nilai_point;
-        return $transaction;
+        $selisih = $my_tree_level - $upline_level;
+
+        $node_counts = 2 ^ $selisih;
+        $start = ($node_counts * ($position - 1)) + 1;
+        $end = ($start + $node_counts) - 1;
+
+        $rata = $node_counts / 2;
+        $kiri_akhir = $end - $rata;
+
+        $pasangan = null;   //new Member();
+
+        //Jika posisi = Kiri
+        if ($my_position <= $kiri_akhir)
+        {
+            $kiri = (($end - $my_position) - $rata) + 1;
+            $kanan = $kiri + $kiri_akhir;
+
+            $pasangan = Member::where('tree_level', '=', $my_tree_level)->where('tree_position', '=', $kanan);
+
+        } elseif ($my_position > $kiri_akhir) {
+            $kanan = $rata - ($end - $my_position);
+            $kiri = $kanan + $kiri_akhir;
+
+            $pasangan = Member::where('tree_level', '=', $my_tree_level)->where('tree_position', '=', $kiri);
+        }
+
+        if ($pasangan !== null)
+        {
+            $faktor_kali = intval($upline->level->minimum_point);
+            $nilai_point = floatval($upline->level->point_value);
+
+            $transaction = Transaction::where('transaction_date', '=', $this->date)
+                ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
+                //->where('trans', '<>', 'PAYMENT')
+                ->get();
+
+            if ($transaction === null) {
+                $transaction = new Transaction();
+
+                $transaction->member_id = $upline->id;
+                $transaction->user_id = 1;
+                $transaction->type = 'all';
+                $transaction->trans = 'SYSTEM';
+            }
+
+            $transaction->bonus_partner_amount = $faktor_kali * $nilai_point;
+            $transaction->save();
+        }
+
     }
 
     /*
      * NOT USED
      */
+
+    private function initTransaction($upline)
+    {
+        $transaction = new Transaction();
+
+        $transaction->member_id = $upline->id;
+        $transaction->user_id = 1;
+        $transaction->type = 'point';
+        $transaction->trans = 'POINT';
+
+        return $transaction;
+    }
 
     private function processMemberLevel()
     {

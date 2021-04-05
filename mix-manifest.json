@@ -309,5 +309,14 @@
     "/vendors/css/ui/prism.min.css": "/vendors/css/ui/prism.min.css",
     "/vendors/css/vendors-rtl.min.css": "/vendors/css/vendors-rtl.min.css",
     "/vendors/css/vendors.min.css": "/vendors/css/vendors.min.css",
-    "/vendors/css/weather-icons/climacons.min.css": "/vendors/css/weather-icons/climacons.min.css"
+    "/vendors/css/weather-icons/climacons.min.css": "/vendors/css/weather-icons/climacons.min.css",
+    "/css/plugins/aos/aos.css":  "/css/plugins/aos/aos.css",
+    "/css/plugins/bootstrap-icons/bootstrap-icons.css":  "/css/plugins/bootstrap-icons/bootstrap-icons.css",
+    "/css/plugins/boxicons/css/boxicons.min.css":  "/css/plugins/boxicons/css/boxicons.min.css",
+    "/css/plugins/glightbox/glightbox.min.css":  "/css/plugins/glightbox/glightbox.min.css",
+    "/css/plugins/swiper/swiper-bundle.min.css":  "/css/plugins/swiper/swiper-bundle.min.css",
+    "/js/scripts/single.js":  "/js/scripts/single.js",
+    "/js/scripts/aos/aos.js":  "/js/scripts/aos/aos.js",
+    "/js/scripts/glightbox/glightbox.min.js":  "/js/scripts/glightbox/glightbox.min.js",
+    "/js/scripts/swiper/swiper-bundle.min.js": "/js/scripts/swiper/swiper-bundle.min.js"
 }
