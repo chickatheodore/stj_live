@@ -693,7 +693,7 @@
                 <div class="row" data-aos="fade-up" data-aos-delay="100">
 
                     <div class="col-lg-6 ">
-                        <iframe class="mb-4 mb-lg-0" src="https://maps.google.com/maps?width=100%25&amp;height=384&amp;hl=en&amp;q=Jl.%20Hasanuddin%20No%2059%20Gedung%20Darma%20Lantai%202%20Pemecutan%20Denpasar+(PT.%20Supra%20Tirtha%20Jaya)&amp;t=&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
+                        <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.344485011068!2d115.21024361478395!3d-8.658750293778274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd24105cdb08319%3A0xed58976a339faa5d!2sPT.%20Supra%20Tirtha%20Jaya!5e0!3m2!1sen!2sid!4v1617684928054!5m2!1sen!2sid" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
                     </div>
 
                     <div class="col-lg-6">

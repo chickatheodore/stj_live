@@ -72,6 +72,7 @@
                                                         <th class="text-center align-middle" style="min-width: 100px">Poin Balance</th>
                                                         <th class="text-center align-middle">Bonus Poin</th>
                                                         <th class="text-center align-middle">Bonus Sponsor</th>
+                                                        <th class="text-center align-middle">Bonus Pasangan</th>
                                                         <th class="text-center align-middle">Bonus Dibayar</th>
                                                         <th class="text-center align-middle">Saldo Bonus</th>
                                                     </tr>
@@ -153,6 +154,7 @@
                         '<td class="text-center">' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_point_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_sponsor_amount) + '</td>' +
+                        '<td class="text-right">' + $.number(item.bonus_partner_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_paid_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_ending_balance) + '</td>' +
                         '</tr>');
