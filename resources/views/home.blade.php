@@ -17,17 +17,6 @@
         .horizontal-menu.navbar-sticky .horizontal-menu-wrapper .navbar-horizontal.header-navbar.fixed-top {
             top: 0px;
         }
-        /*@media (min-width: 1024px) {
-            #hero {
-                background-attachment: fixed;
-            }
-        }
-
-        @media (max-width: 768px) {
-            #hero {
-                height: 100vh;
-            }
-        }*/
 
         #hero {
             width: 100%;
@@ -40,72 +29,6 @@
         #hero .container {
             position: relative;
         }
-
-        /*[data-aos][data-aos][data-aos-delay="100"].aos-animate, body[data-aos-delay="100"] [data-aos].aos-animate {
-            transition-delay: .1s;
-        }
-        [data-aos^=zoom][data-aos^=zoom].aos-animate {
-            opacity: 1;
-            transform: translateZ(0) scale(1);
-        }
-        [data-aos][data-aos][data-aos-delay="100"], body[data-aos-delay="100"] [data-aos] {
-            transition-delay: 0;
-        }
-        [data-aos][data-aos][data-aos-easing=ease-in-out], body[data-aos-easing=ease-in-out] [data-aos] {
-            transition-timing-function: ease-in-out;
-        }
-        [data-aos][data-aos][data-aos-duration="1000"], body[data-aos-duration="1000"] [data-aos] {
-            transition-duration: 1s;
-        }
-        [data-aos^=zoom][data-aos^=zoom] {
-            opacity: 0;
-            transition-property: opacity,transform;
-        }
-
-        [data-aos=zoom-out] {
-            transform: scale(1.2);
-        }
-        [data-aos^=fade][data-aos^=fade].aos-animate {
-            opacity: 1;
-            transform: translateZ(0);
-        }
-        [data-aos^=fade][data-aos^=fade] {
-            opacity: 0;
-            transition-property: opacity,transform;
-        }*/
-
-        /*@media (min-width: 1400px) {
-            .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-                max-width: 1320px;
-            }
-        }
-        @media (min-width: 1200px) {
-            .container, .container-lg, .container-md, .container-sm, .container-xl {
-                max-width: 1140px;
-            }
-        }
-        @media (min-width: 992px) {
-            .container, .container-lg, .container-md, .container-sm {
-                max-width: 960px;
-            }
-        }
-        @media (min-width: 768px) {
-            .container, .container-md, .container-sm {
-                max-width: 720px;
-            }
-        }
-        @media (min-width: 576px) {
-            .container, .container-sm {
-                max-width: 540px;
-            }
-        }
-        .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-            width: 100%;
-            padding-right: var(--bs-gutter-x,.75rem);
-            padding-left: var(--bs-gutter-x,.75rem);
-            margin-right: auto;
-            margin-left: auto;
-        }*/
 
         #hero h1 {
             margin: 0;
@@ -190,6 +113,7 @@
         .section-title p {
             margin: 15px auto 0 auto;
             font-weight: 600;
+            color: #2c2c2c;
         }
 
         .featured-services .icon-box {
@@ -223,13 +147,8 @@
             font-size: 15px;
             line-height: 28px;
             margin-bottom: 0;
+            color: #2c2c2c;
         }
-
-        /*@media (min-width: 1024px) {
-            .section-title p {
-                width: 50%;
-            }
-        }*/
 
         .counts {
             padding: 70px 0 60px;
@@ -358,11 +277,6 @@
             margin: 0 auto 15px auto;
             color: #eee;
         }
-        /*@media (min-width: 992px) {
-            .testimonials .testimonial-item p {
-                width: 80%;
-            }
-        }*/
 
         .testimonials .testimonial-item .quote-icon-left {
             display: inline-block;
@@ -387,6 +301,10 @@
             text-align: center;
             border-radius: 50px;
             padding: 2px 15px;
+        }
+
+        .about p {
+            color: #2c2c2c;
         }
 
         .team {
@@ -493,35 +411,27 @@
             <div class="container" data-aos="fade-up">
 
                 <div class="row">
-                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                    <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
                             <div class="icon"><i class="bx bxl-dribbble"></i></div>
-                            <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-                            <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                            <h4 class="title"><a href="">Produk Asli Indonesia</a></h4>
+                            <p class="description">Produk-produk dari STJ dibuat oleh Putera Asli Bali dan terbuat dari bahan pilihan khas Indonesia untuk memajukan dan mensejahterakan masyarakat lokal khususnya pelaku usaha / UMKM</p>
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                    <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
                             <div class="icon"><i class="bx bx-file"></i></div>
-                            <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-                            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+                            <h4 class="title"><a href="">Menghemat Waktu & Biaya</a></h4>
+                            <p class="description">Sebuah metode pengobatan tradisional yang dikemas secara praktis dan dapat membantu Anda mengatasi berbagai macam keluhan tanpa harus menghabiskan waktu & biaya besar untuk pergi ke klink / dokter</p>
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                    <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
                         <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
                             <div class="icon"><i class="bx bx-tachometer"></i></div>
-                            <h4 class="title"><a href="">Magni Dolores</a></h4>
-                            <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                        <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
-                            <div class="icon"><i class="bx bx-world"></i></div>
-                            <h4 class="title"><a href="">Nemo Enim</a></h4>
-                            <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                            <h4 class="title"><a href="">Terbuat Dari Bahan Alami</a></h4>
+                            <p class="description">Awan (Lengis Taksu) Herbal Oil sebagai warisan budaya nenek moyang, diracik lebih dari 70 macam formula rempah-rempah hasil tanaman masyarakat lokal untuk menjadi sebuah produk minyak balur yang luar biasa. sehingga hasilnya aman tanpa efek samping</p>
                         </div>
                     </div>
 
@@ -537,7 +447,7 @@
                 <div class="section-title">
                     <h2>About</h2>
                     <h3>Find Out More <span>About Us</span></h3>
-                    <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p>
+                    <p>PT. SUPRA TIRTHA JAYA didirikan pada tanggal 8 Desember 2018 oleh Direktur Utama (Owner) Putu Juni Ambara sebagai perusahaan yang bergerak dibidang importir, produksi dan distribusi produk unggulan dengan konsep network marketing. PT. SUPRA TIRTHA JAYA yang beralamat di Jl. Hasanuddin No 59 Gedung Darma Lantai 2 Pemecutan Denpasar sudah terdaftar dengan Ijin NIB, Ijin Usaha serta Ijin Lokasi dengan No. 9120101111857.</p>
                 </div>
 
                 <div class="row">
@@ -545,31 +455,29 @@
                         <img src="/images/one/about.jpg" class="img-fluid" alt="">
                     </div>
                     <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                        <h3>Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</h3>
+                        <h3>Produk STJ Bali Sudah Banyak Dipakai dan Terbukti Bermanfaat untuk Masyarakat Indonesia.</h3>
                         <p class="fst-italic">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                            magna aliqua.
+                            Ayo Cintai Produk Asli Indonesia dan Lestarikan Budaya Leluhur dengan Beralih ke Produk Pengobatan Tradisional yang Praktis, Terbukti Ampuh, dan Banyak Manfaatnya dari STJ.
                         </p>
                         <ul>
                             <li>
                                 <i class="bx bx-store-alt"></i>
                                 <div>
-                                    <h5>Ullamco laboris nisi ut aliquip consequat</h5>
-                                    <p>Magni facilis facilis repellendus cum excepturi quaerat praesentium libre trade</p>
+                                    <h5>Tentang Kami</h5>
+                                    <p>Beridiri Sejak 2018, PT. STJ Tak Berhenti Bergerak dan Terus Menghadirkan Inovasi Dari Karya-Karya Asli Bali Lainnya..
+                                        Hingga saat ini, PT. STJ Telah Memiliki 2 Macam Produk Unggulan Pengobatan Tradisional</p>
                                 </div>
                             </li>
                             <li>
                                 <i class="bx bx-images"></i>
                                 <div>
-                                    <h5>Magnam soluta odio exercitationem reprehenderi</h5>
-                                    <p>Quo totam dolorum at pariatur aut distinctio dolorum laudantium illo direna pasata redi</p>
+                                    <h5>Warisan Budaya Nenek Moyang</h5>
+                                    <p>Salah satu Warisan Budaya Nenek Moyang yang hampir punah adalah pengobatan tradisional.</p>
                                 </div>
                             </li>
                         </ul>
                         <p>
-                            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                            culpa qui officia deserunt mollit anim id est laborum
+                            April 2020, dalam terpaan pandemi, STJ melakukan berbagai terobosan. Salah satunya kreasi minyak balur yang memiliki banyak manfaat kesehatan. Besar harapan STJ menggerakkan ekonomi Indonesia, khususnya Bali, di tengah kelesuan dunia pariwisata sehingga maju bersama-sama menggapai kemerdekaan finansial bagi anggota-anggotanya.
                         </p>
                     </div>
                 </div>
@@ -752,7 +660,7 @@
                 <div class="section-title">
                     <h2>Contact</h2>
                     <h3><span>Contact Us</span></h3>
-                    <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p>
+                    <p>Konsultasi / Pesan langsung Produk-Produk STJ dengan menghubungi Admin kami via WA : +628113924555</p>
                 </div>
 
                 <div class="row" data-aos="fade-up" data-aos-delay="100">

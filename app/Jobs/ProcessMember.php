@@ -272,21 +272,21 @@ class ProcessMember implements ShouldQueue
         $start = ($node_counts * ($position - 1)) + 1;
         $end = ($start + $node_counts) - 1;
 
-        $rata = $node_counts / 2;
-        $kiri_akhir = $end - $rata;
+        $setengah = $node_counts / 2;
+        $kiri_akhir = $end - $setengah;
 
         $pasangan = null;   //new Member();
 
         //Jika posisi = Kiri
         if ($my_position <= $kiri_akhir)
         {
-            $kiri = (($end - $my_position) - $rata) + 1;
+            $kiri = (($end - $my_position) - $setengah) + 1;    //Penomoran
             $kanan = $kiri + $kiri_akhir;
 
             $pasangan = Member::where('tree_level', '=', $my_tree_level)->where('tree_position', '=', $kanan);
 
         } elseif ($my_position > $kiri_akhir) {
-            $kanan = $rata - ($end - $my_position);
+            $kanan = $setengah - ($end - $my_position);
             $kiri = $kanan + $kiri_akhir;
 
             $pasangan = Member::where('tree_level', '=', $my_tree_level)->where('tree_position', '=', $kiri);
