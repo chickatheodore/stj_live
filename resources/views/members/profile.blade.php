@@ -272,6 +272,24 @@
                                 <div class="tab-pane fade" id="account-vertical-info" role="tabpanel" aria-labelledby="account-pill-info"
                                      aria-expanded="false">
                                     <form method="post" id="form-info" action="{{ route('member.profile.info') }}">
+                                        <div class="media">
+                                            <a href="javascript: void(0);">
+                                                @php
+                                                $path = '/member/ktp/' . $member->code . '.jpg';
+                                                @endphp
+                                                <img id="gambar_ktp" src="{{ $path }}" class="rounded mr-75" alt="gambar KTP" height="204" width="323">
+                                            </a>
+                                            <div class="media-body mt-75">
+                                                <div class="col-12 px-0 d-flex flex-sm-row flex-column justify-content-start">
+                                                    <label class="btn btn-sm btn-primary ml-50 mb-50 mb-sm-0 cursor-pointer"
+                                                           for="account-upload">Upload gambar KTP</label>
+                                                    <input type="file" id="account-upload" name="image_file" hidden onchange="loadFile(event)">
+                                                    <button class="btn btn-sm btn-outline-warning ml-50">Reset</button>
+                                                </div>
+                                                <p class="text-muted ml-75 mt-50"><small>Allowed JPG, GIF or PNG. Max size of 800kB</small></p>
+                                            </div>
+                                        </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group">
@@ -463,5 +481,10 @@
     <script type="text/javascript">
         let m_p = {{ $member->pin }};
         let m_l = {{ $member->level_id }};
+        let ktp_path = "{{ '/member/ktp/' . $member->code . '.jpg' }}";
+        function loadFile(event) {
+            var image = document.getElementById('gambar_ktp');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
     </script>
 @endsection

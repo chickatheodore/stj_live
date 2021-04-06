@@ -43,6 +43,7 @@ use Laravel\Passport\HasApiTokens;
  * @property float $point_bonus
  * @property float $sponsor_bonus
  * @property float $pair_bonus
+ * @property bool $is_active
  * @property string $activation_date
  * @property string $close_point_date
  * @property string $remember_token
@@ -52,6 +53,7 @@ use Laravel\Passport\HasApiTokens;
  * @property int $right_downline_count
  * @property bool $is_stockiest
  * @property bool $is_new_member
+ * @property string $image_file
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -99,7 +101,7 @@ class Member extends Authenticatable
         'sponsor_id', 'upline_id', 'left_downline_id', 'right_downline_id',
         'pin', 'left_point', 'left_bonus_point', 'left_bonus_partner', 'right_point', 'right_bonus_point', 'right_bonus_partner', 'point_bonus', 'sponsor_bonus', 'pair_bonus',
         'activation_date', 'close_point_date', 'tree_level', 'tree_position',
-        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member',
+        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member', 'is_active',
         'created_at', 'updated_at', 'deleted_at'
     ];
 

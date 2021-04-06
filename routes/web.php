@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 
@@ -36,9 +37,20 @@ Route::group(['middleware' => 'restrictMidnight'], function () {
     Route::get('/member/logout', 'Auth\LoginController@logout');
 
     Route::get('/member/rebuildAllTrees', 'Members\TreeController@rebuildTree');
+
+    Route::get('/member/ktp/{file}', [function ($file) {
+        $path = storage_path('app/members/' . $file);
+        if (file_exists($path)) {
+            return response()->file($path, array('Content-Type' => 'image/jpeg'));
+        } else {
+            $path = storage_path('app/members/no_image_available.jpg');
+            return response()->file($path, array('Content-Type' => 'image/jpeg'));
+        }
+        //abort(404);
+    }]);
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidnight']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidnight']], function () {
     Route::get('/', 'Admins\DashboardController@index');
     Route::get('home', 'Admins\DashboardController@index');
 
@@ -59,7 +71,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
     Route::get('point-history', 'Admins\DashboardController@pointHistory');
 });
 
-Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMidnight']], function() {
+Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMidnight']], function () {
     Route::get('/register', 'Members\PagesController@showMemberRegistrationForm');
     Route::post('/register', 'Members\PagesController@createMember')->name('member.registration');
 
@@ -122,16 +134,15 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::post('/member/profileGeneral', 'Members\PagesController@updateProfileGeneral')->name('member.profile.general');
     Route::post('/member/profileAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.account');
     Route::post('/member/profileInfo', 'Members\PagesController@updateProfileInfo')->name('member.profile.info');
-
 });
 
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
 
-Route::group(['prefix' => 'system'], function() {
-    Route::get('/processBonus', function() {
+Route::group(['prefix' => 'system'], function () {
+    Route::get('/processBonus', function () {
         Artisan::call('cache:clear');
     });
 });

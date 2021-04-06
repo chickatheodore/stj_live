@@ -189,20 +189,43 @@ $('#btn-save-account').click(function (e) {
 
 $('#btn-save-info').click(function (e) {
     e.preventDefault();
-    var _data = $('#form-info').serializeArray();
 
+    var form = $(this);
+    var formData = false;
+    if (window.FormData){
+        formData = new FormData();  //new FormData(form[0]);
+    } else {
+        alert('Does not support form data.');
+        return;
+    }
+
+    var _data = $('#form-info').serializeArray();
     _data.push({'name': '_acc_', 'value': $('#_acc_').val()});
     _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
+
+    $.each($('#form-info').find('input[type="file"]'), function(i, tag) {
+        $.each($(tag)[0].files, function(i, file) {
+            formData.append(tag.name, file);
+        });
+    });
+
+    $.each(_data, function(i, val) {
+        formData.append(val.name, val.value);
+    });
 
     $.ajaxSetup({
         type: "POST",
         url: "/member/profileInfo",
-        headers: addAuthHeader()
+        headers: addAuthHeader(),
+        cache       : false,
+        contentType : false,
+        processData : false
     });
 
     loadingButton($('#btn-save-info'), 'Save changes', true);
-    $.ajax({ data: _data })
+    $.ajax({ data: formData })
         .fail(function() {
+            $('#modal-backdrop').modal('hide');
             loadingButton($('#btn-save-info'), 'Save changes', false);
             Swal.fire({
                 title: "Warning!",
@@ -218,7 +241,9 @@ $('#btn-save-info').click(function (e) {
             loadingButton($('#btn-save-info'), 'Save changes', false);
             const me = JSON.parse(result);
             if (me.status) {
+                refreshKTP();
                 toastr.success(me.message, 'Info akun', { "closeButton": true });
+                $('#modal-backdrop').modal('hide');
             } else {
                 Swal.fire({
                     title: "Warning!",
@@ -230,12 +255,25 @@ $('#btn-save-info').click(function (e) {
                     customClass: 'animated tada',
                 });
             }
+            loadingButton($('#btn-save-info'), 'Save changes', false);
         });
 
 });
 
+function refreshKTP() {
+    /*let _url = $("#gambar_ktp").attr("src");
+    let _pos = _url.lastIndexOf('?');
+    if (_pos > 0)
+        _url = _url.substring(0, _pos);
+
+    _url = _url + '?timestamp=' + new Date().getTime();*/
+
+    let _url = ktp_path + '?timestamp=' + new Date().getTime();
+    $("#gambar_ktp").removeAttr("src").attr("src", _url);
+}
+
 function loadingButton(e, text, show) {
-    if (show) {
+    if (show == true) {
         e.prop('disabled', true);
         e.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + text);
         $('#modal-backdrop').modal('show');

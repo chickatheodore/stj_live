@@ -447,7 +447,10 @@
                 <div class="section-title">
                     <h2>About</h2>
                     <h3>Find Out More <span>About Us</span></h3>
-                    <p>PT. SUPRA TIRTHA JAYA didirikan pada tanggal 8 Desember 2018 oleh Direktur Utama (Owner) Putu Juni Ambara sebagai perusahaan yang bergerak dibidang importir, produksi dan distribusi produk unggulan dengan konsep network marketing. PT. SUPRA TIRTHA JAYA yang beralamat di Jl. Hasanuddin No 59 Gedung Darma Lantai 2 Pemecutan Denpasar sudah terdaftar dengan Ijin NIB, Ijin Usaha serta Ijin Lokasi dengan No. 9120101111857.</p>
+                    <p>
+                        PT. SUPRA TIRTHA JAYA didirikan pada tanggal 8 Desember 2018 oleh Direktur Utama (Owner) Putu Juni Ambara sebagai perusahaan yang bergerak dibidang importir, produksi dan distribusi produk unggulan dengan konsep network marketing.
+                        <br /><br />
+                        PT. SUPRA TIRTHA JAYA yang beralamat di Jl. Hasanuddin No 59 Gedung Darma Lantai 2 Pemecutan Denpasar sudah terdaftar dengan Ijin NIB, Ijin Usaha serta Ijin Lokasi dengan No. 9120101111857.</p>
                 </div>
 
                 <div class="row">

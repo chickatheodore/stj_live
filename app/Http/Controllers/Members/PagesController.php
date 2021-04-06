@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -129,6 +130,7 @@ class PagesController extends Controller
             'nik' => ['required'],
             'password' => ['required'],
             'address' => ['required'],
+            'image_file' => ['required'],
         ])->validate();
         //code, username
 
@@ -164,6 +166,17 @@ class PagesController extends Controller
 
         $member = Member::create($req);
         $member->setIkanAttribute($request->password);
+
+        if ($request->hasFile('image_file')) {
+            $imagePath = $request->file('image_file');
+
+            $curr_file = storage_path('app/members/' . $member->code . '.jpg');
+            if (file_exists($curr_file)) {
+                Storage::delete('app/members/' . $member->code . '.jpg');
+            }
+
+            $path = $request->file('image_file')->storeAs('members', $member->code . '.jpg'); //, 'public'
+        }
 
         //Hapus Left & Right downline jika tersetting
         if ($member->left_downline_id || $member->right_downline_id)
@@ -283,10 +296,25 @@ class PagesController extends Controller
         $member = Member::where('id', '=', $id)->first();
         if ($member) {
 
+            $message = 'Informasi member telah di update.';
+            if ($request->hasFile('image_file')) {
+                $imagePath = $request->file('image_file');
+
+                $curr_file = storage_path('app/members/' . $member->code . '.jpg');
+                if (file_exists($curr_file)) {
+                    Storage::delete('app/members/' . $member->code . '.jpg');
+                }
+
+                $path = $request->file('image_file')->storeAs('members', $member->code . '.jpg'); //, 'public'
+                //$message = $message . ' imagePath: ' . $imagePath . ', path: ' . $path;
+            } else {
+                //$message = $message . ' Has no file';
+            }
+
             Member::updateOrCreate([ 'id' => $id ], $all);
             //$member->save($all);
 
-            return json_encode(['status' => true, 'message' => 'Informasi member telah di update.']);
+            return json_encode(['status' => true, 'message' => $message ]);
         }
 
         return json_encode(['status' => false, 'message' => 'Silahkan cek input anda.']);
