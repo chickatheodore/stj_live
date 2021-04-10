@@ -165,6 +165,7 @@ return [
     "Bonus Sudah Dibayar" => "Bonus Sudah Dibayar",
     "List TUPO Expired" => "List TUPO Expired",
     "History Poin" => "History Poin",
+    "Approve Member" => "Approve Member",
     "Home" => "Home",
     "Featured" => "Featured",
     "About" => "About",

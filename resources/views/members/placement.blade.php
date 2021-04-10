@@ -155,7 +155,7 @@ $read_only = isset($saved) || count($newMembers) < 1;
                                                 </ul>
                                             </div>
 
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label for="level_id">Upgrade level member</label>
                                                 <select class="form-control level_id" id="level_id" name="level_id" disabled>
                                                     <option value=""></option>
@@ -168,7 +168,7 @@ $read_only = isset($saved) || count($newMembers) < 1;
                                                     @endforeach
                                                 </select>
                                                 <div class="level-hide">Jumlah PIN : 0</div>
-                                            </div>
+                                            </div> -->
 
 
                                         </div>

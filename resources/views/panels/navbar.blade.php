@@ -2,7 +2,7 @@
 <nav class="header-navbar navbar-expand-lg navbar navbar-with-menu {{ $configData['navbarColor'] }} navbar-fixed">
   <div class="navbar-header d-xl-block d-none">
     <ul class="nav navbar-nav flex-row">
-      <li class="nav-item"><a class="navbar-brand" href="home">
+      <li class="nav-item"><a class="navbar-brand" href="{{ env('APP_URL').'/' }}">
           <!-- <div class="brand-logo"></div> //-->
           <img src="{{asset('images/STJ-logo.png') }}" height="24px" width="24px" />
         </a></li>

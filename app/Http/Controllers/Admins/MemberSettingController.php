@@ -123,7 +123,15 @@ class MemberSettingController extends Controller
      */
     public function show($id)
     {
-        //
+        $member = Member::find($id);
+
+        $breadcrumbs = [
+            ['link'=>"/",'name'=>"Home"], ['name'=>"Unapproved User"]
+        ];
+        return view('/admins/user-view', [
+            'breadcrumbs' => $breadcrumbs,
+            'member' => $member,
+        ]);
     }
 
     /**

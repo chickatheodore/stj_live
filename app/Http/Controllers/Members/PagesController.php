@@ -425,12 +425,12 @@ class PagesController extends Controller
         $member = Member::find($request->member_id);
 
         if ($member) {
-            if ($request->level_id !== $member->level_id) {
+            /*if ($request->level_id !== $member->level_id) {
                 $member->level_id = $request->level_id;
 
                 $level = Level::find($request->level_id);
                 $member->pin = $member->pin - $level->minimum_point;
-            }
+            }*/
 
             $member->sponsor_id = $request->sponsor_id;
             $member->upline_id = $request->upline_id;
@@ -439,15 +439,21 @@ class PagesController extends Controller
                 $upline = Member::find($request->upline_id);
                 if ($tempat == 'left' && !$upline->left_downline_id) {
                     $upline->left_downline_id = $member->id;
+                    $member->tree_level = $upline->tree_level + 1;
+                    $member->tree_position = $this->getPosition('left', $upline);
                     $upline->save();
                 }
                 if ($tempat == 'right' && !$upline->right_downline_id) {
                     $upline->right_downline_id = $member->id;
+                    $member->tree_level = $upline->tree_level + 1;
+                    $member->tree_position = $this->getPosition('right', $upline);
                     $upline->save();
                 }
             } else if ($request->upline_id) {
                 $upline = Member::find($request->upline_id);
                 $upline->left_downline_id = $member->id;
+                $member->tree_level = $upline->tree_level + 1;
+                $member->tree_position = $this->getPosition('left', $upline);
                 $upline->save();
             }
 
@@ -465,6 +471,21 @@ class PagesController extends Controller
             'allMembers' => $allMembers,
             'newMembers' => $newMembers
         ]);
+    }
+
+    private function getPosition($pos, $upline)
+    {
+        $my_pos = 0;
+        $pos = doubleval($upline->tree_position);
+
+        if ($pos == 'left')
+        {
+            $my_pos = ($pos * 2) - 1;
+        } else if ($pos == 'right')
+        {
+            $my_pos = ($pos * 2);
+        }
+        return strval($my_pos);
     }
 
     public function showPin() {

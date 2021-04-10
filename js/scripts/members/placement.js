@@ -134,7 +134,8 @@ $("#upline_id").change(function (e) {
         url: "/member/getMember/" + id,
     })
         .done(function( data ) {
-            $('#modal-backdrop').modal('hide');
+            //$('#modal-backdrop').modal('hide');
+            hideSTJModal();
             var member = JSON.parse(data);
 
             var left = null, right = null;
@@ -195,7 +196,8 @@ function checkMember(mId) {
         url: "/member/getPoint/" + mId,
     })
     .done(function( data ) {
-        $('#modal-backdrop').modal('hide');
+        //$('#modal-backdrop').modal('hide');
+        hideSTJModal();
         let result = JSON.parse(data);
         let member = result.member;
 

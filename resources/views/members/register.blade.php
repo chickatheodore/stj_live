@@ -1,18 +1,22 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'Register Page')
+@section('title', 'Register')
 
 @section('vendor-style')
     <!-- vendor css files -->
     <link rel='stylesheet' href="{{ asset(mix('vendors/css/forms/select/select2.min.css')) }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" />
+    <style type="text/css">
+    #gambar_ktp { max-width: 323px; max-height: 204px; }
+    #show-image { display: block; max-width: 100%;}
+    </style>
 @endsection
 
 @section('content')
     <section id="register-layout">
         <div class="row">
             <div class="col-md-12">
-                <form class="form form-vertical" method="POST" action="{{ route('member.registration') }}" enctype="multipart/form-data">
+                <form id="form_register" class="form form-vertical" method="POST" action="{{ route('member.registration') }}" enctype="multipart/form-data">
                     @csrf
 
                     <div class="form-body">
@@ -44,17 +48,21 @@
                                             </div>
 
                                             <hr>
+                                            <div class="row">
+                                                <div>
+                                                    <a href="javascript: void(0);">
+                                                        @php
+                                                            $path = '/member/ktp/no_image_available.jpg';
+                                                        @endphp
+                                                        <img id="gambar_ktp" src="{{ $path }}" class="rounded mr-75" alt="gambar KTP">
+                                                    </a>
+                                                </div>
+                                            </div>
                                             <div class="media">
-                                                <a href="javascript: void(0);">
-                                                    @php
-                                                        $path = '/member/ktp/no_image_available.jpg';
-                                                    @endphp
-                                                    <img id="gambar_ktp" src="{{ $path }}" class="rounded mr-75" alt="gambar KTP" height="204" width="323">
-                                                </a>
                                                 <div class="media-body mt-75">
                                                     <div class="col-12 px-0 d-flex flex-sm-row flex-column justify-content-start">
                                                         <label class="btn btn-sm btn-primary ml-50 mb-50 mb-sm-0 cursor-pointer"
-                                                               for="image_file">Upload gambar KTP</label>
+                                                            for="image_file">Upload gambar KTP</label>
                                                         <input type="file" id="image_file" name="image_file" hidden required>
                                                         <button class="btn btn-sm btn-outline-warning ml-50">Reset</button>
                                                     </div>
@@ -333,9 +341,10 @@
         }
 
         $("#image_file").on("change", function(e) {
-            //var image = document.getElementById('gambar_ktp');
-            //image.src = URL.createObjectURL(e.target.files[0]);
+            var image = document.getElementById('gambar_ktp');
+            image.src = URL.createObjectURL(e.target.files[0]);
 
+            /*
             var files = e.target.files;
             var done = function (url) {
                 image.src = url;
@@ -358,12 +367,13 @@
                     reader.readAsDataURL(file);
                 }
             }
+            */
         });
 
         $modal.on('shown.bs.modal', function () {
             cropper = new Cropper(image, {
                 //aspectRatio: 1,
-                //viewMode: 3,
+                viewMode: 1,
                 preview: '.preview'
             });
         }).on('hidden.bs.modal', function () {
@@ -399,5 +409,11 @@
                 }
             });
         });
+
+        $('#btn-register').click(function(e) {
+            e.preventDefault();
+            $('#btn-register').prop('disabled', true);
+            $('#form_register').submit();
+        })
     </script>
 @endsection

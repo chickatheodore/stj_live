@@ -29,6 +29,13 @@
             "i18n": "Bonus Belum Dibayar"
         },
         {
+            "url": "/admin/unapproved",
+            "name": "Approve Member",
+            "slug": "unapproved",
+            "icon": "",
+            "i18n": "Approve Member"
+        },
+        {
             "url": "#",
             "name": "Laporan",
             "icon": "",

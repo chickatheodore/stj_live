@@ -70,6 +70,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
 
     Route::get('expired', 'Admins\DashboardController@expiredTUPO');
     Route::get('point-history', 'Admins\DashboardController@pointHistory');
+
+    Route::get('unapproved', 'Admins\AdminController@showUnapprovedMember');
+    Route::post('approveMember', 'Admins\AdminController@approveMember');
+    Route::get('member/view/{id}', 'Admins\MemberSettingController@show');
 });
 
 Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMidnight']], function () {
@@ -109,6 +113,7 @@ Route::group(['middleware' => ['nodebugbar', 'restrictMidnight']], function () {
     Route::get('/admin/unpaidBonus', 'Admins\AdminController@unpaidBonus');
     Route::get('/admin/paidBonus', 'Admins\AdminController@paidBonus');
     Route::get('/admin/expiredTUPO', 'Admins\AdminController@expiredTUPO');
+    Route::get('/admin/unApproved', 'Admins\AdminController@unApproved');
 });
 
 /*Route::group(['middleware' => ['stj_api', 'restrictMidnight', 'nodebugbar']], function () {

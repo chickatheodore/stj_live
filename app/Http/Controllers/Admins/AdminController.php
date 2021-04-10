@@ -185,4 +185,43 @@ class AdminController extends Controller
         return json_encode([ 'success' => true ]);
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function showUnapprovedMember()
+    {
+        $breadcrumbs = [
+            ['link'=>"/admin/home",'name'=>"Home"], ['name'=>"Member belum di approve"]
+        ];
+        return view('/admins/member-unapproved', [
+            'breadcrumbs' => $breadcrumbs
+        ]);
+    }
+
+    public function unApproved()
+    {
+        $members = Member::where('is_active', '=', '0')
+            ->where('is_new_member', '=', '1')->get();
+
+        return json_encode($members);
+    }
+
+    public function approveMember(Request $request)
+    {
+
+        $datas = json_decode($request->rows);
+        foreach ($datas as $data) {
+            $member = Member::find($data);
+
+            $member->is_active = 1;
+            $member->activation_date = Carbon::now();
+
+            $member->save();
+        }
+
+        return json_encode([ 'success' => true ]);
+    }
+
 }
