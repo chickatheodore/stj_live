@@ -322,7 +322,8 @@ class TreeController extends Controller
         */
 
         $i = 3;
-        while ($i < 34)
+        $max = Member::max('tree_level');
+        while ($i <= $max)
         {
             $members = Member::where('tree_level', '=', $i)->get();
             foreach ($members as $member) {
@@ -331,7 +332,7 @@ class TreeController extends Controller
 
                 $id = $member->id;
                 $upline = Member::find($member->upline_id); //$member->upLine->fresh();
-                $upline->refresh();
+                //$upline->refresh();
 
                 $pos = doubleval($upline->tree_position);
 
