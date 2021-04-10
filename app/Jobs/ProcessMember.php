@@ -67,12 +67,12 @@ class ProcessMember implements ShouldQueue
 
         //$find_expired_tupo = 'SELECT * FROM members WHERE close_point_date < :now' . $now;
 
-        DB::statement('INSERT INTO transactions (member_id, user_id, type, trans, 
+        DB::statement('INSERT INTO transactions (member_id, user_id, type, trans,
             left_point_beginning_balance, right_point_beginning_balance, left_point_amount, right_point_amount,
             left_point_ending_balance, right_point_ending_balance, status_id)
-        SELECT id, 1 AS user_id, \'point\' AS TYPE, \'OVERDUE\' AS trans, left_point AS left_point_beginning_balance, 
+        SELECT id, 1 AS user_id, \'point\' AS TYPE, \'OVERDUE\' AS trans, left_point AS left_point_beginning_balance,
             right_point AS right_point_beginning_balance,
-            -(left_point) AS left_point_amount, -(right_point) AS right_point_amount, 0 AS left_point_ending_balance, 
+            -(left_point) AS left_point_amount, -(right_point) AS right_point_amount, 0 AS left_point_ending_balance,
             0 AS right_point_ending_balance, 3 AS status_id
         FROM members
         WHERE close_point_date < :now', array('now' => $this->date));
@@ -259,6 +259,12 @@ class ProcessMember implements ShouldQueue
 
     private function createPairBonus($upline, $new_member)
     {
+        //Set batasan maksimal kedalaman
+        $amount = $this->getPairAmount($upline, $new_member);
+
+        if ($amount === 0)
+            return;
+
         //Cari pasangan dari semua downline pada level $my_level
         $upline_level = $upline->tree_level;
         $my_tree_level = $new_member->tree_level;
@@ -295,7 +301,7 @@ class ProcessMember implements ShouldQueue
         if ($pasangan !== null)
         {
             $faktor_kali = intval($upline->level->minimum_point);
-            $nilai_point = floatval($upline->level->point_value);
+            $nilai_point = $amount; //floatval($upline->level->point_value);
 
             $transaction = Transaction::where('transaction_date', '=', $this->date)
                 ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
@@ -315,6 +321,43 @@ class ProcessMember implements ShouldQueue
             $transaction->save();
         }
 
+    }
+
+    private function getPairAmount($upline, $new_member)
+    {
+        $amount = 0;
+        /*$pair_formulas = [
+            '1' => [
+                [ 'from' => 1, 'to' => 20, 'amount' => 55000 ],
+                [ 'from' => 21, 'to' => 999999999, 'amount' => 0 ],
+            ],
+            '2' => [
+                [ 'from' => 1, 'to' => 35, 'amount' => 65000 ],
+                [ 'from' => 36, 'to' => 70, 'amount' => 30000 ],
+                [ 'from' => 71, 'to' => 100, 'amount' => 20000 ],
+                [ 'from' => 101, 'to' => 999999999, 'amount' => 0 ],
+            ]
+        ];*/
+
+        $up_level = $upline->tree_level;
+        $my_level = $new_member->tree_level;
+        $selisih_level = $my_level - $up_level;
+
+        $m_level = $new_member->level_id;
+        if ($m_level == 1)
+        {
+            if ($selisih_level > 0 && $selisih_level <= 20)
+                $amount = 55000;
+        } else if ($m_level == 2) {
+            if ($selisih_level >= 1 && $selisih_level <= 35)
+                $amount = 65000;
+                if ($selisih_level >= 36 && $selisih_level <= 70)
+                $amount = 30000;
+                if ($selisih_level >= 71 && $selisih_level <= 100)
+                $amount = 20000;
+        }
+
+        return $amount;
     }
 
     /*
