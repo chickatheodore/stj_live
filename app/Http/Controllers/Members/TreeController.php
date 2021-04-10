@@ -330,7 +330,9 @@ class TreeController extends Controller
                     continue;
 
                 $id = $member->id;
-                $upline = $member->upLine;
+                $upline = Member::find($member->upline_id); //$member->upLine->fresh();
+                $upline->refresh();
+
                 $pos = doubleval($upline->tree_position);
 
                 $my_pos = 0;

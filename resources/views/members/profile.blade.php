@@ -485,6 +485,6 @@
         function loadFile(event) {
             var image = document.getElementById('gambar_ktp');
             image.src = URL.createObjectURL(event.target.files[0]);
-        };
+        }
     </script>
 @endsection

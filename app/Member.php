@@ -53,7 +53,7 @@ use Laravel\Passport\HasApiTokens;
  * @property int $right_downline_count
  * @property bool $is_stockiest
  * @property bool $is_new_member
- * @property string $image_file
+ * @property int $ref_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -63,6 +63,7 @@ use Laravel\Passport\HasApiTokens;
  * @property Province $province
  * @property Member $sponsor
  * @property Member $upLine
+ * @property Member $referral
  * @property Transaction[] $myInternalTransactions
  * @property Transaction[] $myExternalTransactions
  */
@@ -101,7 +102,7 @@ class Member extends Authenticatable
         'sponsor_id', 'upline_id', 'left_downline_id', 'right_downline_id',
         'pin', 'left_point', 'left_bonus_point', 'left_bonus_partner', 'right_point', 'right_bonus_point', 'right_bonus_partner', 'point_bonus', 'sponsor_bonus', 'pair_bonus',
         'activation_date', 'close_point_date', 'tree_level', 'tree_position',
-        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member', 'is_active',
+        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member', 'is_active', 'ref_id',
         'created_at', 'updated_at', 'deleted_at'
     ];
 
@@ -155,6 +156,14 @@ class Member extends Authenticatable
     public function upLine()
     {
         return $this->belongsTo('App\Member', 'upline_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function referral()
+    {
+        return $this->belongsTo('App\Member', 'ref_id');
     }
 
     /**

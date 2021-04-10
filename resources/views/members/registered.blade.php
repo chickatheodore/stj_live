@@ -17,7 +17,7 @@
 
 @section('content')
     <section class="row flexbox-container">
-        <div class="col-xl-10 col-12 d-flex justify-content-center">
+        <div class="col-xl-10 col-md-12 col-12 justify-content-center">
 
             <div class="card bg-authentication rounded-0 mb-0" style="background-color: #fff">
                 <div class="row m-0">
@@ -90,7 +90,7 @@
                             </div>
                         </div>
 
-                        <div class="card rounded-0 mb-0 p-2">
+                        <!-- <div class="card rounded-0 mb-0 p-2">
                             <div class="card-header pt-50 pb-1">
                                 <div class="card-title">
                                     <h4 class="mb-0">Penempatan Member</h4>
@@ -124,7 +124,7 @@
 
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 

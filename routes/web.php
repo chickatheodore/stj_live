@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 
@@ -75,6 +76,8 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
     Route::get('/register', 'Members\PagesController@showMemberRegistrationForm');
     Route::post('/register', 'Members\PagesController@createMember')->name('member.registration');
 
+    Route::get('/activate', 'Members\PagesController@activateMember');
+
     Route::get('placement', 'Members\PagesController@showMemberPlacementForm');
     Route::post('placement', 'Members\PagesController@memberPlacement')->name('member.placement');
 
@@ -97,6 +100,8 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
 
     Route::get('point-history', 'Members\PagesController@showPINHistory');
     Route::get('stockiest', 'Members\PagesController@stockiest');
+
+    Route::post('ktp', 'Members\PagesController@checkValidKTP')->name('check.ktp');
 });
 
 Route::group(['middleware' => ['nodebugbar', 'restrictMidnight']], function () {
@@ -134,6 +139,8 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::post('/member/profileGeneral', 'Members\PagesController@updateProfileGeneral')->name('member.profile.general');
     Route::post('/member/profileAccount', 'Members\PagesController@updateProfileAccount')->name('member.profile.account');
     Route::post('/member/profileInfo', 'Members\PagesController@updateProfileInfo')->name('member.profile.info');
+
+    Route::get('/member/validateKTP/{nik}', 'Members\MemberController@validateKTP');
 });
 
 Route::get('/clear-cache', function () {
@@ -146,3 +153,17 @@ Route::group(['prefix' => 'system'], function () {
         Artisan::call('cache:clear');
     });
 });
+
+/*Route::post('/register', function (Request $request)
+{
+    $data = $request->image_file;
+    $validation = $request->validate([
+        'image_file' => 'required|file'
+    ]);
+    $file      = $validation['image_file']; // get the validated file
+    $extension = $file->getClientOriginalExtension();
+    $filename  = 'profile-photo-' . time() . '.' . $extension;
+    $path      = $file->storeAs('app/members', $filename);
+
+    dd($path);
+})->name('member.registration');*/

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Config;
+use Google\Cloud\Vision\VisionClient;
 
 class Helper
 {
@@ -60,7 +61,7 @@ class Helper
             'defaultLanguage'=>array('en'=>'en','fr'=>'fr','de'=>'de','pt'=>'pt'),
             'direction' => array('ltr', 'rtl'),
         ];
-        
+
         //if mainLayoutType value empty or not match with default options in custom.php config file then set a default value
         foreach ($allOptions as $key => $value) {
             if (array_key_exists($key, $DefaultData)) {
@@ -87,7 +88,7 @@ class Helper
                 }
             }
         }
-        
+
         //layout classes
         $layoutClasses = [
             'theme' => $data['theme'],
@@ -115,7 +116,7 @@ class Helper
         if(!session()->has('locale')){
             app()->setLocale($layoutClasses['defaultLanguage']);
         }
-        
+
         // sidebar Collapsed
         if ($layoutClasses['sidebarCollapsed'] == 'true') {
             $layoutClasses['sidebarClass'] = "menu-collapsed";
@@ -149,4 +150,53 @@ class Helper
             }
         }
     }
+
+    public static function getTextFromGoogleVision($base64image)
+    {
+        $visionJson = file_get_contents(base_path('resources/json/stjBali.json'));
+
+        $vision = new VisionClient(['keyFile' => json_decode($visionJson, true)]);
+        $image = $vision->image($base64image,
+            [
+                'WEB_DETECTION',
+                'TEXT_DETECTION'
+            ]);
+
+        $result = $vision->annotate($image);
+        //print_r($result); exit;
+
+        $texts = $result->text();
+        $web = $result->web();
+
+        foreach($texts as $key => $text)
+        {
+            $description[] = $text->description();
+        }
+
+        // fetch text from image //
+        //print_r($description[0]);
+
+        foreach ($web->entities() as $key => $entity)
+        {
+            $entity_per = number_format(@$entity->info()['score'] * 100 , 2);
+            if(isset($entity->info()['description']))
+            {
+                $match_condition[$entity_per]=['Identity'=>ucfirst($entity->info()['description'])];
+            }
+            else
+            {
+                $match_condition[$entity_per]=['Identity'=>'N/A'];
+            }
+        }
+
+        //print best match//
+        $best_match = current($match_condition);
+        return [
+            'description' => $description,
+            'match_condition' => $match_condition,
+            'texts' => $texts,
+            'web' => $web
+        ];
+    }
+
 }

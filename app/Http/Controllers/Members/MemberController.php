@@ -137,4 +137,10 @@ class MemberController extends Controller
         return json_encode($arr);
     }
 
+    public function validateKTP($nik)
+    {
+        $count = Member::where('nik', '=', $nik)->count();
+        return json_encode([ 'status' => $count < 3 ]);
+    }
+
 }

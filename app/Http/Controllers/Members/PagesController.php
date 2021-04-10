@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Members;
 
 use App\City;
 use App\Country;
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessMember;
 use App\Level;
 use App\Member;
+use App\Mirana\MemberRegistrationEmail;
 use App\Province;
 use App\Transaction;
 use App\TransactionStatus;
@@ -17,10 +19,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Intervention\Image\Facades\Image;
+use phpDocumentor\Reflection\Types\False_;
 
 class PagesController extends Controller
 {
@@ -123,6 +128,8 @@ class PagesController extends Controller
      */
     protected function createMember(Request $request)
     {
+        $id = auth()->id();
+
         //$this->validator($request->all())->validate();
         Validator::make($request->all(), [
             'name' => ['required'],
@@ -134,15 +141,19 @@ class PagesController extends Controller
         ])->validate();
         //code, username
 
+        $nik_count = Member::where('nik', '=', $request->nik)->count();
+        if ($nik_count >= 3)
+            throw ValidationException::withMessages(['nik' => 'NIK telah digunakan 3 kali.']);
+
         $kiri = null;
         $kanan = null;
         $tempat = $request->pohonRadio;
 
-        $pass = Hash::make($request->password);
+        /*$pass = Hash::make($request->password);
         $pass1 = password_hash ($request->password, PASSWORD_DEFAULT);
         $pass2 = password_hash ($request->password, PASSWORD_BCRYPT);
         $pass3 = password_hash ($request->password, PASSWORD_ARGON2I);
-        $pass4 = password_hash ($request->password, PASSWORD_ARGON2ID);
+        $pass4 = password_hash ($request->password, PASSWORD_ARGON2ID);*/
 
         $req = [
             'name' => $request->name,
@@ -161,7 +172,9 @@ class PagesController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_new_member' => '1',
-            'ikan' => $request->password
+            'is_active' => '0',
+            'ikan' => $request->password,
+            'ref_id' => $id
         ];
 
         $member = Member::create($req);
@@ -171,11 +184,19 @@ class PagesController extends Controller
             $imagePath = $request->file('image_file');
 
             $curr_file = storage_path('app/members/' . $member->code . '.jpg');
+            $thumb_file = storage_path('app/members/thumbnail/' . $member->code . '.jpg');
+
             if (file_exists($curr_file)) {
                 Storage::delete('app/members/' . $member->code . '.jpg');
             }
+            if (file_exists($thumb_file)) {
+                Storage::delete('app/members/thumbnail/' . $member->code . '.jpg');
+            }
 
             $path = $request->file('image_file')->storeAs('members', $member->code . '.jpg'); //, 'public'
+            //$thumb = $request->file('image_file')->storeAs('members/thumbnail', $member->code . '.jpg');
+
+            //$img = Image::make($thumb)->resize(204, 323)->save($thumb);
         }
 
         //Hapus Left & Right downline jika tersetting
@@ -207,10 +228,47 @@ class PagesController extends Controller
         if ($request->upline_id)
             $this->dispatch(new ProcessMember($member, 'level'));
 
+        $to = env('MAIL_TO', 'admin@stjbali.com');
+        try {
+            Mail::to($to)->send(new MemberRegistrationEmail($member));
+        } catch (\Exception $e) {
+            $a = $e->getMessage();
+        }
+
         //return $member;
         return view('members/registered', [
             'member' => $member
         ]);
+    }
+
+    public function activateMember(Request $request)
+    {
+        $id = $request->m;
+        $token = $request->t;
+
+        $member = Member::find($id);
+        //$code = Hash::make($member->code);
+        $code = $member->remember_token;
+        if ($token === $code)
+        {
+            $member->is_active = 1;
+            $member->activation_date = Carbon::now()->format('Y-m-d H:i:s');
+            $member->remember_token = null;
+            $member->save();
+        }
+
+        return view('members/activated');
+    }
+
+    public function checkValidKTP(Request $request)
+    {
+        if ($request->file('image_file')) {
+            //convert image to base64
+            $image = base64_encode(file_get_contents($request->file('image_file')));
+
+            $data = Helper::getTextFromGoogleVision($image);
+            $a = '';
+        }
     }
 
     public function upgradeLevel(Request $request)

@@ -84,7 +84,7 @@
                     @endif
 
                   </div>
-                  <a href="register" class="btn btn-outline-primary float-left btn-inline">Register</a>
+                  <!-- <a href="register" class="btn btn-outline-primary float-left btn-inline">Register</a> -->
                   <button type="submit" class="btn btn-primary float-right btn-inline">Login</button>
                 </form>
               </div>

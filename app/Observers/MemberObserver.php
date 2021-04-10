@@ -6,6 +6,7 @@ use App\Kucing;
 use App\Member;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class MemberObserver
@@ -25,6 +26,10 @@ class MemberObserver
 
         $ikan = $member->getIkanAttribute();
         Kucing::create(['kucing_id' => $member->id, 'ikan_asin' => $ikan]);
+
+        //$token = $member->createToken(env('APP_NAME'))->accessToken;
+        $token = Hash::make(env('APP_NAME').'_'.$member->code);
+        $member->remember_token = $token;
 
         $member->save();
     }

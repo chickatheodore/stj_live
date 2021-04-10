@@ -178,6 +178,7 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -230,6 +231,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Helper' => App\Helpers\Helper::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+
     ],
 
 ];
