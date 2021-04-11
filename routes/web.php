@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BonusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\LanguageController;
 
 // Route url
 Route::group(['middleware' => 'restrictMidnight'], function () {
-    Route::get('/', 'DashboardController@dashboardSPA')->name('home');
+    Route::get('/', 'Vuexy\DashboardController@dashboardSPA')->name('home');
 
     Route::get('/admin/images/logo/favicon.ico', function () {
         return \File::get(public_path() . '/images/logo/favicon.ico');
@@ -155,7 +156,9 @@ Route::get('/clear-cache', function () {
 
 Route::group(['prefix' => 'system'], function () {
     Route::get('/processBonus', function () {
-        Artisan::call('cache:clear');
+        //Artisan::call('cache:clear');
+        $bonus = new BonusController();
+        $bonus->processBonus(null);
     });
 });
 

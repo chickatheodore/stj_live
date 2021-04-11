@@ -477,7 +477,7 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/profile.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('js/scripts/members/profile.js')) }}"></script>
     <script type="text/javascript">
         let m_p = {{ $member->pin }};
         let m_l = {{ $member->level_id }};

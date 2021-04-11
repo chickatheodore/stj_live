@@ -8,6 +8,7 @@
 ==========================================================================================*/
 
 $(document).ready(function () {
+
     // Level select
     var levelselect = $("#level_id").select2({
         dropdownAutoWidth: true,
@@ -96,6 +97,9 @@ $('#level_id').change(function (e) {
 
 $('#btn-save-level').click(function (e) {
     e.preventDefault();
+
+    _setLoadingButton($('#btn-save-level'));
+
     let _data = $('#form-general').serializeArray();
 
     _data.push({'name': '_acc_', 'value': $('#_acc_').val()});
@@ -107,10 +111,10 @@ $('#btn-save-level').click(function (e) {
         headers: addAuthHeader()
     });
 
-    loadingButton($('#btn-save-level'), 'Save changes', true);
+    loadingButtonSTJ('Save changes', true);
     $.ajax({ data: _data })
         .fail(function() {
-            loadingButton($('#btn-save-level'), 'Save changes', false);
+            loadingButtonSTJ('Save changes', false);
             Swal.fire({
                 title: "Warning!",
                 text: 'Proses simpan gagal!',
@@ -122,7 +126,7 @@ $('#btn-save-level').click(function (e) {
             });
         })
         .done(function( result ) {
-            loadingButton($('#btn-save-level'), 'Save changes', false);
+            loadingButtonSTJ('Save changes', false);
             const me = JSON.parse(result);
             if (me.status) {
                 toastr.success(me.message, 'Upgrade level', { "closeButton": true });
@@ -142,6 +146,9 @@ $('#btn-save-level').click(function (e) {
 
 $('#btn-save-account').click(function (e) {
     e.preventDefault();
+
+    _setLoadingButton($('#btn-save-account'));
+
     var _data = $('#form-account').serializeArray();
 
     _data.push({'name': '_acc_', 'value': $('#_acc_').val()});
@@ -153,10 +160,10 @@ $('#btn-save-account').click(function (e) {
         headers: addAuthHeader()
     });
 
-    loadingButton($('#btn-save-account'), 'Save changes', true);
+    loadingButtonSTJ('Save changes', true);
     $.ajax({ data: _data })
         .fail(function() {
-            loadingButton($('#btn-save-account'), 'Save changes', false);
+            loadingButtonSTJ('Save changes', false);
             Swal.fire({
                 title: "Warning!",
                 text: 'Proses simpan gagal!',
@@ -168,7 +175,7 @@ $('#btn-save-account').click(function (e) {
             });
         })
         .done(function( result ) {
-            loadingButton($('#btn-save-account'), 'Save changes', false);
+            loadingButtonSTJ('Save changes', false);
             const me = JSON.parse(result);
             if (me.status) {
                 toastr.success(me.message, 'Password change', { "closeButton": true });
@@ -189,6 +196,8 @@ $('#btn-save-account').click(function (e) {
 
 $('#btn-save-info').click(function (e) {
     e.preventDefault();
+
+    _setLoadingButton($('#btn-save-info'));
 
     var form = $(this);
     var formData = false;
@@ -222,11 +231,11 @@ $('#btn-save-info').click(function (e) {
         processData : false
     });
 
-    loadingButton($('#btn-save-info'), 'Save changes', true);
+    loadingButtonSTJ('Saving ...', true);
     $.ajax({ data: formData })
         .fail(function() {
-            $('#modal-backdrop').modal('hide');
-            loadingButton($('#btn-save-info'), 'Save changes', false);
+            hideSTJModal();
+            loadingButtonSTJ( null, false);
             Swal.fire({
                 title: "Warning!",
                 text: 'Proses simpan gagal!',
@@ -238,12 +247,12 @@ $('#btn-save-info').click(function (e) {
             });
         })
         .done(function( result ) {
-            loadingButton($('#btn-save-info'), 'Save changes', false);
+            loadingButtonSTJ(null, false);
             const me = JSON.parse(result);
             if (me.status) {
                 refreshKTP();
                 toastr.success(me.message, 'Info akun', { "closeButton": true });
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
             } else {
                 Swal.fire({
                     title: "Warning!",
@@ -255,7 +264,7 @@ $('#btn-save-info').click(function (e) {
                     customClass: 'animated tada',
                 });
             }
-            loadingButton($('#btn-save-info'), 'Save changes', false);
+            loadingButtonSTJ(null, false);
         });
 
 });
@@ -270,18 +279,4 @@ function refreshKTP() {
 
     let _url = ktp_path + '?timestamp=' + new Date().getTime();
     $("#gambar_ktp").removeAttr("src").attr("src", _url);
-}
-
-function loadingButton(e, text, show) {
-    if (show == true) {
-        e.prop('disabled', true);
-        e.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + text);
-        $('#modal-backdrop').modal('show');
-        $('#loader-text').html('Saving...');
-    } else {
-        e.prop('disabled', false);
-        e.html(text);
-        $('#modal-backdrop').modal('hide');
-        $('#loader-text').html('Loading...');
-    }
 }

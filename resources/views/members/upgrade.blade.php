@@ -104,7 +104,7 @@
 
         $('#btn-extend').click(function (e) {
             $('#btn-extend').prop('disabled', true);
-            $('#modal-backdrop').modal('show');
+            showSTJModal();
 
             let _data = $('#form-upgrade').serializeArray();
 
@@ -118,7 +118,7 @@
 
             $.ajax({ data: _data })
                 .fail(function() {
-                    $('#modal-backdrop').modal('hide');
+                    hideSTJModal();
                     $('#btn-extend').prop('disabled', false);
 
                     Swal.fire({
@@ -132,7 +132,7 @@
                     });
                 })
                 .done(function( result ) {
-                    $('#modal-backdrop').modal('hide');
+                    hideSTJModal();
                     $('#level_id').prop('disabled', true);
 
                     const me = JSON.parse(result);

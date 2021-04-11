@@ -199,5 +199,5 @@ $read_only = isset($saved) || count($newMembers) < 1;
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/placement.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('js/scripts/members/placement.js')) }}"></script>
 @endsection

@@ -199,4 +199,15 @@ class Helper
         ];
     }
 
+    public static function asset($path) {
+        $base = base_path();
+        $asset = asset($path);
+        $time = filemtime($base . $path);
+
+        $lastDot = strripos($asset, '.');
+        $file = substr($asset, 0, $lastDot + 1) . $time . substr($asset, $lastDot);
+
+        return $file;
+    }
+
 }

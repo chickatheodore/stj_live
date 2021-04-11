@@ -124,7 +124,7 @@ $("#upline_id").change(function (e) {
     pohonKanan.prop('disabled', false);
     bSave.prop('disabled', false);
 
-    $('#modal-backdrop').modal('show');
+    showSTJModal();
     $.ajaxSetup({
         type: "GET",
         headers: addAuthHeader()
@@ -134,7 +134,7 @@ $("#upline_id").change(function (e) {
         url: "/member/getMember/" + id,
     })
         .done(function( data ) {
-            //$('#modal-backdrop').modal('hide');
+            //hideSTJModal();
             hideSTJModal();
             var member = JSON.parse(data);
 
@@ -186,7 +186,7 @@ function checkMember(mId) {
     //if (!level) return;
 
     $('#level_id').attr('disabled', 'disabled');
-    $('#modal-backdrop').modal('show');
+    showSTJModal();
     $.ajaxSetup({
         type: "GET",
         headers: addAuthHeader()
@@ -196,7 +196,7 @@ function checkMember(mId) {
         url: "/member/getPoint/" + mId,
     })
     .done(function( data ) {
-        //$('#modal-backdrop').modal('hide');
+        //hideSTJModal();
         hideSTJModal();
         let result = JSON.parse(data);
         let member = result.member;

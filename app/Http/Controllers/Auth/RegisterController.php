@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\City;
 use App\Country;
-use App\Jobs\ProcessMember;
 use App\Member;
 use App\Province;
 use App\User;

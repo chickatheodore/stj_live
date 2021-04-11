@@ -113,7 +113,7 @@
             _data.push({'name': '_acc_', 'value': $('#_acc_').val()});
             _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
 
-            $('#modal-backdrop').modal('show');
+            showSTJModal();
 
             $.ajaxSetup({
                 type: "POST",
@@ -123,10 +123,10 @@
 
             $.ajax({ data: _data })
             .fail(function (e) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
             })
             .done(function( data ) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
                 var histories = JSON.parse(data);
 
                 $('#bonustable tbody').empty();

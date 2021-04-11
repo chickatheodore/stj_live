@@ -246,13 +246,18 @@ class PagesController extends Controller
         $id = $request->m;
         $token = $request->t;
 
+        $now = Carbon::now();
+        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
+        $tgl = $tgl->addMonth(2)->subDay();
+
         $member = Member::find($id);
         //$code = Hash::make($member->code);
         $code = $member->remember_token;
         if ($token === $code)
         {
             $member->is_active = 1;
-            $member->activation_date = Carbon::now()->format('Y-m-d H:i:s');
+            $member->activation_date = $now->format('Y-m-d H:i:s');
+            $member->close_point_date = $tgl;
             $member->remember_token = null;
             $member->save();
         }

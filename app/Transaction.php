@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $bonus_paid_amount
  * @property float $bonus_ending_balance
  * @property int $reff_id
+ * @property string $remarks
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -41,7 +42,10 @@ class Transaction extends Model
     /**
      * @var array
      */
-    protected $fillable = ['member_id', 'user_id', 'status_id', 'transaction_date', 'type', 'trans', 'pin_beginning_balance', 'pin_amount', 'pin_ending_balance', 'left_point_beginning_balance', 'right_point_beginning_balance', 'left_point_amount', 'right_point_amount', 'left_point_ending_balance', 'right_point_ending_balance', 'bonus_beginning_balance', 'bonus_point_amount', 'bonus_sponsor_amount', 'bonus_paid_amount', 'bonus_ending_balance', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['member_id', 'user_id', 'status_id', 'transaction_date', 'type', 'trans', 'pin_beginning_balance', 'pin_amount', 'pin_ending_balance',
+        'left_point_beginning_balance', 'right_point_beginning_balance', 'left_point_amount', 'right_point_amount', 'left_point_ending_balance', 'right_point_ending_balance',
+        'bonus_beginning_balance', 'bonus_point_amount', 'bonus_sponsor_amount', 'bonus_paid_amount', 'bonus_ending_balance', 'remarks',
+        'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return BelongsTo

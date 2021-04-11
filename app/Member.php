@@ -53,6 +53,7 @@ use Laravel\Passport\HasApiTokens;
  * @property int $right_downline_count
  * @property bool $is_stockiest
  * @property bool $is_new_member
+ * @property bool $is_paired
  * @property int $ref_id
  * @property string $created_at
  * @property string $updated_at

@@ -159,7 +159,7 @@ $(document).ready(function () {
                 headers: addAuthHeader()
             });
 
-            $('#modal-backdrop').modal('show');
+            showSTJModal();
             let _data = [];
             /*for (var i = 0; i < rows.length; i++)
             {
@@ -182,10 +182,10 @@ $(document).ready(function () {
 
             $.ajax({ data: _data })
             .done(function( result ) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
             });
 
-            $('#modal-backdrop').modal('hide');
+            hideSTJModal();
 
         });
         /*** ================================================ ***/

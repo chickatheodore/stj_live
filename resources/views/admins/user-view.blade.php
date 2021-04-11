@@ -82,7 +82,7 @@
     $('#btn-approve').click(function(e) {
         e.preventDefault();
 
-        $('#modal-backdrop').modal('show');
+        showSTJModal();
             $.ajaxSetup({
                 type: "GET",
                 headers: addAuthHeader()
@@ -95,7 +95,7 @@
                 data: { m: _id, t: _token }
             })
             .fail(function (e) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
                 Swal.fire({
                     title: "Warning!",
                     text: "Terjadi kesalahan saat memproses permintaan.",
@@ -107,7 +107,7 @@
                 });
             })
             .done(function( data ) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
                 let result = JSON.parse(data);
                 if (result.status === true)
                 {

@@ -58,7 +58,7 @@ class MemberCommand extends Command
 
         dispatch(new ProcessMember(null, 'overdue'));
 
-        dispatch(new ProcessMember(null, 'bonus'));
+        //dispatch(new ProcessMember(null, 'bonus'));
 
         /*$overdue_members = Member::where('close_point_date', '<', Carbon::now()->format('Y-m-d'));
         foreach ($overdue_members as $overdue_member) {

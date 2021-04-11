@@ -202,21 +202,26 @@ class AdminController extends Controller
 
     public function unApproved()
     {
-        $members = Member::where('is_active', '=', '0')
-            ->where('is_new_member', '=', '1')->get();
+        $members = Member::where('is_active', '=', '0')->get();
 
         return json_encode($members);
     }
 
     public function approveMember(Request $request)
     {
+        $now = Carbon::now();
+        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
+        $tgl = $tgl->addMonth(2)->subDay();
 
         $datas = json_decode($request->rows);
+
         foreach ($datas as $data) {
             $member = Member::find($data);
 
             $member->is_active = 1;
             $member->activation_date = Carbon::now();
+            $member->close_point_date = $tgl;
+            $member->remember_token = null;
 
             $member->save();
         }

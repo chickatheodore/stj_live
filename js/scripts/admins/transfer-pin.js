@@ -68,10 +68,10 @@ $('#btn-save').click(function (e) {
         headers: addAuthHeader()
     });
 
-    $('#modal-backdrop').modal('show');
+    showSTJModal();
     $.ajax({ data: _data })
         .fail(function() {
-            $('#modal-backdrop').modal('hide');
+            hideSTJModal();
             Swal.fire({
                 title: "Warning!",
                 text: 'Proses transfer PIN gagal!',
@@ -83,7 +83,7 @@ $('#btn-save').click(function (e) {
             });
         })
         .done(function( result ) {
-            $('#modal-backdrop').modal('hide');
+            hideSTJModal();
             const me = JSON.parse(result);
             if (me.status) {
                 Swal.fire({

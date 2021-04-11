@@ -321,7 +321,7 @@ class TreeController extends Controller
         }
         */
 
-        $i = 3;
+        $i = 4;
         $max = Member::max('tree_level');
         while ($i <= $max)
         {

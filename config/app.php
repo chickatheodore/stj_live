@@ -178,7 +178,8 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+        Arcanedev\LogViewer\LogViewerServiceProvider::class,
     ],
 
     /*

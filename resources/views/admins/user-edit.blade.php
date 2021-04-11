@@ -219,7 +219,7 @@
 
 @section('page-script')
     {{-- Page js files --}}
-    <script src="{{ asset(mix('js/scripts/admins/user.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('js/scripts/admins/user.js')).'?v='.date('Ymdhis') }}"></script>
     <script src="{{ asset(mix('js/scripts/navs/navs.js')) }}"></script>
 @endsection
 

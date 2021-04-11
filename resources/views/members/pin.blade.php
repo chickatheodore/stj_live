@@ -53,5 +53,5 @@
 
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/pin.js')).'?v='.date('Ymdhis') }}"></script>
+    <!-- <script src="{{ Helper::asset(mix('js/scripts/members/pin.js')) }}"></script> -->
 @endsection

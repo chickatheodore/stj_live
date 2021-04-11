@@ -7,8 +7,11 @@
 	Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
+let _buttonSave = $('#btn-save');
+
 $(document).ready(function () {
 
+    _setLoadingButton(_buttonSave);
     // Member select
     var memberselect = $("#member_id").select2({
         dropdownAutoWidth: true,
@@ -53,10 +56,10 @@ $("#member_id").change(function (e) {
 
     let mId = $('#member_id option:selected').val();
 
-    $('#btn-save').prop('disabled', !mId);
+    _buttonSave.prop('disabled', !mId);
 });
 
-$('#btn-save').click(function (e) {
+_buttonSave.click(function (e) {
     e.preventDefault();
 
     let mId = $('#member_id option:selected').val();
@@ -88,6 +91,8 @@ $('#btn-save').click(function (e) {
         return;
     }
 
+    loadingButtonSTJ('Transfer', true);
+
     let _data = $('#form-transfer-pin').serializeArray();
 
     _data.push({'name': '_acc_', 'value': $('#_acc_').val()});
@@ -101,6 +106,7 @@ $('#btn-save').click(function (e) {
 
     $.ajax({ data: _data })
         .fail(function() {
+            loadingButtonSTJ(null, false);
             Swal.fire({
                 title: "Warning!",
                 text: 'Proses transfer PIN gagal!',
@@ -112,6 +118,7 @@ $('#btn-save').click(function (e) {
             });
         })
         .done(function( result ) {
+            loadingButtonSTJ(null, false);
             const me = JSON.parse(result);
             if (me.status) {
                 Swal.fire({

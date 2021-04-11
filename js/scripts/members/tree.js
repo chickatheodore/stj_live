@@ -20,7 +20,7 @@ var ajaxURLs = {
 
 function initTree(mId) {
     let _url = '/member/getMemberTree'; //+ (mId ? '/' + mId : '');
-    //$('#modal-backdrop').modal('show');
+    //showSTJModal();
 
     $.ajaxSetup({
         type: "POST",
@@ -34,7 +34,7 @@ function initTree(mId) {
         data: { 'id': mId }
     })
     .done(function( data ) {
-        //$('#modal-backdrop').modal('hide');
+        //hideSTJModal();
         let result = sanitizeData(JSON.parse(data));
 
         _orChart = $('#chart-container').orgchart({

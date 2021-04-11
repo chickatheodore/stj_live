@@ -337,7 +337,7 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/tree.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('js/scripts/members/tree.js')) }}"></script>
     <script type="text/javascript">
         let _mId = {{ auth()->id() }};
         let _orChart = null;

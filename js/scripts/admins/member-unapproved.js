@@ -129,7 +129,7 @@ $(document).ready(function () {
                 headers: addAuthHeader()
             });
 
-            $('#modal-backdrop').modal('show');
+            showSTJModal();
             let _data = [];
 
             let _rows = [];
@@ -143,10 +143,10 @@ $(document).ready(function () {
 
             $.ajax({ data: _data })
             .done(function( result ) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
             });
 
-            $('#modal-backdrop').modal('hide');
+            hideSTJModal();
 
         });
         /*** ================================================ ***/

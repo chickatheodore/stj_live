@@ -264,7 +264,7 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ asset(mix('js/scripts/members/register.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('js/scripts/members/register.js')) }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>
 
     <script type="text/javascript">
@@ -300,7 +300,7 @@
 
         function checkNIK(_nik)
         {
-            $('#modal-backdrop').modal('show');
+            showSTJModal();
             $.ajaxSetup({
                 type: "GET",
                 headers: addAuthHeader()
@@ -309,7 +309,7 @@
                 url: "/member/validateKTP/" + _nik,
             })
             .fail(function (e) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
                 Swal.fire({
                     title: "Warning!",
                     text: "Terjadi kesalahan saat memproses permintaan.",
@@ -321,7 +321,7 @@
                 });
             })
             .done(function( data ) {
-                $('#modal-backdrop').modal('hide');
+                hideSTJModal();
                 let result = JSON.parse(data);
                 if (result.status === false)
                 {
