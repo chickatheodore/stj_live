@@ -42,7 +42,7 @@ class ProcessMember implements ShouldQueue
         //$this->operation = $operation;
 
         //options : no_point, with_point
-        $this->mode = 'no_point';
+        $this->mode = 'with_point';
 
         $arguments = func_get_args();
         $numberOfArguments = func_num_args();
@@ -85,7 +85,7 @@ class ProcessMember implements ShouldQueue
         $now = Carbon::now();
         $close_date = Carbon::parse($member->close_point_date . ' 23:59:59');
 
-        $skip = $now->gt($close_date) || $member->is_new_member === 1 || $member->is_active === 0;
+        $skip = $member->id == 1 || $now->gt($close_date) || $member->is_new_member === 1 || $member->is_active === 0;
 
         return $skip;
     }
@@ -96,6 +96,7 @@ class ProcessMember implements ShouldQueue
 
         //$find_expired_tupo = 'SELECT * FROM members WHERE close_point_date < :now' . $now;
 
+        /*
         DB::statement('INSERT INTO transactions (member_id, user_id, type, trans,
             left_point_beginning_balance, right_point_beginning_balance, left_point_amount, right_point_amount,
             left_point_ending_balance, right_point_ending_balance, status_id)
@@ -107,13 +108,52 @@ class ProcessMember implements ShouldQueue
         WHERE id > 2 and close_point_date < :now', array('now' => $this->date));
 
         DB::statement('UPDATE members SET left_point = 0, right_point = 0 WHERE id > 2 and close_point_date < :now', array('now' => $this->date));
+        */
+
+        $members = Member::all();
+        foreach ($members as $member) {
+            if ($member->id > 2 && $member->is_active === 1 && Carbon::parse($member->close_point_date) < Carbon::now())
+            {
+                $transaction = Transaction::where('member_id', '=', $member->id)->where('trans', '=', 'OVERDUE')->orderByDesc('transaction_date')->first();
+                if ($transaction === null) {
+                    Transaction::create([
+                        'member_id' => $member->id,
+                        'user_id' => '1',
+                        'type' => 'point',
+                        'trans' => 'OVERDUE',
+                        'left_point_beginning_balance' => $member->left_point,
+                        'right_point_beginning_balance' => $member->right_point,
+                        'left_point_amount' => 0 - $member->left_point,
+                        'right_point_amount' => 0 - $member->right_point,
+                        'left_point_ending_balance' => '0',
+                        'right_point_ending_balance' => '0',
+                        'status_id' => '3',
+                    ]);
+                }
+
+                $member->left_point = 0;
+                $member->right_point = 0;
+                $member->save();
+            }
+
+            //jika member punya point kiri dan kanan, ubah ke bonus
+            if ($member->id > 2 && $member->is_active === 1 && Carbon::parse($member->close_point_date) >= Carbon::now()) {
+
+                //Ubah Poin ke Bonus Poin
+                if ($member->left_point > 0 && $member->right_point > 0)
+                    $konversi = $this->convertPointToBonusPoint($member);
+
+            }
+
+        }
 
     }
 
     private function processMemberBonus()
     {
-        DB::statement('insert into transactions (member_id, user_id, type, trans, status_id) values
-            select id, 1, \'all\', \'SYSTEM\', 1 from members where id > 2 and is_active = 1 and close_point_date >= :now', array('now' => $this->date));
+        //DB::statement('insert into transactions (member_id, user_id, type, trans, status_id)
+        //    select id, 1 AS user_id, \'all\' AS type, \'SYSTEM\' AS trans, 1 AS status_id from members where id > 2
+        //    and is_active = 1 and close_point_date >= :now', array('now' => $this->date));
 
         /*
          * Member memperoleh bonus jika ada Member baru yang memenuhi syarat :
@@ -154,13 +194,9 @@ class ProcessMember implements ShouldQueue
                 if (!$this->skipMember($upline)) {
                     $position = 'left';
 
-                    //Ubah Poin ke Bonus Poin
-                    if ($upline->left_point > 0 && $upline->right_point > 0)
-                        $upline = $this->convertPointToBonusPoint($upline);
-
                     if ($this->mode === 'with_point') {
                         //Poin downline
-                        $this->processUpline($upline, $temp_member, $position);
+                        $this->processUpline($upline, $temp_member, $position, $new_member);
                     }
 
                     //Bonus Pasangan
@@ -174,10 +210,12 @@ class ProcessMember implements ShouldQueue
                     $uid = 0;
                 else {
                     //$upline = $upline->upLine;
-                    $up_id = $upline->upline_id;
 
-                    if ($this->mode === 'with_point')
+                    if ($this->mode === 'with_point') {
                         $temp_member = Member::find($up_id);
+                    }
+
+                    $up_id = $upline->upline_id;
                 }
 
                 //$temp_member = $upline;
@@ -238,7 +276,7 @@ class ProcessMember implements ShouldQueue
         return $position;
     }
 
-    private function processUpline($upline, $downline, $position)
+    private function processUpline($upline, $downline, $position, $new_member)
     {
         $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
             ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
@@ -252,6 +290,12 @@ class ProcessMember implements ShouldQueue
             $transaction->user_id = 1;
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
+
+            $last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
+            if ($last_trans !== null) {
+                $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
+                $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
+            }
         }
 
         //Upline dapat Bonus Point (untuk member baru)
@@ -267,11 +311,11 @@ class ProcessMember implements ShouldQueue
         $upline->save();
 
         //Berikan Bonus untuk Upline
-        $transaction = $this->createPointBonus($upline, $transaction, $position);
+        $transaction = $this->createPointBonus($upline, $transaction, $position, $new_member);
         $transaction->save();
     }
 
-    private function createPointBonus($upline, $transaction, $position)
+    private function createPointBonus($upline, $transaction, $position, $new_member)
     {
         $transaction->left_point_amount = 0;
         $transaction->right_point_amount = 0;
@@ -288,7 +332,7 @@ class ProcessMember implements ShouldQueue
         $transaction->left_point_ending_balance = $transaction->left_point_beginning_balance + $transaction->left_point_amount;
         $transaction->right_point_ending_balance = $transaction->right_point_beginning_balance + $transaction->right_point_amount;
 
-        $transaction->remarks = $this->createRemarks($transaction, 'Bonus member baru (25 BV).');
+        $transaction->remarks = $this->createRemarks($transaction, 'Bonus member baru [ ' . $new_member->code . ' - ' . $new_member->name . ' ] (25 BV).');
 
         return $transaction;
     }
@@ -320,16 +364,23 @@ class ProcessMember implements ShouldQueue
             $transaction->user_id = 1;
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
+
+            $last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
+            if ($last_trans !== null) {
+                $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
+                $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
+            }
         }
 
         $transaction->bonus_point_amount = $jumlah_point * ($faktor_kali * $nilai_point);
-        $transaction->save();
 
         $transaction->remarks = $this->createRemarks($transaction,
-            'Ubah bonus point: ' . number_format($jumlah_point, 0) . '. Level: ' . $level .
+            'Ubah bonus point: ' . number_format($max, 0) . ' BV (' . number_format($jumlah_point, 0) . '). Level: ' . $level .
             ', [ (' . number_format($jumlah_point, 0) . ' * ' . number_format($faktor_kali, 0) . ') * ' .
             number_format($nilai_point, 0) . ' ] = ' . number_format($transaction->bonus_point_amount, 0)
         );
+
+        $transaction->save();
 
         $upline->left_point = $upline->left_point - $max;
         $upline->right_point = $upline->right_point - $max;
@@ -355,6 +406,12 @@ class ProcessMember implements ShouldQueue
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
             $transaction->bonus_sponsor_amount = 0;
+
+            $last_trans = Transaction::where('member_id', '=', $sponsor->id)->orderByDesc('transaction_date')->first();
+            if ($last_trans !== null) {
+                $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
+                $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
+            }
         }
 
         $faktor_kali = 1;   // Sponsor bonus tidak di kali 8, intval($sponsor->level->minimum_point);
@@ -444,6 +501,12 @@ class ProcessMember implements ShouldQueue
                 $transaction->type = 'all';
                 $transaction->trans = 'SYSTEM';
                 $transaction->bonus_partner_amount = 0;
+
+                $last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
+                if ($last_trans !== null) {
+                    $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
+                    $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
+                }
             }
 
             $bonus = $faktor_kali * $nilai_point;

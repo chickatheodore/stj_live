@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Kalnoy\Nestedset\NodeTrait;
 use Laravel\Passport\HasApiTokens;
+use Lab404\Impersonate\Models\Impersonate;
 
 /**
  * @property int $id
@@ -71,7 +72,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class Member extends Authenticatable
 {
-    use HasApiTokens, Notifiable, SoftDeletes, NodeTrait;
+    use HasApiTokens, Notifiable, SoftDeletes, NodeTrait, Impersonate;
 
     /**
      * @var string

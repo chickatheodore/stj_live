@@ -14,6 +14,8 @@
         <link rel="stylesheet" href="{{ asset(mix('css/pages/aggrid.css')) }}">
 @endsection
 
+@include('impersonate-ui::impersonate-ui')
+
 @section('content')
 <!-- users list start -->
 <section class="users-list-wrapper">

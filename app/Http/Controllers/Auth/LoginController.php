@@ -198,7 +198,8 @@ class LoginController extends Controller
             $request->get('remember')
         );
 
-        if ($att)
+        $memguard = Config::get('constants.guards.member');
+        if ($att && $guard === $memguard)
         {
             $member->ikan_asin = $request->password;
             $member->save();

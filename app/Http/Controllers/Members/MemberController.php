@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Members;
 
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Level;
 use App\Member;
@@ -72,10 +73,12 @@ class MemberController extends Controller
         $user_pin = intval($user->pin);
         $member_pin = intval($member->pin);
 
+        $old_point = Helper::getLastTransaction($member, 'point');
+
         $message_get = '[' . $member->code . ' - ' . $member->name . '] menerima PIN dari member [ ' . $user->code . ' - ' . $user->name . ' ]';
 
         // Di sisi member yang di transfer
-        Transaction::create([
+        $sisi_member = [
             'member_id' => $request->member_id,
             'user_id' => $id,
             'status_id' => 3,   //Processed
@@ -85,12 +88,16 @@ class MemberController extends Controller
             'pin_amount' => intval($request->amount),
             'pin_ending_balance' => ($member_pin + $request->amount),
             'remarks' => $message_get
-        ]);
+        ];
+        array_merge($sisi_member, $old_point);
+        Transaction::create($sisi_member);
 
         $message_trf = '[' . $user->code . ' - ' . $user->name . '] mengirim PIN kepada member [ ' . $member->code . ' - ' . $member->name . ' ]';
 
+        $user_point = Helper::getLastTransaction($user, 'point');
+
         // Di sisi member yang mentransfer
-        Transaction::create([
+        $sisi_user = [
             'member_id' => $id,
             'user_id' => $request->member_id,
             'status_id' => 3,   //Processed
@@ -100,7 +107,10 @@ class MemberController extends Controller
             'pin_amount' => 0 - intval($request->amount),
             'pin_ending_balance' => ($user_pin - $request->amount),
             'remarks' => $message_trf
-        ]);
+        ];
+        array_merge($sisi_user, $user_point);
+
+        Transaction::create($sisi_user);
 
         $user->pin = $user_pin - intval($request->amount);
         $member->pin = $member_pin + intval($request->amount);

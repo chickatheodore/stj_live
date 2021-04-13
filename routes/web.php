@@ -50,6 +50,7 @@ Route::group(['middleware' => 'restrictMidnight'], function () {
         }
         //abort(404);
     }]);
+
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidnight']], function () {
@@ -116,6 +117,8 @@ Route::group(['middleware' => ['nodebugbar', 'restrictMidnight']], function () {
     Route::get('/admin/paidBonus', 'Admins\AdminController@paidBonus');
     Route::get('/admin/expiredTUPO', 'Admins\AdminController@expiredTUPO');
     Route::get('/admin/unApproved', 'Admins\AdminController@unApproved');
+
+    Route::get('/reload-captcha', 'Vuexy\DashboardController@reloadCaptcha');
 });
 
 /*Route::group(['middleware' => ['stj_api', 'restrictMidnight', 'nodebugbar']], function () {
@@ -148,6 +151,8 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::post('/member/profileInfo', 'Members\PagesController@updateProfileInfo')->name('member.profile.info');
 
     Route::get('/member/validateKTP/{nik}', 'Members\MemberController@validateKTP');
+
+    Route::post('/sendmail', 'Vuexy\DashboardController@sendContactUsEmail')->name('contactus.sendmail');
 });
 
 Route::get('/clear-cache', function () {
@@ -161,6 +166,14 @@ Route::group(['prefix' => 'system'], function () {
         $bonus = new BonusController();
         $bonus->processBonus(null);
     });
+});
+
+//Route::impersonate();
+
+//Route::post('/impersonate-ui', 'Hapidjus\ImpersonateUI\Controllers');
+Route::group(['middleware' => ['web','admin','member']], function () {
+    Route::post('impersonate-ui', [Hapidjus\ImpersonateUI\Controllers\ImpersonateUiController::class, 'take'])->name('impersonate-ui.take');
+    Route::get('impersonate-ui', [Hapidjus\ImpersonateUI\Controllers\ImpersonateUiController::class, 'leave'])->name('impersonate-ui.leave');
 });
 
 /*Route::post('/register', function (Request $request)

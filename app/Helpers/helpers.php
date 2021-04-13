@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Transaction;
 use Config;
 use Google\Cloud\Vision\VisionClient;
 
@@ -208,6 +209,46 @@ class Helper
         $file = substr($asset, 0, $lastDot + 1) . $time . substr($asset, $lastDot);
 
         return $file;
+    }
+
+    public static function getLastTransaction($member, $type)
+    {
+        $transaction = Transaction::where('member_id', '=', $member->id)->orderByDesc('transaction_date')->first();
+        if ($transaction !== null) {
+            if ($type == 'all') {
+                return $transaction->toArray();
+            } if ($type == 'pin') {
+                return [
+                    //'pin_beginning_balance' => $transaction->pin_beginning_balance,
+                    //'pin_amount' => $transaction->pin_amount,
+
+                    'pin_beginning_balance' => $transaction->pin_ending_balance,
+                    'pin_ending_balance' => $transaction->pin_ending_balance
+                ];
+            } else if ($type === 'point') {
+                return [
+                    //'left_point_beginning_balance' => $transaction->left_point_beginning_balance,
+                    //'right_point_beginning_balance' => $transaction->right_point_beginning_balance,
+                    //'left_point_amount' => $transaction->left_point_amount,
+                    //'right_point_amount' => $transaction->right_point_amount,
+
+                    'left_point_beginning_balance' => $transaction->left_point_ending_balance,
+                    'right_point_beginning_balance' => $transaction->right_point_ending_balance,
+                    'left_point_ending_balance' => $transaction->left_point_ending_balance,
+                    'right_point_ending_balance' => $transaction->right_point_ending_balance,
+
+                    //'bonus_beginning_balance' => $transaction->bonus_beginning_balance,
+                    //'bonus_point_amount' => $transaction->bonus_point_amount,
+                    //'bonus_sponsor_amount' => $transaction->bonus_sponsor_amount,
+                    //'bonus_partner_amount' => $transaction->bonus_partner_amount,
+                    //'bonus_paid_amount' => $transaction->bonus_paid_amount,
+
+                    'bonus_beginning_balance' => $transaction->bonus_ending_balance,
+                    'bonus_ending_balance' => $transaction->bonus_ending_balance,
+                ];
+            }
+        }
+        return null;
     }
 
 }

@@ -2,6 +2,10 @@
     class="horizontal-layout horizontal-menu {{$configData['horizontalMenuType']}} {{ $configData['blankPageClass'] }} {{ $configData['bodyClass'] }}  {{($configData['theme'] === 'dark') ? 'dark-layout' : 'light' }} {{ $configData['footerType'] }}  footer-light"
     data-menu="horizontal-menu" data-col="2-columns" data-open="hover" data-layout="{{ $configData['theme'] }}">
 
+    @impersonating($guard = 'member')
+    @include('impersonate-ui::impersonate-ui')
+    @endImpersonating
+
     {{-- Include Sidebar --}}
     @include('panels.sidebar')
 

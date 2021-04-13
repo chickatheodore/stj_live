@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\City;
 use App\Country;
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Kucing;
 use App\Member;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use phpDocumentor\Reflection\Types\Null_;
 
 class AdminController extends Controller
 {
@@ -112,7 +114,9 @@ class AdminController extends Controller
             $member = Member::find($transaction->member_id);
 
             $amount = $transaction->bonus_point_amount + $transaction->bonus_sponsor_amount + $transaction->bonus_partner_amount;
-            $member_amount = $member->point_bonus + $member->sponsor_bonus  + $member->pair_bonus;
+
+            $member_amount = 0;
+            //$member_amount = $member->point_bonus + $member->sponsor_bonus  + $member->pair_bonus;
 
             //Set status transaksi = 3
             $transaction->status_id = 3;
@@ -129,9 +133,16 @@ class AdminController extends Controller
                 $a = $e->getMessage();
             }
 
+            $old_pin = Helper::getLastTransaction($member, 'pin');
+            $old_point = Helper::getLastTransaction($member, 'point');
+            if ($old_point !== null)
+            {
+                $member_amount = $old_point->bonus_ending_balance;
+            }
+
             //Buat transaksi baru untuk proses pembayarannya
             try {
-                Transaction::create([
+                $data = [
                     'member_id' => $member->id,
                     'user_id' => 1,
                     'type' => 'point',
@@ -141,7 +152,10 @@ class AdminController extends Controller
                     'bonus_ending_balance' => $member_amount - $amount,
                     'status_id' => 3,
                     'reff_id' => $transaction->id
-                ]);
+                ];
+                array_merge($data, $old_pin);
+
+                Transaction::create($data);
             } catch (\Exception $e)
             {
                 $a = $e->getMessage();

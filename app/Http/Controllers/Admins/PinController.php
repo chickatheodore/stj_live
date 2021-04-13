@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admins;
 
+use App\Helpers\Helper;
 use App\Member;
 use App\Transaction;
 use Carbon\Carbon;
@@ -35,7 +36,8 @@ class PinController extends Controller
         $member->pin = $end; //$member->pin + intval($request->amount);
         $member->save();
 
-        Transaction::create([
+        $member_point = Helper::getLastTransaction($member, 'point');
+        $data = [
             'member_id' => $member->id,
             'user_id' => 1,
             'type' => 'pin',
@@ -45,7 +47,9 @@ class PinController extends Controller
             'pin_ending_balance' => $amount,
             'status_id' => 3,
             'remarks' => 'Menerima PIN dari Office/Admin'
-        ]);
+        ];
+        array_merge($data, $member_point);
+        Transaction::create($data);
 
         return json_encode(['status' => true]);
     }

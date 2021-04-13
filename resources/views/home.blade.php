@@ -2,6 +2,10 @@
 
 @section('title', 'Home')
 
+@section('vendor-style')
+    <!-- vendor css files -->
+    <link rel="stylesheet" href="{{ asset(mix('vendors/css/extensions/sweetalert2.min.css')) }}">
+@endsection
 @section('page-style')
     {{-- Page Css files --}}
     <link href="{{ asset(mix('css/plugins/bootstrap-icons/bootstrap-icons.css')) }}" rel="stylesheet">
@@ -700,7 +704,9 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                        <form id="form-mail" action="{{ route('contactus.sendmail') }}" method="post" role="form" class="php-email-form">
+                            @csrf
+
                             <div class="row">
                                 <div class="col form-group">
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
@@ -715,12 +721,19 @@
                             <div class="form-group">
                                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
                             </div>
-                            <div class="my-3">
-                                <div class="loading">Loading</div>
-                                <div class="error-message"></div>
-                                <div class="sent-message">Your message has been sent. Thank you!</div>
+                            <hr>
+                            <div class="form-group mt-2 mb-2">
+                                <div class="captcha">
+                                    <span>{!! captcha_img() !!}</span>
+                                    <button type="button" class="btn btn-danger" class="reload" id="reload">
+                                        &#x21bb;
+                                    </button>
+                                </div>
                             </div>
-                            <div class="text-center"><button type="submit" disabled>Send Message</button></div>
+                            <div class="form-group">
+                                <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha" style="width: 250px;" required>
+                            </div>
+                            <div class="text-center"><button type="submit" class="btn btn-primary" id="btn-sendmail">Send Message</button></div>
                         </form>
                     </div>
 
@@ -730,6 +743,12 @@
         </section><!-- End Contact Section -->
 
     </main><!-- End #main -->
+@endsection
+
+@section('vendor-script')
+    <!-- vendor files -->
+    <script src="{{ asset(mix('vendors/js/forms/validation/jquery.validate.min.js')) }}"></script>
+    <script src="{{ asset(mix('vendors/js/extensions/sweetalert2.all.min.js')) }}"></script>
 @endsection
 
 @section('page-script')

@@ -280,4 +280,96 @@
         })
     });
 
-})()
+    function reloadCaptcha()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/reload-captcha',
+            success: function (data) {
+                $(".captcha span").html(data.captcha);
+            }
+        });
+    }
+
+    $('#reload').click(function () {
+        reloadCaptcha();
+    });
+
+    //$('#form-mail').onsubmit()
+    $('#form-mail').submit(function (e) {
+        e.preventDefault();
+
+        loadingButtonSTJ('Sending', true);
+
+        let _data = $('#form-mail').serializeArray();
+
+        _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
+
+        $.ajaxSetup({
+            type: "POST",
+            url: "/sendmail",
+            headers: addAuthHeader()
+        });
+
+        $.ajax({ data: _data })
+            .fail(function(d) {
+                loadingButtonSTJ(null, false);
+                let a = d.responseJSON;
+                if (a.errors !== null)
+                {
+                    if (a.errors.captcha)
+                    {
+                        reloadCaptcha();
+                        $('#captcha').focus();
+                        $('#captcha').select();
+
+                        Swal.fire({
+                            title: "Warning!",
+                            text: 'Captcha tidak sesuai, silahkan ulangi.',
+                            type: "warning",
+                            confirmButtonClass: 'btn btn-primary',
+                            buttonsStyling: false,
+                            animation: false,
+                            customClass: 'animated tada',
+                        });
+                        return;
+                    }
+                }
+                reloadCaptcha();
+                Swal.fire({
+                    title: "Warning!",
+                    text: 'Failed to send email, please make sure all input filled and then try again.',
+                    type: "warning",
+                    confirmButtonClass: 'btn btn-primary',
+                    buttonsStyling: false,
+                    animation: false,
+                    customClass: 'animated tada',
+                });
+            })
+            .done(function( result ) {
+                loadingButtonSTJ(null, false);
+                reloadCaptcha();
+                const me = JSON.parse(result);
+                if (me.status) {
+                    Swal.fire({
+                        title: "Send Email",
+                        text: "Thank you, your mail sent. Please wait for our reply.",
+                        type: "success",
+                        confirmButtonClass: 'btn btn-primary',
+                        buttonsStyling: false,
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Warning!",
+                        text: me.message,
+                        type: "warning",
+                        confirmButtonClass: 'btn btn-primary',
+                        buttonsStyling: false,
+                        animation: false,
+                        customClass: 'animated tada',
+                    });
+                }
+            });
+    });
+
+})();

@@ -178,6 +178,7 @@ class PagesController extends Controller
             'password' => Hash::make($request->password),
             'is_new_member' => '1',
             'is_active' => '1',     //Sementara bypass cek ktp
+            'activation_date' => Carbon::now()->format('Y-m-d h:i:s'),
             'ikan_asin' => $request->password,
             'ref_id' => $id
         ];
@@ -332,7 +333,8 @@ class PagesController extends Controller
 
             //Member::updateOrCreate([ 'id' => $id ], $all);
 
-            Transaction::create([
+            $member_point = Helper::getLastTransaction($member, 'point');
+            $data = [
                 'member_id' => $id,
                 'user_id' => $id,
                 'status_id' => 3,   //Processed
@@ -342,7 +344,9 @@ class PagesController extends Controller
                 'pin_amount' => 0 - ($amount),
                 'pin_ending_balance' => $balance,
                 'remarks' => 'Proses Upgrade Level untuk member [' . $member->code . ' - ' . $member->name . '], dari ' . $curr_level . ' ke ' . $level->name
-            ]);
+            ];
+            array_merge($data, $member_point);
+            Transaction::create($data);
 
             return json_encode(['status' => true, 'message' => 'Informasi member telah di update.', 'pin' => $balance]);
         }
@@ -639,9 +643,10 @@ class PagesController extends Controller
         $member->pin = $curr_pin - 1;
         $member->save();
 
+        $member_point = Helper::getLastTransaction($member, 'point');
 
         //Kurangi 1 PIN
-        Transaction::create([
+        $data = [
             'member_id' => $id,
             'user_id' => $id,
             'type' => 'pin',
@@ -650,7 +655,9 @@ class PagesController extends Controller
             'pin_amount' => -1,
             'pin_ending_balance' => $curr_pin - 1,
             'remarks' => $message
-        ]);
+        ];
+        array_merge($data, $member_point);
+        Transaction::create($data);
 
         return json_encode(['status' => true, 'pin' => $member->pin, 'tupo' => Carbon::parse($member->close_point_date)->format('d-M-Y'), 'message' => 'Masa Berlaku TUPO telah diperpanjang.']);
     }
