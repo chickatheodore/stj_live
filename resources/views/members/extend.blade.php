@@ -40,7 +40,7 @@
                                                 <div class="text-center">
                                                     <span id="info-pin" style="background-color: #262c49;padding: 8px;">PIN Tersisa : {{ number_format($member->pin, 0) }}</span>
                                                     <div>&nbsp;</div>
-                                                    <span style="background-color: #262c49;padding: 8px;">Masa Berlaku : {{ Carbon\Carbon::parse($member->close_point_date)->format('d-M-Y') }}</span>
+                                                    <span id="info-tupo" style="background-color: #262c49;padding: 8px;">Masa Berlaku : {{ Carbon\Carbon::parse($member->close_point_date)->format('d-M-Y') }}</span>
                                                 </div>
                                                 <div>&nbsp;</div>
                                                 <input type="hidden" id="_acc_" name="_acc_" value="{{ auth()->id() }}">
@@ -90,8 +90,10 @@
                 headers: addAuthHeader()
             });
 
+            showSTJModal();
             $.ajax({ data: _data })
                 .fail(function() {
+                    hideSTJModal();
                     Swal.fire({
                         title: "Warning!",
                         text: 'Proses Perpanjang Masa Berlaku TUPO gagal!',
@@ -103,9 +105,11 @@
                     });
                 })
                 .done(function( result ) {
+                    hideSTJModal();
                     const me = JSON.parse(result);
                     if (me.status) {
                         $('#info-pin').html('PIN Tersisa : ' + $.number(me.pin));
+                        $('#info-tupo').html('Masa Berlaku : ' + me.tupo);
 
                         Swal.fire({
                             title: "Sukses",

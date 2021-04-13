@@ -23,17 +23,19 @@
                                         <div class="card-body pt-0">
 
                                             <div class="form-group text-center">
+                                                <label for="member-pin">Stock Tersisa</label>
+                                                <input type="text" class="form-control text-center btn-primary" id="member-pin" placeholder="Stock Tersisa" value="{{ number_format($member->pin, 0) }}" readonly>
+                                            </div>
+
+                                            <hr />
+
+                                            <div class="form-group text-center">
                                                 <label for="pin-masuk">Total Stock Masuk</label>
                                                 <input type="text" class="form-control text-center" id="pin-masuk" placeholder="Total Stock Masuk" value="{{ number_format($pins->masuk, 0) }}" readonly>
                                             </div>
                                             <div class="form-group text-center">
                                                 <label for="pin-keluar">Total Stock Keluar</label>
                                                 <input type="text" class="form-control text-center" id="pin-keluar" placeholder="Total Stock Keluar" value="{{ number_format($pins->keluar, 0) }}" readonly>
-                                            </div>
-                                            <hr />
-                                            <div class="form-group text-center">
-                                                <label for="member-pin">Stock Tersisa</label>
-                                                <input type="text" class="form-control text-center" id="member-pin" placeholder="Stock Tersisa" value="{{ number_format($member->pin, 0) }}" readonly>
                                             </div>
 
                                         </div>

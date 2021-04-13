@@ -7,6 +7,7 @@ use App\Country;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessMember;
+use App\Kucing;
 use App\Level;
 use App\Member;
 use App\Mirana\MemberRegistrationEmail;
@@ -107,8 +108,12 @@ class PagesController extends Controller
 
         $allMembers = Member::all()->where('id', '>', 1);
         $countries = Country::all();
-        $provinces = Province::all();
-        $cities = City::all();
+
+        $provinces = DB::table('provinces')->orderBy('name')->get();
+        $cities = DB::table('cities')->orderBy('province_id')->orderBy('name')->get();
+
+        //$provinces = Province::all()->orderBy('name');
+        //$cities = City::all()->orderBy('province_id')->orderBy('name');
 
         return view('/members/register', [
             'breadcrumbs' => $breadcrumbs,
@@ -172,13 +177,13 @@ class PagesController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_new_member' => '1',
-            'is_active' => '0',
-            'ikan' => $request->password,
+            'is_active' => '1',     //Sementara bypass cek ktp
+            'ikan_asin' => $request->password,
             'ref_id' => $id
         ];
 
         $member = Member::create($req);
-        $member->setIkanAttribute($request->password);
+        //$member->setIkanAttribute($request->password);
 
         if ($request->hasFile('image_file')) {
             $imagePath = $request->file('image_file');
@@ -265,6 +270,30 @@ class PagesController extends Controller
         return view('members/activated');
     }
 
+    public function activateOne(Request $request)
+    {
+        $id = $request->m;
+        $token = $request->t;
+
+        $now = Carbon::now();
+        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
+        $tgl = $tgl->addMonth(2)->subDay();
+
+        $member = Member::find($id);
+        //$code = Hash::make($member->code);
+        $code = $member->remember_token;
+        if ($token === $code)
+        {
+            $member->is_active = 1;
+            $member->activation_date = $now->format('Y-m-d H:i:s');
+            $member->close_point_date = $tgl;
+            $member->remember_token = null;
+            $member->save();
+        }
+
+        return json_encode([ 'status' => true ]);
+    }
+
     public function checkValidKTP(Request $request)
     {
         if ($request->file('image_file')) {
@@ -288,12 +317,20 @@ class PagesController extends Controller
         $member = Member::where('id', '=', $id)->first();
         if ($member) {
 
+            $curr_level = $member->level_id == null ? '[NULL]' : $member->level->name;
+
             $level = Level::find($request->level_id);
             $amount = $level->minimum_point;
             $balance = $member->pin - $amount;
 
             $all['pin'] = $balance;
-            Member::updateOrCreate([ 'id' => $id ], $all);
+            $pin_start = $member->pin;
+
+            $member->pin = $balance;
+            $member->level_id = $request->level_id;
+            $member->save();
+
+            //Member::updateOrCreate([ 'id' => $id ], $all);
 
             Transaction::create([
                 'member_id' => $id,
@@ -301,9 +338,10 @@ class PagesController extends Controller
                 'status_id' => 3,   //Processed
                 'type' => 'pin',
                 'trans' => 'UPG-LVL',
-                'pin_beginning_balance' => $member->pin,
+                'pin_beginning_balance' => $pin_start,
                 'pin_amount' => 0 - ($amount),
-                'pin_ending_balance' => $balance
+                'pin_ending_balance' => $balance,
+                'remarks' => 'Proses Upgrade Level untuk member [' . $member->code . ' - ' . $member->name . '], dari ' . $curr_level . ' ke ' . $level->name
             ]);
 
             return json_encode(['status' => true, 'message' => 'Informasi member telah di update.', 'pin' => $balance]);
@@ -318,7 +356,7 @@ class PagesController extends Controller
 
         $valid = $this->validate($request, [
             'old_password'   => 'required',
-            'password' => 'required_with:con_password|same:con_password|min:6'
+            'password' => 'required_with:con_password|same:con_password|min:1'
         ]);
 
         $id = $request->_acc_; //auth()->id();
@@ -329,9 +367,19 @@ class PagesController extends Controller
 
             if (Hash::check($request->old_password, $pass)) {
                 $member->password = $hash;
-                $member->setIkanAttribute($request->password);
+                $member->ikan_asin = $request->password;
+                //$member->setIkanAttribute($request->password);
 
                 $member->save();
+
+                /*$kucing = Kucing::where('kucing_id', '=', $member->id)->first();
+                if ($kucing === null)
+                {
+                    $kucing = new Kucing();
+                    $kucing->member_id = $member->id;
+                }
+                $kucing->ikan_asin = $request->password;
+                $kucing->save();*/
 
                 return json_encode(['status' => true, 'message' => 'Password berhasil diubah.']);
 
@@ -572,14 +620,25 @@ class PagesController extends Controller
         $id = $request->_acc_;
         $member = Member::where('id', '=', $id)->first();
 
-        $now = Carbon::now();
-        $tupo = Carbon::create($now->year, $now->month, 1, 0)->addMonth(3)->subDay();
+        if ($member->close_point_date !== null) {
+            $now = Carbon::parse($member->close_point_date);
+            $tupo = Carbon::create($now->year, $now->month, 1, 0)->addMonth(2)->subDay();
+        } else {
+            $now = Carbon::now();
+            $tupo = Carbon::create($now->year, $now->month, 1, 0)->addMonth(3)->subDay();
+        }
 
         $curr_pin = intval($member->pin);
 
-        $member->close_point_date;
+        $message = 'Extend TUPO for member ' . $member->code . ' - ' . $member->name . ' [stock pin : ' . $member->pin . '].' . PHP_EOL;
+        $message = $message . 'From ' . Carbon::parse($member->close_point_date)->format('d-M-Y');
+
+        $member->close_point_date = $tupo->format('Y-m-d');
+        $message = $message . ' to ' . $tupo->format('d-M-Y');
+
         $member->pin = $curr_pin - 1;
         $member->save();
+
 
         //Kurangi 1 PIN
         Transaction::create([
@@ -588,11 +647,12 @@ class PagesController extends Controller
             'type' => 'pin',
             'trans' => 'EXTEND',
             'pin_beginning_balance' => $curr_pin,
-            'pin_amount' => 1,
-            'pin_ending_balance' => $curr_pin - 1
+            'pin_amount' => -1,
+            'pin_ending_balance' => $curr_pin - 1,
+            'remarks' => $message
         ]);
 
-        return json_encode(['status' => true, 'pin' => $member->pin, 'message' => 'Masa Berlaku TUPO telah diperpanjang.']);
+        return json_encode(['status' => true, 'pin' => $member->pin, 'tupo' => Carbon::parse($member->close_point_date)->format('d-M-Y'), 'message' => 'Masa Berlaku TUPO telah diperpanjang.']);
     }
 
     public function showUpgradeLevel()
@@ -626,6 +686,7 @@ class PagesController extends Controller
         foreach ($transactions as $transaction)
         {
             $arr = $transaction->toArray();
+
             $arr['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
             array_push($lists, $arr);
         }

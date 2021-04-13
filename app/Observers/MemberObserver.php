@@ -21,11 +21,12 @@ class MemberObserver
     {
         if ($member->code === null)
             $member->code = $this->generateMemberID();
+
         //if ($member->username === null)
         //    $member->username = $this->generateUserName();
 
-        $ikan = $member->getIkanAttribute();
-        Kucing::create(['kucing_id' => $member->id, 'ikan_asin' => $ikan]);
+        //$ikan = $member->getIkanAttribute();
+        //Kucing::create(['kucing_id' => $member->id, 'ikan_asin' => $ikan]);
 
         //$token = $member->createToken(env('APP_NAME'))->accessToken;
         $token = Hash::make(env('APP_NAME').'_'.$member->code);
@@ -42,14 +43,14 @@ class MemberObserver
      */
     public function updated(Member $member)
     {
-        $ikan = $member->getIkanAttribute();
+        /*$ikan = $member->getIkanAttribute();
         $kucing = Kucing::where('kucing_id', '=', $member->id)->first();
-        if ($kucing) {
+        if ($kucing === null) {
+            Kucing::create(['kucing_id' => $member->id, 'ikan_asin' => $ikan]);
+        } else {
             $kucing->ikan_asin = $ikan;
             $kucing->save();
-        } else {
-            Kucing::create(['kucing_id' => $member->id, 'ikan_asin' => $ikan]);
-        }
+        }*/
     }
 
     /**

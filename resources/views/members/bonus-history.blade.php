@@ -75,6 +75,7 @@
                                                         <th class="text-center align-middle">Bonus Pasangan</th>
                                                         <th class="text-center align-middle">Bonus Dibayar</th>
                                                         <th class="text-center align-middle">Saldo Bonus</th>
+                                                        <th class="text-center align-middle">Keterangan</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -94,6 +95,28 @@
             </div>
         </div>
 
+        <div class="modal fade" id="remarks-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Remarks</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="remark_input">Remarks</label>
+                                    <textarea class="form-control" id="remark_input" rows="5" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 @endsection
 
@@ -148,7 +171,8 @@
                 $('#bonustable tbody').empty();
                 for (let i = 0; i < histories.length; i++) {
                     let item = histories[i];
-                    $('#bonustable tbody').append('<tr>' +
+                    let _id = 'bonus_' + i;
+                    $('#bonustable tbody').append('<tr id="' + _id + '" style="cursor: pointer" onclick="showRemarks(\'' + _id + '\')">' +
                         '<td>' + item.transaction_date + '</td>' +
                         '<td class="text-center">' + $.number(item.left_point_amount) + ' | ' + $.number(item.right_point_amount) + '</td>' +
                         '<td class="text-center">' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
@@ -157,10 +181,19 @@
                         '<td class="text-right">' + $.number(item.bonus_partner_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_paid_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_ending_balance) + '</td>' +
+                        '<td class="text-right"><button type="button" class="btn btn-info" onclick="showRemarks(\'' + _id + '\')">Keterangan</button></td>' +
                         '</tr>');
+
+                    $("tr#" + _id).data('bonus', item);
                 }
             });
 
         });
+
+        function showRemarks(el) {
+            let _bonus = $('tr#' + el).data('bonus');
+            $('#remark_input').html(_bonus.remarks);
+            $('#remarks-modal').modal('show');
+        }
     </script>
 @endsection

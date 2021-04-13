@@ -112,6 +112,9 @@ class ProcessMember implements ShouldQueue
 
     private function processMemberBonus()
     {
+        DB::statement('insert into transactions (member_id, user_id, type, trans, status_id) values
+            select id, 1, \'all\', \'SYSTEM\', 1 from members where id > 2 and is_active = 1 and close_point_date >= :now', array('now' => $this->date));
+
         /*
          * Member memperoleh bonus jika ada Member baru yang memenuhi syarat :
          * - Sudah diaktifkan
@@ -151,6 +154,10 @@ class ProcessMember implements ShouldQueue
                 if (!$this->skipMember($upline)) {
                     $position = 'left';
 
+                    //Ubah Poin ke Bonus Poin
+                    if ($upline->left_point > 0 && $upline->right_point > 0)
+                        $upline = $this->convertPointToBonusPoint($upline);
+
                     if ($this->mode === 'with_point') {
                         //Poin downline
                         $this->processUpline($upline, $temp_member, $position);
@@ -159,9 +166,8 @@ class ProcessMember implements ShouldQueue
                     //Bonus Pasangan
                     $this->createPairBonus($upline, $new_member);
 
-                    //Ubah Poin ke Bonus Poin
-                    if ($upline->left_point > 0 && $upline->right_point > 0)
-                        $upline = $this->convertPointToBonusPoint($upline);
+                    //Terakhir finalisasi saldo awal, saldo akhir, saldo bonus
+                    $this->finalizeTransaction($upline);
                 }
 
                 if ($upline->upline_id == null)
@@ -176,6 +182,46 @@ class ProcessMember implements ShouldQueue
 
                 //$temp_member = $upline;
             }
+        }
+    }
+
+    private function finalizeTransaction($member)
+    {
+        $old_transaction = Transaction::where('transaction_date', '<', $this->date)
+            ->where('member_id', '=', $member->id)->where('type', '<>', 'pin')
+            ->orderByDesc('transaction_date')
+            ->first();
+
+        $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
+            ->where('member_id', '=', $member->id)->where('type', '<>', 'pin')
+            //->where('trans', '<>', 'PAYMENT')
+            ->first();
+
+        if ($transaction !== null)
+        {
+            if ($old_transaction === null)
+                $transaction->bonus_beginning_balance = 0;
+            else
+                $transaction->bonus_beginning_balance = $old_transaction->bonus_ending_balance;
+
+            $p = $transaction->bonus_point_amount;
+            $s = $transaction->bonus_sponsor_amount;
+            $a = $transaction->bonus_partner_amount;
+            $i = 0; //$transaction->bonus_paid_amount;
+
+            $balance = ($p + $s + $a) - abs($i);
+            $transaction->bonus_ending_balance = $balance;
+
+            $transaction->save();
+
+            if ($transaction->bonus_point_amount)
+                $member->point_bonus = $member->point_bonus + $transaction->bonus_point_amount;
+            if ($transaction->bonus_sponsor_amount)
+                $member->sponsor_bonus = $member->sponsor_bonus + $transaction->bonus_sponsor_amount;
+            if ($transaction->bonus_partner_amount)
+                $member->pair_bonus = $member->pair_bonus + $transaction->bonus_partner_amount;
+
+            $member->save();
         }
     }
 
@@ -308,19 +354,21 @@ class ProcessMember implements ShouldQueue
             $transaction->user_id = 1;
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
+            $transaction->bonus_sponsor_amount = 0;
         }
 
         $faktor_kali = 1;   // Sponsor bonus tidak di kali 8, intval($sponsor->level->minimum_point);
-        $nilai_point = floatval($sponsor->level->point_value);
+        $nilai_point = 80000; //floatval($sponsor->level->point_value);
         $level = $sponsor->level_id === null ? 'NULL' : ($sponsor->level_id === 1 ? 'BRONZE' : 'GOLD');
 
-        $transaction->bonus_sponsor_amount = $faktor_kali * $nilai_point;
+        $bonus = $faktor_kali * $nilai_point;
+        $transaction->bonus_sponsor_amount = $transaction->bonus_sponsor_amount + $bonus;
 
         $transaction->remarks = $this->createRemarks($transaction,
-            'Bonus sponsor dari member baru - ' . $new_member->code . ' :  Level: ' . $level .
+            'Bonus sponsor dari member baru [ ' . $new_member->code . ' - ' . $new_member->name . ' ].  Level: ' . $level .
             ', [ (' . number_format($faktor_kali, 0) . ') * ' .
             number_format($nilai_point, 0) . ') ] = ' .
-            number_format($transaction->bonus_sponsor_amount, 0)
+            number_format($bonus, 0)
         );
 
         $transaction->save();
@@ -359,20 +407,20 @@ class ProcessMember implements ShouldQueue
             $kanan = $kiri + $kiri_akhir;
 
             $pasangan = Member::where('tree_level', '=', $my_tree_level)
-                ->where('tree_position', '=', $kanan)
-                ->where('is_paired', '=', '0');
+                ->where('tree_position', '=', $kanan);
+                //->where('is_paired', '=', '0');
 
         } elseif ($my_position > $kiri_akhir) {
             $kanan = $setengah - ($end - $my_position);
             $kiri = $kanan + $kiri_akhir;
 
             $pasangan = Member::where('tree_level', '=', $my_tree_level)
-                ->where('tree_position', '=', $kiri)
-                ->where('is_paired', '=', '0');
+                ->where('tree_position', '=', $kiri);
+                //->where('is_paired', '=', '0');
         }
 
         $pair = $pasangan->first();
-        if ($pair !== null)
+        if ($pair !== null && $pair->id !== $new_member->id)
         {
             $pair->is_paired = 1;
             $new_member->is_paired = 1;
@@ -380,7 +428,7 @@ class ProcessMember implements ShouldQueue
             $pair->save();
             $new_member->save();
 
-            $faktor_kali = intval($upline->level->minimum_point);
+            $faktor_kali = intval($new_member->level->minimum_point); //intval($upline->level->minimum_point);
             $nilai_point = $amount; //floatval($upline->level->point_value);
 
             $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
@@ -395,16 +443,18 @@ class ProcessMember implements ShouldQueue
                 $transaction->user_id = 1;
                 $transaction->type = 'all';
                 $transaction->trans = 'SYSTEM';
+                $transaction->bonus_partner_amount = 0;
             }
 
-            $transaction->bonus_partner_amount = $faktor_kali * $nilai_point;
+            $bonus = $faktor_kali * $nilai_point;
+            $transaction->bonus_partner_amount = $transaction->bonus_partner_amount + $bonus;
             $level = $upline->level_id === null ? 'NULL' : ($upline->level_id === 1 ? 'BRONZE' : 'GOLD');
 
             $transaction->remarks = $this->createRemarks($transaction,
-                'Bonus pasangan antara ( ' . $new_member->code . ' & ' . $pair->code . '):  Level: ' . $level .
+                'Bonus pasangan antara ( [ ' . $new_member->code . ' - ' . $new_member->name . ' ] dengan [ ' . $pair->code . ' - ' . $pair->name . ' ] ):  Level: ' . $level .
                 ', [ (' . number_format($faktor_kali, 0) . ') * ' .
                 number_format($nilai_point, 0) . ') ] = ' .
-                number_format($transaction->bonus_partner_amount, 0)
+                number_format($bonus, 0)
             );
 
             $transaction->save();
@@ -432,7 +482,7 @@ class ProcessMember implements ShouldQueue
         $my_level = $new_member->tree_level;
         $selisih_level = $my_level - $up_level;
 
-        $m_level = $new_member->level_id;
+        $m_level = $upline->level_id; //$new_member->level_id;
         if ($m_level == 1)
         {
             if ($selisih_level > 0 && $selisih_level <= 20)
@@ -534,7 +584,8 @@ class ProcessMember implements ShouldQueue
                     'right_point_amount' => $right_amount,
                     'left_point_ending_balance' => 0,
                     'right_point_ending_balance' => 0,
-                    'status_id' => 3
+                    'status_id' => 3,
+                    'remarks' => 'Batas TUPO terlewati'
                 ]);
             }
         }

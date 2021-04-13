@@ -12,6 +12,15 @@ let _buttonSave = $('#btn-save');
 $(document).ready(function () {
 
     _setLoadingButton(_buttonSave);
+    if (counterMax <= 0) {
+        $('#amount').prop('disabled', true);
+        _buttonSave.prop('disabled', true);
+        $("#member_id").prop('disabled', true);
+
+        $('#label_pin').hide();
+        $('#tidak_cukup').show();
+    }
+
     // Member select
     var memberselect = $("#member_id").select2({
         dropdownAutoWidth: true,
@@ -61,6 +70,20 @@ $("#member_id").change(function (e) {
 
 _buttonSave.click(function (e) {
     e.preventDefault();
+
+    if (counterMax <= 0)
+    {
+        Swal.fire({
+            title: "Warning!",
+            text: 'Maaf, PIN anda tidak mencukupi, jumlah PIN : ' + counterMax,
+            type: "warning",
+            confirmButtonClass: 'btn btn-primary',
+            buttonsStyling: false,
+            animation: false,
+            customClass: 'animated tada',
+        });
+        return;
+    }
 
     let mId = $('#member_id option:selected').val();
     if (!mId) {

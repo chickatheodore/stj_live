@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command('member:process')->dailyAt('00:05');
+        //$schedule->command('mirana:backup')->everyFiveMinutes();
     }
 
     /**

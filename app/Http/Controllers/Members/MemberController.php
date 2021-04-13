@@ -72,6 +72,8 @@ class MemberController extends Controller
         $user_pin = intval($user->pin);
         $member_pin = intval($member->pin);
 
+        $message_get = '[' . $member->code . ' - ' . $member->name . '] menerima PIN dari member [ ' . $user->code . ' - ' . $user->name . ' ]';
+
         // Di sisi member yang di transfer
         Transaction::create([
             'member_id' => $request->member_id,
@@ -81,8 +83,11 @@ class MemberController extends Controller
             'trans' => 'RCV-POINT',
             'pin_beginning_balance' => $member_pin,
             'pin_amount' => intval($request->amount),
-            'pin_ending_balance' => ($member_pin + $request->amount)
+            'pin_ending_balance' => ($member_pin + $request->amount),
+            'remarks' => $message_get
         ]);
+
+        $message_trf = '[' . $user->code . ' - ' . $user->name . '] mengirim PIN kepada member [ ' . $member->code . ' - ' . $member->name . ' ]';
 
         // Di sisi member yang mentransfer
         Transaction::create([
@@ -93,7 +98,8 @@ class MemberController extends Controller
             'trans' => 'TRF-POINT',
             'pin_beginning_balance' => $user_pin,
             'pin_amount' => 0 - intval($request->amount),
-            'pin_ending_balance' => ($user_pin - $request->amount)
+            'pin_ending_balance' => ($user_pin - $request->amount),
+            'remarks' => $message_trf
         ]);
 
         $user->pin = $user_pin - intval($request->amount);

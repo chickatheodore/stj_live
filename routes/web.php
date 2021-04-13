@@ -82,6 +82,7 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
     Route::post('/register', 'Members\PagesController@createMember')->name('member.registration');
 
     Route::get('/activate', 'Members\PagesController@activateMember');
+    Route::get('/activate1', 'Members\PagesController@activateOne');
 
     Route::get('placement', 'Members\PagesController@showMemberPlacementForm');
     Route::post('placement', 'Members\PagesController@memberPlacement')->name('member.placement');

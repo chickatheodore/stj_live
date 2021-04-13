@@ -68,6 +68,7 @@
                                                     <th class="text-center align-middle">Tgl</th>
                                                     <th class="text-center align-middle" style="min-width: 50px">PIN</th>
                                                     <th class="text-center align-middle" style="min-width: 60px">PIN Balance</th>
+                                                    <th class="text-center align-middle">Keterangan</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -85,6 +86,29 @@
                     </div>
 
                 </form>
+            </div>
+        </div>
+
+        <div class="modal fade" id="remarks-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Remarks</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="remark_input">Remarks</label>
+                                    <textarea class="form-control" id="remark_input" rows="5" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -132,14 +156,24 @@
                 $('#bonustable tbody').empty();
                 for (let i = 0; i < histories.length; i++) {
                     let item = histories[i];
-                    $('#bonustable tbody').append('<tr>' +
+                    let _id = 'bonus_' + i;
+                    $('#bonustable tbody').append('<tr id="' + _id + '">' +
                         '<td class="text-center">' + item.transaction_date + '</td>' +
                         '<td class="text-center">' + $.number(item.pin_amount) + '</td>' +
                         '<td class="text-center">' + $.number(item.pin_ending_balance) + '</td>' +
+                        '<td class="text-center"><button type="button" class="btn btn-info" onclick="showRemarks(\'' + _id + '\')">Keterangan</button></td>' +
                         '</tr>');
+
+                    $("tr#" + _id).data('bonus', item);
                 }
             });
 
         });
+
+        function showRemarks(el) {
+            let _pin = $('tr#' + el).data('bonus');
+            $('#remark_input').html(_pin.remarks);
+            $('#remarks-modal').modal('show');
+        }
     </script>
 @endsection

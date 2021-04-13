@@ -26,7 +26,7 @@
                             <div class="col-md-3"></div>
                             <div class="col-md-6 col-12">
                                 <div class="card">
-                                    <div class="card-header pt-50 pb-1">
+                                    <div class="card-header pt-50 pb-1 text-center" style="display: block">
                                         <div class="card-title">
                                             <h4 class="mb-0">Transfer PIN</h4>
                                         </div>
@@ -48,8 +48,9 @@
                                             <hr />
 
                                             <div class="form-group">
-                                                <label for="amount">Jumlah PIN yang akan ditransfer</label>
-                                                <input type="number" class="form-control touchspin-min-max" id="amount" name="amount" value="0">
+                                                <div id="tidak_cukup" class="btn-danger text-center" style="display: none;margin-bottom: 4px;">PIN anda tidak mencukupi.</div>
+                                                <label id="label_pin" for="amount">Jumlah PIN yang akan ditransfer</label>
+                                                <input type="number" class="form-control touchspin-min-max" id="amount" name="amount" value="{{ $member->pin > 0 ? '1' : '0' }}">
                                             </div>
 
                                         </div>

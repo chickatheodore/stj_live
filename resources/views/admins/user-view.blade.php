@@ -89,9 +89,9 @@
             });
 
             _id = {{ $member->id }};
-            _token = {{ $member->remember_token }};
+            _token = '{{ $member->remember_token }}';
             $.ajax({
-                url: "/member/activate",
+                url: "/member/activate1",
                 data: { m: _id, t: _token }
             })
             .fail(function (e) {

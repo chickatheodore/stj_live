@@ -43,7 +43,8 @@ class PinController extends Controller
             'pin_beginning_balance' => $member->pin,
             'pin_amount' => $request->amount,
             'pin_ending_balance' => $amount,
-            'status_id' => 3
+            'status_id' => 3,
+            'remarks' => 'Menerima PIN dari Office/Admin'
         ]);
 
         return json_encode(['status' => true]);

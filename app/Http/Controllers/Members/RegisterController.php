@@ -107,8 +107,8 @@ class RegisterController extends Controller
 
         //$allMembers = Member::all()->where('id', '>', 1);
         $countries = Country::all();
-        $provinces = Province::all();
-        $cities = City::all();
+        $provinces = Province::all()->orderBy('name');
+        $cities = City::all()->orderBy('province_id')->orderBy('name');
 
         return view('/members/register', [
             'breadcrumbs' => $breadcrumbs,
@@ -151,11 +151,11 @@ class RegisterController extends Controller
             'account_name' => $request->account_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'ikan' => $request->password
+            'ikan_asin' => $request->password
         ];
 
         $member = Member::create($req);
-        $member->setIkanAttribute($request->password);
+        //$member->setIkanAttribute($request->password);
 
         if ($tempat && $request->upline_id) {
             $upline = Member::find($request->upline_id);

@@ -26,7 +26,7 @@
                         <div class="card rounded-0 mb-0 p-2">
                             <div class="card-header pt-50 pb-1">
                                 <div class="card-title">
-                                    <h4 class="mb-0">Registrasi Member</h4>
+                                    <h4 class="mb-0">Member telah berhasil didaftarkan</h4>
                                 </div>
                             </div>
 

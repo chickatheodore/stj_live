@@ -55,6 +55,7 @@ use Laravel\Passport\HasApiTokens;
  * @property bool $is_new_member
  * @property bool $is_paired
  * @property int $ref_id
+ * @property string $ikan_asin
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -103,7 +104,7 @@ class Member extends Authenticatable
         'sponsor_id', 'upline_id', 'left_downline_id', 'right_downline_id',
         'pin', 'left_point', 'left_bonus_point', 'left_bonus_partner', 'right_point', 'right_bonus_point', 'right_bonus_partner', 'point_bonus', 'sponsor_bonus', 'pair_bonus',
         'activation_date', 'close_point_date', 'tree_level', 'tree_position',
-        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member', 'is_active', 'ref_id',
+        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member', 'is_active', 'ref_id', 'ikan_asin',
         'created_at', 'updated_at', 'deleted_at'
     ];
 
@@ -197,7 +198,7 @@ class Member extends Authenticatable
         return $this->hasMany('App\Transaction', 'user_id');
     }
 
-    protected $ikan = '';
+    /*protected $ikan = '';
     public function getIkanAttribute()
     {
         return $this->ikan;
@@ -205,7 +206,7 @@ class Member extends Authenticatable
     public function setIkanAttribute($value)
     {
         $this->ikan = $value;
-    }
+    }*/
 
     /*
      * Baru - untuk mengakomodasi NodeSet

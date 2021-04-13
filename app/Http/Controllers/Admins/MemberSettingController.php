@@ -43,7 +43,7 @@ class MemberSettingController extends Controller
      */
     public function create()
     {
-        $kucing = new Kucing();
+        //$kucing = new Kucing();
         $member = new Member();
         $countries = Country::all();
         $provinces = Province::all();
@@ -55,7 +55,7 @@ class MemberSettingController extends Controller
         return view('/admins/user-edit', [
             'breadcrumbs' => $breadcrumbs,
             'member' => $member,
-            'kucing' => $kucing,
+            //'kucing' => $kucing,
             'countries' => $countries,
             'provinces' => $provinces,
             'cities' => $cities
@@ -96,6 +96,7 @@ class MemberSettingController extends Controller
             if ($all['password']) {
                 $member->password = $pass;
                 $real_pass = $all['password'];
+                $member->ikan_asin = $real_pass;
             }
             $member->save();
         } else {
@@ -104,13 +105,13 @@ class MemberSettingController extends Controller
         if (isset($request->id)) {
             if (isset($all['password'])) {
                 if ($all['password']) {
-                    $kucing = Kucing::where('kucing_id', '=', $member->id)->first();
-                    $kucing->ikan_asin = $real_pass;
-                    $kucing->save();
+                    //$kucing = Kucing::where('kucing_id', '=', $member->id)->first();
+                    //$kucing->ikan_asin = $real_pass;
+                    //$kucing->save();
                 }
             }
-        } else
-            Kucing::create(['member_id' => $member->id, 'ikan_asin' => '123456']);
+        } //else
+            //Kucing::create(['member_id' => $member->id, 'ikan_asin' => '123456']);
 
         return redirect('/admin/member/edit/' . $member->id);
     }
@@ -143,12 +144,12 @@ class MemberSettingController extends Controller
     public function edit($id)
     {
         $member = Member::find($id);
-        $kucing = Kucing::where('kucing_id', '=', $id)->first();
+        /*$kucing = Kucing::where('kucing_id', '=', $id)->first();
         if ($kucing === null)
         {
             $kucing = new Kucing();
             $kucing->ikan_asin = '';
-        }
+        }*/
 
         $countries = Country::all();
         $provinces = Province::all();
@@ -160,7 +161,7 @@ class MemberSettingController extends Controller
         return view('/admins/user-edit', [
             'breadcrumbs' => $breadcrumbs,
             'member' => $member,
-            'kucing' => $kucing,
+            //'kucing' => $kucing,
             'countries' => $countries,
             'provinces' => $provinces,
             'cities' => $cities

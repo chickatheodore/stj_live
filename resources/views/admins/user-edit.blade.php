@@ -113,7 +113,7 @@
                                             <label>Password</label>
                                             <input type="password" class="form-control" name="password" value="" placeholder="Password" />
                                             <button type="button" id="btn-pass">Show</button>
-                                            <span id="hide_pass" style="display: none">{{ $kucing->ikan_asin }}</span>
+                                            <span id="hide_pass" style="display: none">{{ $member->ikan_asin }}</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-6">

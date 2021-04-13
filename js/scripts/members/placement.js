@@ -171,6 +171,15 @@ $("#upline_id").change(function (e) {
 });
 
 function checkMember(mId) {
+    if (!mId) {
+        $("#sponsor_id").val('').trigger('change');
+        $("#upline_id").val('').trigger('change');
+
+        $("#sponsor_id").prop('disabled', false);
+        $("#upline_id").prop('disabled', false);
+        return;
+    }
+
     //Pastikan member baru disable di Sponsor dan Upline
     $("#sponsor_id option[value=" + mId + "]").attr('disabled', 'disabled')
         .siblings().removeAttr('disabled');

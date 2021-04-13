@@ -77,11 +77,11 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="city_id">Kota</label>
-                                                <select class="form-control city_id" id="city_id" name="city_id">
+                                                <label for="country_id">Negara</label>
+                                                <select class="form-control country_id" id="country_id" name="country_id">
                                                     <option value=""></option>
-                                                    @foreach($cities as $city)
-                                                        <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                                    @foreach($countries as $country)
+                                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -95,17 +95,14 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="postal_code">Kode POS</label>
-                                                <input type="text" id="postal_code" name="postal_code" class="form-control" placeholder="Kode POS">
+                                                <label for="city_id">Kota</label>
+                                                <select class="form-control city_id" id="city_id" name="city_id">
+                                                    <option value=""></option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="country_id">Negara</label>
-                                                <select class="form-control country_id" id="country_id" name="country_id">
-                                                    <option value=""></option>
-                                                    @foreach($countries as $country)
-                                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <label for="postal_code">Kode POS</label>
+                                                <input type="text" id="postal_code" name="postal_code" class="form-control" placeholder="Kode POS">
                                             </div>
 
                                             <div class="form-group">
@@ -136,7 +133,7 @@
                                         <div class="card-content">
                                             <div class="card-body pt-0">
                                                 <div class="form-group">
-                                                    <label for="bank">Bank</label>
+                                                    <label for="bank">Bank <span class="small d-lg-block text-danger">*) Wajib diisi</span></label>
                                                     <input id="bank" type="text" class="form-control @error('bank') is-invalid @enderror" name="bank" placeholder="Bank" value="{{ old('bank') }}" required autocomplete="bank" autofocus>
                                                     @error('bank')
                                                     <span class="invalid-feedback" role="alert">
@@ -145,7 +142,7 @@
                                                     @enderror
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="account_number">Nomor Rekening</label>
+                                                    <label for="account_number">Nomor Rekening <span class="small d-lg-block text-danger">*) Wajib diisi</span></label>
                                                     <input id="account_number" type="text" class="form-control @error('account_number') is-invalid @enderror" name="account_number" placeholder="Nomor Rekening" value="{{ old('account_number') }}" required>
                                                     @error('account_number')
                                                     <span class="invalid-feedback" role="alert">
@@ -154,7 +151,7 @@
                                                     @enderror
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="account_name">Nama Nasabah</label>
+                                                    <label for="account_name">Nama Nasabah <span class="small d-lg-block text-danger">*) Wajib diisi</span></label>
                                                     <input id="account_name" type="text" class="form-control @error('account_name') is-invalid @enderror" name="account_name" placeholder="Nama Nasabah" value="{{ old('account_name') }}" required>
                                                     @error('account_name')
                                                     <span class="invalid-feedback" role="alert">
@@ -216,9 +213,22 @@
 
                         <div class="row">
                             <div class="col-md-12 col-12 d-flex justify-content-center">
-                                <button type="submit" id="btn-register" class="btn btn-primary float-right btn-inline mb-50" disabled>Register</button>
+                                <button type="submit" id="btn-register" class="btn btn-primary float-right btn-inline" disabled>Register</button>
+                                <span>&nbsp;</span>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary waves-effect waves-float waves-light" onclick="openRegistrationDoc();">Petunjuk</button>
+                                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split waves-effect waves-float waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" style="">
+                                        <a class="dropdown-item" target="_blank" href="/docs/registration.pdf">PDF</a>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
+                        <div class="row">&nbsp;</div>
+
                     </div>
 
                 </form>
@@ -415,5 +425,13 @@
             $('#btn-register').prop('disabled', true);
             $('#form_register').submit();
         })
+
+        let raw_data = '{{ json_encode($cities) }}';
+        let _city_str = raw_data.replace(/&quot;/g, '"');
+        let _city_data = JSON.parse(_city_str);
+
+        function openRegistrationDoc() {
+            window.open('{{ env('APP_URL') }}/docs/registration.htm');
+        }
     </script>
 @endsection
