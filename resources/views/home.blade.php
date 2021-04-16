@@ -39,7 +39,7 @@
             font-size: 48px;
             font-weight: 700;
             line-height: 56px;
-            color: #222222;
+            color: #f0f0f0; /*#222222;*/
             font-family: "Poppins", sans-serif;
         }
 
@@ -68,7 +68,7 @@
             font-size: 16px;
             transition: 0.5s;
             margin-left: 25px;
-            color: #222222;
+            color: #f0f0f0; /*#222222;*/
             font-weight: 600;
             display: flex;
             align-items: center;
