@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Member;
 use App\Transaction;
+use App\TempTransaction;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 
 class ProcessMember implements ShouldQueue
 {
@@ -147,6 +149,7 @@ class ProcessMember implements ShouldQueue
 
         }
 
+        DB::statement('truncate table temp_transactions');
     }
 
     private function processMemberBonus()
@@ -201,9 +204,6 @@ class ProcessMember implements ShouldQueue
 
                     //Bonus Pasangan
                     $this->createPairBonus($upline, $new_member);
-
-                    //Terakhir finalisasi saldo awal, saldo akhir, saldo bonus
-                    $this->finalizeTransaction($upline);
                 }
 
                 if ($upline->upline_id == null)
@@ -220,12 +220,51 @@ class ProcessMember implements ShouldQueue
 
                 //$temp_member = $upline;
             }
+
         }
+
+        //Terakhir finalisasi saldo awal, saldo akhir, saldo bonus
+        $this->finalizeTransaction();   //$upline
+
+        // Terakhir, pindahkan dari temp ke Transaction
+        DB::statement('insert into transactions
+        (member_id,user_id,transaction_date,type,trans,pin_beginning_balance,pin_amount,pin_ending_balance,left_point_beginning_balance,right_point_beginning_balance,left_point_amount,right_point_amount,left_point_ending_balance,right_point_ending_balance,bonus_beginning_balance,bonus_point_amount,bonus_sponsor_amount,bonus_partner_amount,bonus_paid_amount,bonus_ending_balance,remarks)
+        select member_id,user_id,transaction_date,type,trans,pin_beginning_balance,pin_amount,pin_ending_balance,left_point_beginning_balance,right_point_beginning_balance,left_point_amount,right_point_amount,left_point_ending_balance,right_point_ending_balance,bonus_beginning_balance,bonus_point_amount,bonus_sponsor_amount,bonus_partner_amount,bonus_paid_amount,bonus_ending_balance,remarks from temp_transactions');
     }
 
-    private function finalizeTransaction($member)
+    private function getOrCreateTempTransactions($member)
     {
-        $old_transaction = Transaction::where('transaction_date', '<', $this->date)
+        $now = Carbon::now()->format('Y-m-d h:i:s');
+        $start = Carbon::now()->format('Y-m-d') . ' 00:00:00';
+        $end = Carbon::now()->format('Y-m-d') . ' 23:59:59';
+
+        $temp_transaction = TempTransaction::where('member_id', '=', $member->id)
+            ->whereBetween('transaction_date', [ $start, $end ])
+            ->where('trans', '=', 'SYSTEM')->first();
+
+        if ($temp_transaction === null)
+        {
+            $total_bonus = $member->point_bonus + $member->sponsor_bonus + $member->pair_bonus;
+            $temp_transaction = TempTransaction::create(
+                [
+                    'member_id' => $member->id,
+                    'user_id' => '1',
+                    'transaction_date' => $now,
+                    'type' => 'all',
+                    'trans' => 'SYSTEM',
+                    'pin_beginning_balance' => $member->pin,
+                    'left_point_beginning_balance' => $member->left_point,
+                    'right_point_beginning_balance' => $member->right_point,
+                    'bonus_beginning_balance' => $total_bonus,
+                ]
+            );
+        }
+        return $temp_transaction;
+    }
+
+    private function finalizeTransaction()  //$member
+    {
+        /*$old_transaction = Transaction::where('transaction_date', '<', $this->date)
             ->where('member_id', '=', $member->id)->where('type', '<>', 'pin')
             ->orderByDesc('transaction_date')
             ->first();
@@ -233,31 +272,65 @@ class ProcessMember implements ShouldQueue
         $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
             ->where('member_id', '=', $member->id)->where('type', '<>', 'pin')
             //->where('trans', '<>', 'PAYMENT')
-            ->first();
+            ->first();*/
 
-        if ($transaction !== null)
+        //$transaction = $this->getOrCreateTempTransactions($member);
+        $transactions = TempTransaction::all();
+
+        foreach($transactions as $transaction) //if ($transaction !== null)
         {
-            if ($old_transaction === null)
+            /*if ($old_transaction === null)
                 $transaction->bonus_beginning_balance = 0;
             else
-                $transaction->bonus_beginning_balance = $old_transaction->bonus_ending_balance;
+                $transaction->bonus_beginning_balance = $old_transaction->bonus_ending_balance;*/
 
+            $member = Member::find($transaction->member_id); //$transaction->member;
+
+            $pb = $transaction->pin_beginning_balance;
+            $pa = $transaction->pin_amount;
+            $transaction->pin_ending_balance = $pb + $pa;
+
+            $lpb = $transaction->left_point_beginning_balance;
+            $rpb = $transaction->right_point_beginning_balance;
+            $lp = $transaction->left_point_amount;
+            $rp = $transaction->right_point_amount;
+            $transaction->left_point_ending_balance = $lpb + $lp;
+            $transaction->right_point_ending_balance = $rpb + $rp;
+
+            $bbb = $transaction->bonus_beginning_balance;
             $p = $transaction->bonus_point_amount;
             $s = $transaction->bonus_sponsor_amount;
             $a = $transaction->bonus_partner_amount;
             $i = 0; //$transaction->bonus_paid_amount;
 
-            $balance = ($p + $s + $a) - abs($i);
+            $balance = ($bbb + ($p + $s + $a)) - abs($i);
             $transaction->bonus_ending_balance = $balance;
 
-            $transaction->save();
+            $transaction->remarks = $this->createRemarks($transaction, PHP_EOL . 'SETTING MEMBER DATA');
+            $log = null;
+            if ($transaction->bonus_point_amount !== null) {
+                $mpb = $member->point_bonus;
+                $end_pb = $mpb + $transaction->bonus_point_amount;
+                $member->point_bonus = $end_pb; //$member->point_bonus + $transaction->bonus_point_amount;
 
-            if ($transaction->bonus_point_amount)
-                $member->point_bonus = $member->point_bonus + $transaction->bonus_point_amount;
-            if ($transaction->bonus_sponsor_amount)
-                $member->sponsor_bonus = $member->sponsor_bonus + $transaction->bonus_sponsor_amount;
-            if ($transaction->bonus_partner_amount)
-                $member->pair_bonus = $member->pair_bonus + $transaction->bonus_partner_amount;
+                $transaction->remarks = $this->createRemarks($transaction, 'Bonus Poin : ' . number_format($mpb,0) . ' + ' . number_format($transaction->bonus_point_amount,0) . '= ' . number_format($end_pb,0));
+            }
+            if ($transaction->bonus_sponsor_amount !== null) {
+                $msb = $member->sponsor_bonus;
+                $end_sb = $msb + $transaction->bonus_sponsor_amount;
+                $member->sponsor_bonus = $end_sb; //$member->sponsor_bonus + $transaction->bonus_sponsor_amount;
+
+                $transaction->remarks = $this->createRemarks($transaction, 'Bonus Sponsor : ' . number_format($msb,0) . ' + ' . number_format($transaction->bonus_sponsor_amount,0) . '= ' . number_format($end_sb,0));
+            }
+            if ($transaction->bonus_partner_amount !== null) {
+                $mib = $member->pair_bonus;
+                $end_ib = $mib + $transaction->bonus_partner_amount;
+                $member->pair_bonus = $end_ib; //$member->pair_bonus + $transaction->bonus_partner_amount;
+
+                $transaction->remarks = $this->createRemarks($transaction, 'Bonus Pasangan : ' . number_format($mib,0) . ' + ' . number_format($transaction->bonus_partner_amount,0) . '= ' . number_format($end_ib,0));
+            }
+
+            $transaction->save();
 
             $member->save();
         }
@@ -278,24 +351,26 @@ class ProcessMember implements ShouldQueue
 
     private function processUpline($upline, $downline, $position, $new_member)
     {
-        $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
+        /*$transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
             ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
             //->where('trans', '<>', 'PAYMENT')
-            ->first();
+            ->first();*/
+
+        $transaction = $this->getOrCreateTempTransactions($upline);
 
         if ($transaction === null) {
-            $transaction = new Transaction();
+            $transaction = new TempTransaction();
 
             $transaction->member_id = $upline->id;
             $transaction->user_id = 1;
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
 
-            $last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
+            /*$last_trans = TempTransaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
             if ($last_trans !== null) {
                 $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
                 $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
-            }
+            }*/
         }
 
         //Upline dapat Bonus Point (untuk member baru)
@@ -317,20 +392,20 @@ class ProcessMember implements ShouldQueue
 
     private function createPointBonus($upline, $transaction, $position, $new_member)
     {
-        $transaction->left_point_amount = 0;
-        $transaction->right_point_amount = 0;
+        //$transaction->left_point_amount = 0;
+        //$transaction->right_point_amount = 0;
 
-        $transaction->left_point_beginning_balance = $upline->left_point;
-        $transaction->right_point_beginning_balance = $upline->right_point;
+        //$transaction->left_point_beginning_balance = $upline->left_point;
+        //$transaction->right_point_beginning_balance = $upline->right_point;
 
         if ($position == 'left') {
-            $transaction->left_point_amount = 25;
+            $transaction->left_point_amount = $transaction->left_point_amount + 25;
         } elseif ($position == 'right') {
-            $transaction->right_point_amount = 25;
+            $transaction->right_point_amount = $transaction->right_point_amount + 25;
         }
 
-        $transaction->left_point_ending_balance = $transaction->left_point_beginning_balance + $transaction->left_point_amount;
-        $transaction->right_point_ending_balance = $transaction->right_point_beginning_balance + $transaction->right_point_amount;
+        //$transaction->left_point_ending_balance = $transaction->left_point_beginning_balance + $transaction->left_point_amount;
+        //$transaction->right_point_ending_balance = $transaction->right_point_beginning_balance + $transaction->right_point_amount;
 
         $transaction->remarks = $this->createRemarks($transaction, 'Bonus member baru [ ' . $new_member->code . ' - ' . $new_member->name . ' ] (25 BV).');
 
@@ -349,27 +424,29 @@ class ProcessMember implements ShouldQueue
 
         $jumlah_point = $max / 25; //($max * 2) / 25;
 
-        $faktor_kali = intval($upline->level->minimum_point);
+        $faktor_kali = 1;   // Point bonus tidak di kali 8, intval($upline->level->minimum_point);
         $nilai_point = floatval($upline->level->point_value);
 
-        $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
+        /*$transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
             ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
             //->where('trans', '<>', 'PAYMENT')
-            ->first();
+            ->first();*/
+
+        $transaction = $this->getOrCreateTempTransactions($upline);
 
         if ($transaction === null) {
-            $transaction = new Transaction();
+            $transaction = new TempTransaction();
 
             $transaction->member_id = $upline->id;
             $transaction->user_id = 1;
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
 
-            $last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
+            /*$last_trans = TempTransaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
             if ($last_trans !== null) {
                 $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
                 $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
-            }
+            }*/
         }
 
         $transaction->bonus_point_amount = $jumlah_point * ($faktor_kali * $nilai_point);
@@ -393,25 +470,27 @@ class ProcessMember implements ShouldQueue
     {
         $sponsor = $new_member->sponsor;
 
-        $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
+        /*$transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
             ->where('member_id', '=', $sponsor->id)->where('type', '<>', 'pin')
             //->where('trans', '<>', 'PAYMENT')
-            ->first();
+            ->first();*/
+
+        $transaction = $this->getOrCreateTempTransactions($sponsor);
 
         if ($transaction === null) {
-            $transaction = new Transaction();
+            $transaction = new TempTransaction();
 
             $transaction->member_id = $sponsor->id;
             $transaction->user_id = 1;
             $transaction->type = 'all';
             $transaction->trans = 'SYSTEM';
-            $transaction->bonus_sponsor_amount = 0;
+            //$transaction->bonus_sponsor_amount = 0;
 
-            $last_trans = Transaction::where('member_id', '=', $sponsor->id)->orderByDesc('transaction_date')->first();
+            /*$last_trans = Transaction::where('member_id', '=', $sponsor->id)->orderByDesc('transaction_date')->first();
             if ($last_trans !== null) {
                 $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
                 $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
-            }
+            }*/
         }
 
         $faktor_kali = 1;   // Sponsor bonus tidak di kali 8, intval($sponsor->level->minimum_point);
@@ -436,8 +515,11 @@ class ProcessMember implements ShouldQueue
         //Set batasan maksimal kedalaman
         $amount = $this->getPairAmount($upline, $new_member);
 
-        if ($amount === 0)
+        if ($amount === 0) {
+            Log::info('Member ['.$new_member->id.' ('.$new_member->code.' - '.$new_member->name.')]' . PHP_EOL .
+            'Amount : 0');
             return;
+        }
 
         //Cari pasangan dari semua downline pada level $my_level
         $upline_level = $upline->tree_level;
@@ -456,20 +538,25 @@ class ProcessMember implements ShouldQueue
         $kiri_akhir = $end - $setengah;
 
         $pasangan = null;   //new Member();
+        $cari_posisi = 0;
 
         //Jika posisi = Kiri
+        $is_kiri = true;
         if ($my_position <= $kiri_akhir)
         {
             $kiri = (($end - $my_position) - $setengah) + 1;    //Penomoran
             $kanan = $kiri + $kiri_akhir;
+            $cari_posisi = $kanan;
 
             $pasangan = Member::where('tree_level', '=', $my_tree_level)
                 ->where('tree_position', '=', $kanan);
                 //->where('is_paired', '=', '0');
 
         } elseif ($my_position > $kiri_akhir) {
+            $is_kiri = false;
             $kanan = $setengah - ($end - $my_position);
             $kiri = $kanan + $kiri_akhir;
+            $cari_posisi = $kiri;
 
             $pasangan = Member::where('tree_level', '=', $my_tree_level)
                 ->where('tree_position', '=', $kiri);
@@ -477,6 +564,23 @@ class ProcessMember implements ShouldQueue
         }
 
         $pair = $pasangan->first();
+
+        $log = 'Member : Level = '.$new_member->tree_level.', Posisi = '.$new_member->tree_position.PHP_EOL.
+            'Upline : Level = '.$upline->tree_level.', Posisi = '.$upline->tree_position.PHP_EOL.
+            'Selisih Level : '.$selisih.', Jumlah Node = '.$node_counts.PHP_EOL.
+            'Rentang : '.$start.' s/d '.$end.'. Tengah : '.$end.PHP_EOL.
+            'Kiri : '.$start.' -> '.$kiri_akhir.', Kanan : '.($kiri_akhir + 1).' -> '.$end.PHP_EOL.
+            'Kiri POS : '.$kiri.', Kanan POS : '.$kanan;
+
+        Log::debug($log);
+
+        /*Log::info('Member ['.$new_member->id.' ('.$new_member->code.' - '.$new_member->name.')]' . PHP_EOL .
+            'Upline ['.$upline->id.' ('.$upline->code.' - '.$upline->name.')]' . PHP_EOL .
+            'Level : '.$new_member->tree_level.', Position : '.$new_member->tree_position.'.'.PHP_EOL.
+            'Pasangan : Level = '.$my_tree_level.', Position : '.$cari_posisi.PHP_EOL.
+            'Is Kiri : '.($is_kiri === true ? 'Ya' : 'Tidak').', Kiri : '.$kiri.', Kanan : '.$kanan.PHP_EOL.
+            'Ketemu : '.($pair === null ? 'Tidak' : 'Ya, Id : '.$pair->id));*/
+
         if ($pair !== null && $pair->id !== $new_member->id)
         {
             $pair->is_paired = 1;
@@ -488,25 +592,27 @@ class ProcessMember implements ShouldQueue
             $faktor_kali = intval($new_member->level->minimum_point); //intval($upline->level->minimum_point);
             $nilai_point = $amount; //floatval($upline->level->point_value);
 
-            $transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
+            /*$transaction = Transaction::whereBetween('transaction_date', [ $this->date, $this->high_date])
                 ->where('member_id', '=', $upline->id)->where('type', '<>', 'pin')
                 //->where('trans', '<>', 'PAYMENT')
-                ->first();
+                ->first();*/
+
+            $transaction = $this->getOrCreateTempTransactions($upline);
 
             if ($transaction === null) {
-                $transaction = new Transaction();
+                $transaction = new TempTransaction();
 
                 $transaction->member_id = $upline->id;
                 $transaction->user_id = 1;
                 $transaction->type = 'all';
                 $transaction->trans = 'SYSTEM';
-                $transaction->bonus_partner_amount = 0;
+                //$transaction->bonus_partner_amount = 0;
 
-                $last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
+                /*$last_trans = Transaction::where('member_id', '=', $upline->id)->orderByDesc('transaction_date')->first();
                 if ($last_trans !== null) {
                     $transaction->pin_beginning_balance = $last_trans->pin_ending_balance;
                     $transaction->pin_ending_balance = $last_trans->pin_ending_balance;
-                }
+                }*/
             }
 
             $bonus = $faktor_kali * $nilai_point;

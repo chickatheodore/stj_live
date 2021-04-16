@@ -270,9 +270,9 @@ $(document).ready(function () {
         });
     }
     // Input, Select, Textarea validations except submit button validation initialization
-    if ($(".users-edit").length > 0) {
-        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
-    }
+    //if ($(".users-edit").length > 0) {
+    //    $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+    //}
 
     $('#btn-pass').click(function (e) {
         $('#hide_pass').show();

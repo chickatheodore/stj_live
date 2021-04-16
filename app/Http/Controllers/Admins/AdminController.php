@@ -243,4 +243,28 @@ class AdminController extends Controller
         return json_encode([ 'success' => true ]);
     }
 
+    public function showPINHistory()
+    {
+        return view('admins/pin-history');
+    }
+
+    public function getPINHistory(Request $request)
+    {
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+
+        $transactions = Transaction::where('user_id', '=', '1')
+            ->where('type', '=', 'pin')->where('trans', '=', 'ADMIN-TRF')
+            ->whereBetween('transaction_date', [$start_date, $end_date])->get();
+
+        $lists = [];
+        foreach ($transactions as $transaction) {
+            $tran = $transaction->toArray();
+            $tran['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
+            array_push($lists, $tran);
+        }
+        $data = json_encode($lists);
+        return $data;
+    }
+
 }

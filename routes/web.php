@@ -62,6 +62,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
     Route::get('member/create', 'Admins\MemberSettingController@create');
     Route::get('member/edit/{id}', 'Admins\MemberSettingController@edit');
     Route::post('member/save', 'Admins\MemberSettingController@store')->name('member.save');
+    Route::post('member/update', 'Admins\MemberSettingController@update')->name('member.update');
 
     Route::get('trf-pin', 'Admins\PinController@showTransferPINForm');
     Route::post('trf-pin', 'Admins\PinController@transferPIN');
@@ -76,6 +77,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
     Route::get('unapproved', 'Admins\AdminController@showUnapprovedMember');
     Route::post('approveMember', 'Admins\AdminController@approveMember');
     Route::get('member/view/{id}', 'Admins\MemberSettingController@show');
+
+    Route::get('point-history', 'Admins\AdminController@showPINHistory');
 });
 
 Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMidnight']], function () {
@@ -129,6 +132,7 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
 
     Route::get('/admin/getPointHistory', 'Admins\DashboardController@getPointHistory');
     Route::post('/admin/transferPIN', 'Admins\PinController@transferPIN');
+    Route::post('/admin/getPINHistory', 'Admins\AdminController@getPINHistory');
 
     //Route::get('/admin/tupoExpired', 'Admins\DashboardController@expiredPoint');
 

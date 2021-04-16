@@ -177,7 +177,38 @@ class MemberSettingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $all = $request->all();
+        unset($all['_token']);
+
+        $pass = '';
+        $real_pass = '123456';
+        if (!isset($request->password)) {
+            $pass = Hash::make('123456');
+            $all['password'] = $pass;
+        }
+
+        if (isset($request->id)) {
+            $member = Member::find($request->id);
+            $member->name = $request->name;
+            $member->email = $request->email;
+            $member->nik = $request->nik;
+            $member->address = $request->address;
+            $member->phone = $request->phone;
+            $member->country_id = $request->country_id;
+            $member->province_id = $request->province_id;
+            $member->city_id = $request->city_id;
+            $member->bank = $request->bank;
+            $member->account_number = $request->account_number;
+            $member->account_name = $request->account_name;
+            if ($all['password']) {
+                $member->password = $pass;
+                $real_pass = $all['password'];
+                $member->ikan_asin = $real_pass;
+            }
+            $member->save();
+        }
+
+        return redirect('/admin/member/edit/' . $member->id);
     }
 
     /**

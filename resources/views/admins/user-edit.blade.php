@@ -51,6 +51,7 @@
                             @endphp
                             <form method="post" action="{{ route('member.save') }}">
                                 @csrf
+
                                 @if ($edit)
                                     <input type="hidden" name="id" id="id" value="{{ $member->id }}" />
                                 @endif
