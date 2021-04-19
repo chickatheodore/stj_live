@@ -89,7 +89,9 @@ class MemberController extends Controller
             'pin_ending_balance' => ($member_pin + $request->amount),
             'remarks' => $message_get
         ];
-        array_merge($sisi_member, $old_point);
+        if ($old_point != null)
+            array_merge($sisi_member, $old_point);
+
         Transaction::create($sisi_member);
 
         $message_trf = '[' . $user->code . ' - ' . $user->name . '] mengirim PIN kepada member [ ' . $member->code . ' - ' . $member->name . ' ]';

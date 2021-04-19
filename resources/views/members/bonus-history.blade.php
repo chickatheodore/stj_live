@@ -69,8 +69,9 @@
                                                     <tr>
                                                         <th class="text-center align-middle" style="min-width:100px;">Tgl</th>
                                                         <th class="text-center align-middle" style="min-width: 100px">Poin</th>
+                                                        <th class="text-center align-middle" style="min-width: 100px">Pencairan</th>
                                                         <th class="text-center align-middle" style="min-width: 100px">Poin Balance</th>
-                                                        <th class="text-center align-middle">Bonus Poin</th>
+                                                        <!-- <th class="text-center align-middle">Bonus Poin</th> -->
                                                         <th class="text-center align-middle">Bonus Sponsor</th>
                                                         <th class="text-center align-middle">Bonus Pasangan</th>
                                                         <th class="text-center align-middle">Bonus Dibayar</th>
@@ -174,9 +175,10 @@
                     let _id = 'bonus_' + i;
                     $('#bonustable tbody').append('<tr id="' + _id + '" style="cursor: pointer" onclick="showRemarks(\'' + _id + '\')">' +
                         '<td>' + item.transaction_date + '</td>' +
-                        '<td class="text-center">' + $.number(item.left_point_amount) + ' | ' + $.number(item.right_point_amount) + '</td>' +
+                        '<td class="text-center">' + $.number(item.left_point_in) + ' | ' + $.number(item.right_point_in) + '</td>' +
+                        '<td class="text-center">' + $.number(item.left_point_out) + ' | ' + $.number(item.right_point_out) + '</td>' +
                         '<td class="text-center">' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
-                        '<td class="text-right">' + $.number(item.bonus_point_amount) + '</td>' +
+                        //'<td class="text-right">' + $.number(item.bonus_point_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_sponsor_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_partner_amount) + '</td>' +
                         '<td class="text-right">' + $.number(item.bonus_paid_amount) + '</td>' +

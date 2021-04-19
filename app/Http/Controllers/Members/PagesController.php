@@ -160,6 +160,10 @@ class PagesController extends Controller
         $pass3 = password_hash ($request->password, PASSWORD_ARGON2I);
         $pass4 = password_hash ($request->password, PASSWORD_ARGON2ID);*/
 
+        $now = Carbon::now();
+        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
+        $tgl = $tgl->addMonth(2)->subDay();
+
         $req = [
             'name' => $request->name,
             'nik' => $request->nik,
@@ -176,9 +180,10 @@ class PagesController extends Controller
             'account_name' => $request->account_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_new_member' => '1',
+            'is_tupo' => '1',
             'is_active' => '1',     //Sementara bypass cek ktp
             'activation_date' => Carbon::now()->format('Y-m-d h:i:s'),
+            'close_point_date' => $tgl->format('Y-m-d'),
             'ikan_asin' => $request->password,
             'ref_id' => $id
         ];
@@ -640,9 +645,6 @@ class PagesController extends Controller
         $member->close_point_date = $tupo->format('Y-m-d');
         $message = $message . ' to ' . $tupo->format('d-M-Y');
 
-        $member->pin = $curr_pin - 1;
-        $member->save();
-
         $member_point = Helper::getLastTransaction($member, 'point');
 
         //Kurangi 1 PIN
@@ -656,8 +658,14 @@ class PagesController extends Controller
             'pin_ending_balance' => $curr_pin - 1,
             'remarks' => $message
         ];
-        array_merge($data, $member_point);
+        if ($member_point != null)
+            array_merge($data, $member_point);
+
         Transaction::create($data);
+
+        $member->pin = $curr_pin - 1;
+        $member->is_tupo = 1;
+        $member->save();
 
         return json_encode(['status' => true, 'pin' => $member->pin, 'tupo' => Carbon::parse($member->close_point_date)->format('d-M-Y'), 'message' => 'Masa Berlaku TUPO telah diperpanjang.']);
     }

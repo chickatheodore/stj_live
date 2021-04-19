@@ -87,7 +87,7 @@ class ProcessMember implements ShouldQueue
         $now = Carbon::now();
         $close_date = Carbon::parse($member->close_point_date . ' 23:59:59');
 
-        $skip = $member->id == 1 || $now->gt($close_date) || $member->is_new_member === 1 || $member->is_active === 0;
+        $skip = $member->id == 1 || $now->gt($close_date) || $member->is_tupo === 1 || $member->is_active === 0;
 
         return $skip;
     }
@@ -165,7 +165,7 @@ class ProcessMember implements ShouldQueue
          * - Punya Level ( BRONZE atau GOLD )
          * - Punya Upline
         */
-        $new_members = Member::where('is_new_member', '=', '1')
+        $new_members = Member::where('is_tupo', '=', '1')
             ->where('is_active', '=', '1')
             ->whereNotNull('level_id')->whereNotNull('upline_id')->get();
 
@@ -174,9 +174,9 @@ class ProcessMember implements ShouldQueue
 
             $upline = $new_member->upLine;
 
-            //Cari Tree Level untuk Member baru, dan set is_new_member = false
+            //Cari Tree Level untuk Member baru, dan set is_tupo = false
             $new_member->tree_level = $upline->tree_level + 1;
-            $new_member->is_new_member = 0;
+            $new_member->is_tupo = 0;
             $new_member->tree_position = $this->setMemberPosition($new_member, $upline);
             $new_member->save();
 

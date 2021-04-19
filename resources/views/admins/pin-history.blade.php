@@ -66,6 +66,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th class="text-center align-middle">Tgl</th>
+                                                    <th class="text-center align-middle">Member</th>
                                                     <th class="text-center align-middle" style="min-width: 50px">PIN</th>
                                                     <th class="text-center align-middle" style="min-width: 60px">PIN Balance</th>
                                                     <th class="text-center align-middle">Keterangan</th>
@@ -159,6 +160,7 @@
                     let _id = 'bonus_' + i;
                     $('#bonustable tbody').append('<tr id="' + _id + '">' +
                         '<td class="text-center">' + item.transaction_date + '</td>' +
+                        '<td>' + item.member.code + ' - ' + item.member.name + '</td>' +
                         '<td class="text-center">' + $.number(item.pin_amount) + '</td>' +
                         '<td class="text-center">' + $.number(item.pin_ending_balance) + '</td>' +
                         '<td class="text-center"><button type="button" class="btn btn-info" onclick="showRemarks(\'' + _id + '\')">Keterangan</button></td>' +

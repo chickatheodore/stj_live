@@ -27,12 +27,12 @@
                                 {{ $dt->diffInMonths($date) }} Bulan ( {{ $date->diffInDays() }} Hari )
                             </div>
                         </div>
-                        <div class="card">
+                        <!-- <div class="card">
                             <div class="card-body text-center">
                                 Poin<br />
                                 {{ number_format($member->point_bonus, 0) }}
                             </div>
-                        </div>
+                        </div> -->
                         <div class="card">
                             <div class="card-body text-center">
                                 Sponsor<br />
@@ -49,7 +49,8 @@
                             <div class="card-body text-center">
                                 Total Bonus<br />
                                 @php
-                                $total = floatval($member->point_bonus) + floatval($member->sponsor_bonus) + floatval($member->pair_bonus);
+                                //$total = floatval($member->point_bonus) + floatval($member->sponsor_bonus) + floatval($member->pair_bonus);
+                                $total = floatval($member->sponsor_bonus) + floatval($member->pair_bonus);
                                 @endphp
                                 {{ number_format($total, 0) }}
                             </div>

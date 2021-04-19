@@ -8,7 +8,7 @@
     # Handle js with filemtime
     RewriteRule ^js/scripts/admins/([a-zA-Z\-]+).([0-9]+).js /js/scripts/admins/$1.js [L]
     RewriteRule ^js/scripts/members/([a-zA-Z\-]+).([0-9]+).js /js/scripts/members/$1.js [L]
-    RewriteRule ^vendors/js/([a-zA-Z\-]+).min.([0-9]+).js /vendors/js/$1.min.js [L]
+    RewriteRule ^vendors/js/([a-zA-Z\-]+)(.*).min.([0-9]+).js /vendors/js/$1$2.min.js [L]
 
     #RewriteRule ^docs/(.*).htm /storage/docs/$1.htm [L]
     RewriteRule ^docs/(.*)$ /storage/docs/$1 [L,NC]

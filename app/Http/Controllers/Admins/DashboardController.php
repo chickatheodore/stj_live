@@ -47,6 +47,7 @@ class DashboardController extends Controller
         $end = Carbon::parse($request->end_date)->format('Y-m-d') . ' 23:59:59';
 
         $transactions = Transaction::with('member')
+            ->where('user_id', '=', '1')
             ->whereBetween('transaction_date', [$start, $end])
             ->orderBy('transaction_date');
 

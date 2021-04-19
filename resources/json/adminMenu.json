@@ -63,6 +63,13 @@
                     "i18n": "History Poin",
                     "icon": "",
                     "slug": "point-history"
+                },
+                {
+                    "url": "/admin/pin-history",
+                    "name": "PIN History",
+                    "i18n": "PIN History",
+                    "slug": "pin-history",
+                    "icon": ""
                 }
             ]
         }

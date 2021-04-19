@@ -22,7 +22,7 @@ $(document).ready(function () {
     }*/
     function numericFormatter(params) {
         let id = params.colDef.field;
-        if (id === 'BonusPoint' || id === 'BonusSponsor' || id === 'Total')
+        if (params.value)
         {
             return $.number(params.value);
         }
@@ -43,27 +43,20 @@ $(document).ready(function () {
             headerCheckboxSelection: true,
         },
         {
-            headerName: 'Tanggal',
-            field: 'Tanggal',
-            filter: true,
-            width: 175,
-            //valueFormatter: dateFormatter
-        },
-        {
             headerName: 'Member ID',
-            field: 'MemberID',
+            field: 'code',
             filter: true,
             width: 175,
         },
         {
             headerName: 'Name',
-            field: 'Name',
+            field: 'name',
             filter: true,
             width: 400,
         },
         {
-            headerName: 'Bonus Poin',
-            field: 'BonusPoint',
+            headerName: 'Bonus Pasangan',
+            field: 'pair_bonus',
             filter: true,
             valueFormatter: numericFormatter,
             cellStyle: {
@@ -72,7 +65,7 @@ $(document).ready(function () {
         },
         {
             headerName: 'Bonus Sponsor',
-            field: 'BonusSponsor',
+            field: 'sponsor_bonus',
             filter: true,
             valueFormatter: numericFormatter,
             cellStyle: {
@@ -82,7 +75,7 @@ $(document).ready(function () {
         },
         {
             headerName: 'Total Bonus',
-            field: 'Total',
+            field: 'bonus_balance',
             filter: true,
             valueFormatter: numericFormatter,
             cellStyle: {
@@ -160,18 +153,10 @@ $(document).ready(function () {
             });
 
             showSTJModal();
+
             let _data = [];
-            /*for (var i = 0; i < rows.length; i++)
-            {
-                _data.push(rows[i].data);
-                _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
-
-                $.ajax({ data: _data })
-                .done(function( result ) {
-                });
-            }*/
-
             let _rows = [];
+
             for (var i = 0; i < rows.length; i++)
             {
                 _rows.push(rows[i].data.id);

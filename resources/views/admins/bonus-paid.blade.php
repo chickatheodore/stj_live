@@ -140,5 +140,5 @@
 
 @section('page-script')
   {{-- Page js files --}}
-  <script src="{{ Helper::asset(mix('js/scripts/admins/bonus-paid.js')).'?v='.date('Ymdhis') }}"></script>
+  <script src="{{ Helper::asset(mix('js/scripts/admins/bonus-paid.js')) }}"></script>
 @endsection

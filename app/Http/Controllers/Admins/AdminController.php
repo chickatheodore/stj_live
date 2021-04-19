@@ -39,23 +39,9 @@ class AdminController extends Controller
 
     public function unpaidBonus()
     {
-        $transactions = Transaction::with('member')->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
-            ->where('status_id', '<', '3')->where('bonus_ending_balance', '>', '0')->get();
+        $members = Member::where('bonus_balance', '>', '0')->get();
 
-        $items = [];
-        foreach ($transactions as $transaction) {
-            array_push($items, [
-                'id' => $transaction->id,
-                'Tanggal' => Carbon::parse($transaction->transaction_date)->format('d-M-Y'),
-                'MemberID' => $transaction->member->code,
-                'Name' => $transaction->member->name,
-                'BonusPoint' => floatval($transaction->bonus_point_amount),
-                'BonusSponsor' => floatval($transaction->bonus_sponsor_amount),
-                'Total' => $transaction->bonus_point_amount + $transaction->bonus_sponsor_amount
-            ]);
-        }
-
-        return json_encode($items);
+        return json_encode($members);
     }
 
     /**
@@ -75,7 +61,9 @@ class AdminController extends Controller
 
     public function paidBonus()
     {
-        $transactions = Transaction::with('member')->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
+        $transactions = Transaction::with('member')
+            ->where('trans', '<>', 'PAYMENT')
+            ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
             ->where('status_id', '=', '3')->get();
 
         $items = [];
@@ -103,6 +91,148 @@ class AdminController extends Controller
     }
 
     public function payBonus(Request $request)
+    {
+        $datas = json_decode($request->rows);
+        foreach ($datas as $data) {
+            $member = Member::find($data);
+
+            if ($member === null)
+                continue;
+
+            $amount = $member->bonus_balance;
+            $pair_bonus = $member->pair_bonus;
+            $sponsor_bonus = $member->sponsor_bonus;
+
+            $transactions = Transaction::where('member_id', '=', $data)->where('trans', '=', 'SYSTEM')->where('status_id', '<', '3')->get();
+            foreach ($transactions as $transaction) {
+                $transaction->status_id = 3;
+                $transaction->save();
+            }
+
+            //Simpan perubahan nilai bonus di table Member
+            $member->sponsor_bonus = 0;
+            $member->pair_bonus = 0;
+            $member->save();
+
+            $old_pin = Helper::getLastTransaction($member, 'pin');
+
+            //Buat transaksi baru untuk proses pembayarannya
+            $data = [
+                'member_id' => $member->id,
+                'user_id' => 1,
+                'type' => 'point',
+                'trans' => 'PAYMENT',
+                'bonus_beginning_balance' => $amount,
+                'bonus_sponsor_amount' => 0 - $sponsor_bonus,
+                'bonus_partner_amount' => 0 - $pair_bonus,
+                'bonus_paid_amount' => 0 - $amount,
+                'bonus_ending_balance' => 0,
+                'status_id' => 3,
+                'reff_id' => $transaction->id
+            ];
+            array_merge($data, $old_pin);
+
+            Transaction::create($data);
+        }
+
+        return json_encode([ 'success' => true ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function showUnapprovedMember()
+    {
+        $breadcrumbs = [
+            ['link'=>"/admin/home",'name'=>"Home"], ['name'=>"Member belum di approve"]
+        ];
+        return view('/admins/member-unapproved', [
+            'breadcrumbs' => $breadcrumbs
+        ]);
+    }
+
+    public function unApproved()
+    {
+        $members = Member::where('is_active', '=', '0')->get();
+
+        return json_encode($members);
+    }
+
+    public function approveMember(Request $request)
+    {
+        $now = Carbon::now();
+        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
+        $tgl = $tgl->addMonth(2)->subDay();
+
+        $datas = json_decode($request->rows);
+
+        foreach ($datas as $data) {
+            $member = Member::find($data);
+
+            $member->is_active = 1;
+            $member->activation_date = Carbon::now();
+            $member->close_point_date = $tgl;
+            $member->remember_token = null;
+
+            $member->save();
+        }
+
+        return json_encode([ 'success' => true ]);
+    }
+
+    public function showPINHistory()
+    {
+        return view('admins/pin-history');
+    }
+
+    public function getPINHistory(Request $request)
+    {
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+
+        $transactions = Transaction::with('member')
+            ->where('user_id', '=', '1')
+            ->where('type', '=', 'pin')->where('trans', '=', 'ADMIN-TRF')
+            ->whereBetween('transaction_date', [$start_date, $end_date])->get();
+
+        $lists = [];
+        foreach ($transactions as $transaction) {
+            $tran = $transaction->toArray();
+            $tran['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
+            array_push($lists, $tran);
+        }
+        $data = json_encode($lists);
+        return $data;
+    }
+
+    /*
+     * OBSELETE
+    */
+
+    public function unpaidBonusVersionTransaction()
+    {
+        $transactions = Transaction::with('member')->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
+            ->where('status_id', '<', '3')->where('bonus_ending_balance', '>', '0')->get();
+
+        $items = [];
+        foreach ($transactions as $transaction) {
+            array_push($items, [
+                'id' => $transaction->id,
+                'Tanggal' => Carbon::parse($transaction->transaction_date)->format('d-M-Y'),
+                'MemberID' => $transaction->member->code,
+                'Name' => $transaction->member->name,
+                'BonusPoint' => floatval($transaction->bonus_point_amount),
+                'BonusSponsor' => floatval($transaction->bonus_sponsor_amount),
+                'Total' => $transaction->bonus_point_amount + $transaction->bonus_sponsor_amount
+            ]);
+        }
+
+        return json_encode($items);
+    }
+
+    public function payBonusVersionTransaction(Request $request)
     {
         //$arr = explode(',', $request->ids);
         //DB::statement('update transactions set status_id = 3, bonus_paid_amount = bonus_point_amount
@@ -197,74 +327,6 @@ class AdminController extends Controller
         $member->save();*/
 
         return json_encode([ 'success' => true ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function showUnapprovedMember()
-    {
-        $breadcrumbs = [
-            ['link'=>"/admin/home",'name'=>"Home"], ['name'=>"Member belum di approve"]
-        ];
-        return view('/admins/member-unapproved', [
-            'breadcrumbs' => $breadcrumbs
-        ]);
-    }
-
-    public function unApproved()
-    {
-        $members = Member::where('is_active', '=', '0')->get();
-
-        return json_encode($members);
-    }
-
-    public function approveMember(Request $request)
-    {
-        $now = Carbon::now();
-        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
-        $tgl = $tgl->addMonth(2)->subDay();
-
-        $datas = json_decode($request->rows);
-
-        foreach ($datas as $data) {
-            $member = Member::find($data);
-
-            $member->is_active = 1;
-            $member->activation_date = Carbon::now();
-            $member->close_point_date = $tgl;
-            $member->remember_token = null;
-
-            $member->save();
-        }
-
-        return json_encode([ 'success' => true ]);
-    }
-
-    public function showPINHistory()
-    {
-        return view('admins/pin-history');
-    }
-
-    public function getPINHistory(Request $request)
-    {
-        $start_date = Carbon::parse($request->start_date);
-        $end_date = Carbon::parse($request->end_date);
-
-        $transactions = Transaction::where('user_id', '=', '1')
-            ->where('type', '=', 'pin')->where('trans', '=', 'ADMIN-TRF')
-            ->whereBetween('transaction_date', [$start_date, $end_date])->get();
-
-        $lists = [];
-        foreach ($transactions as $transaction) {
-            $tran = $transaction->toArray();
-            $tran['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
-            array_push($lists, $tran);
-        }
-        $data = json_encode($lists);
-        return $data;
     }
 
 }

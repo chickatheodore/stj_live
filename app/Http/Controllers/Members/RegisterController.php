@@ -8,6 +8,7 @@ use App\Member;
 use App\Province;
 use App\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -135,6 +136,10 @@ class RegisterController extends Controller
         $kanan = null;
         $tempat = $request->pohonRadio;
 
+        $now = Carbon::now();
+        $tgl = Carbon::create($now->year, $now->month, 1, 0, 0, 0);
+        $tgl = $tgl->addMonth(2)->subDay();
+
         $req = [
             'name' => $request->name,
             'nik' => $request->nik,
@@ -151,6 +156,10 @@ class RegisterController extends Controller
             'account_name' => $request->account_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_tupo' => '1',
+            'is_active' => '1',     //Sementara bypass cek ktp
+            'activation_date' => Carbon::now()->format('Y-m-d h:i:s'),
+            'close_point_date' => $tgl->format('Y-m-d'),
             'ikan_asin' => $request->password
         ];
 

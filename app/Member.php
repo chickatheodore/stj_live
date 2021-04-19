@@ -44,6 +44,7 @@ use Lab404\Impersonate\Models\Impersonate;
  * @property float $point_bonus
  * @property float $sponsor_bonus
  * @property float $pair_bonus
+ * @property float $bonus_balance
  * @property bool $is_active
  * @property string $activation_date
  * @property string $close_point_date
@@ -53,7 +54,7 @@ use Lab404\Impersonate\Models\Impersonate;
  * @property int $left_downline_count
  * @property int $right_downline_count
  * @property bool $is_stockiest
- * @property bool $is_new_member
+ * @property bool $is_tupo
  * @property bool $is_paired
  * @property int $ref_id
  * @property string $ikan_asin
@@ -104,8 +105,8 @@ class Member extends Authenticatable
         'bank', 'account_number', 'account_name', 'remember_token',
         'sponsor_id', 'upline_id', 'left_downline_id', 'right_downline_id',
         'pin', 'left_point', 'left_bonus_point', 'left_bonus_partner', 'right_point', 'right_bonus_point', 'right_bonus_partner', 'point_bonus', 'sponsor_bonus', 'pair_bonus',
-        'activation_date', 'close_point_date', 'tree_level', 'tree_position',
-        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_new_member', 'is_active', 'ref_id', 'ikan_asin',
+        'bonus_balance','activation_date', 'close_point_date', 'tree_level', 'tree_position',
+        'left_downline_count', 'right_downline_count', 'is_stockiest', 'is_tupo', 'is_active', 'ref_id', 'ikan_asin',
         'created_at', 'updated_at', 'deleted_at'
     ];
 

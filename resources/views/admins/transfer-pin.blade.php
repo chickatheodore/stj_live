@@ -81,5 +81,5 @@
 @endsection
 @section('page-script')
     <!-- Page js files -->
-    <script src="{{ Helper::asset(mix('js/scripts/admins/transfer-pin.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('js/scripts/admins/transfer-pin.js')) }}"></script>
 @endsection

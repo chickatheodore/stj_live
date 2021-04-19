@@ -331,7 +331,7 @@
     <script src="{{ asset(mix('vendors/js/forms/validation/jqBootstrapValidation.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/extensions/sweetalert2.all.min.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/extensions/toastr.min.js')) }}"></script>
-    <script src="{{ asset(mix('vendors/js/charts/jquery.orgchart.min.js')).'?v='.date('Ymdhis') }}"></script>
+    <script src="{{ Helper::asset(mix('vendors/js/charts/jquery.orgchart.min.js')) }}"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.1.1/js/jquery.orgchart.js"></script> -->
     <script src="https://dabeng.github.io/OrgChart/js/html2canvas.min.js"></script>
 @endsection

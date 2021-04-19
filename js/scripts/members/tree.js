@@ -84,7 +84,7 @@ var nodeTemplate = function (data) {
                 '<div>P/S : ' + (data.bv ? data.bv : '') + '</div>\n' +
                 '<div>TUPO : ' + (data.cpd ? data.cpd : '') + '</div>\n' +
                 '<div>Poin : ' + (data.poin ? data.poin : '0') + '</div>\n' +
-                '<div>Bonus Poin : ' + (data.point_bonus ? data.point_bonus : '0') + '</div>\n' +
+                //'<div>Bonus Poin : ' + (data.point_bonus ? data.point_bonus : '0') + '</div>\n' +
                 '<div>Bonus Sponsor : ' + (data.sponsor_bonus ? data.sponsor_bonus : '0') + '</div>\n' +
                 '<div>Bonus Pasangan : ' + (data.pair_bonus ? data.pair_bonus : '0') + '</div>\n'
             :

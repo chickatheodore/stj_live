@@ -78,7 +78,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'restrictMidni
     Route::post('approveMember', 'Admins\AdminController@approveMember');
     Route::get('member/view/{id}', 'Admins\MemberSettingController@show');
 
-    Route::get('point-history', 'Admins\AdminController@showPINHistory');
+    Route::get('pin-history', 'Admins\AdminController@showPINHistory');
 });
 
 Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMidnight']], function () {

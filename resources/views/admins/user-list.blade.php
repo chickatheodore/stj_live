@@ -14,8 +14,6 @@
         <link rel="stylesheet" href="{{ asset(mix('css/pages/aggrid.css')) }}">
 @endsection
 
-@include('impersonate-ui::impersonate-ui')
-
 @section('content')
 <!-- users list start -->
 <section class="users-list-wrapper">
@@ -145,5 +143,5 @@
 
 @section('page-script')
   {{-- Page js files --}}
-  <script src="{{ Helper::asset(mix('js/scripts/admins/user.js')).'?v='.date('Ymdhis') }}"></script>
+  <script src="{{ Helper::asset(mix('js/scripts/admins/user.js')) }}"></script>
 @endsection

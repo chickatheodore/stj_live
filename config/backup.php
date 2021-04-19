@@ -116,6 +116,7 @@ return [
              * The disk names on which the backups will be stored.
              */
             'disks' => [
+                'google',
                 'local',
             ],
         ],
@@ -166,11 +167,11 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => 'backup@stjbali.com',
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
+                'address' => env('MAIL_FROM_ADDRESS', 'admin@stjbali.com'),
+                'name' => env('MAIL_FROM_NAME', 'Web Administrator'),
             ],
         ],
 

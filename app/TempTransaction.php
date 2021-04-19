@@ -20,6 +20,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $right_point_beginning_balance
  * @property float $left_point_amount
  * @property float $right_point_amount
+ * @property float $left_point_in
+ * @property float $right_point_in
+ * @property float left_point_out
+ * @property float right_point_out
  * @property float $left_point_ending_balance
  * @property float $right_point_ending_balance
  * @property float $bonus_beginning_balance
@@ -46,6 +50,7 @@ class TempTransaction extends Model
      */
     protected $fillable = ['member_id', 'user_id', 'status_id', 'transaction_date', 'type', 'trans', 'pin_beginning_balance', 'pin_amount', 'pin_ending_balance',
         'left_point_beginning_balance', 'right_point_beginning_balance', 'left_point_amount', 'right_point_amount', 'left_point_ending_balance', 'right_point_ending_balance',
+        'left_point_in', 'right_point_in', 'left_point_out', 'right_point_out',
         'bonus_beginning_balance', 'bonus_point_amount', 'bonus_sponsor_amount', 'bonus_paid_amount', 'bonus_ending_balance', 'remarks',
         'created_at', 'updated_at', 'deleted_at'];
 

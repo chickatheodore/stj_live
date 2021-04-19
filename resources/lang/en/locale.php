@@ -173,4 +173,5 @@ return [
     "Team" => "Team",
     "Contact" => "Contact",
     "Member Login" => "Member Login",
+    "PIN History" => "PIN History",
 ];
