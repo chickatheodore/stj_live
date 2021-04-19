@@ -12,6 +12,8 @@
         #bonustable { font-size: 80%; }
     </style>
     <section id="register-layout">
+
+        <!-- ================================================= -->
         <div class="row">
             <div class="col-md-12">
                 <form class="form form-vertical" id="form-history" method="POST">
@@ -19,9 +21,8 @@
 
                     <div class="form-body">
                         <div class="row">
-
-                            <div class="col-md-2"></div>
-                            <div class="col-md-8 col-12">
+                            <div class="col-md-3">&nbsp;</div>
+                            <div class="col-md-6 col-12">
                                 <div class="card">
                                     <div class="card-header pt-50 pb-1">
                                         <div class="card-title">
@@ -31,9 +32,9 @@
                                     <p class="px-2"></p>
                                     <div class="card-content">
                                         @php
-                                        $current = Carbon\Carbon::now();
-                                        $start_date = Carbon\Carbon::create($current->year, $current->month, 1, 0);
-                                        $end_date = Carbon\Carbon::create($current->year, $current->month, 1, 0)->addMonth()->subDay();
+                                            $current = Carbon\Carbon::now();
+                                            $start_date = Carbon\Carbon::create($current->year, $current->month, 1, 0);
+                                            $end_date = Carbon\Carbon::create($current->year, $current->month, 1, 0)->addMonth()->subDay();
                                         @endphp
                                         <div class="card-body pt-0">
 
@@ -58,36 +59,34 @@
                                             </div>
 
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-content">
+
                                         <div class="col-md-12 col-12 table-responsive">
 
                                             <table id="bonustable" class="table table-sm table-striped table-bordered">
                                                 <thead class="thead-light">
-                                                    <tr>
-                                                        <th class="text-center align-middle" style="min-width:100px;">Tgl</th>
-                                                        <th class="text-center align-middle" style="min-width: 100px">Poin</th>
-                                                        <th class="text-center align-middle" style="min-width: 100px">Pencairan</th>
-                                                        <th class="text-center align-middle" style="min-width: 100px">Poin Balance</th>
-                                                        <!-- <th class="text-center align-middle">Bonus Poin</th> -->
-                                                        <th class="text-center align-middle">Bonus Sponsor</th>
-                                                        <th class="text-center align-middle">Bonus Pasangan</th>
-                                                        <th class="text-center align-middle">Bonus Dibayar</th>
-                                                        <th class="text-center align-middle">Saldo Bonus</th>
-                                                        <th class="text-center align-middle">Keterangan</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th class="text-center align-middle" style="min-width:100px;">Tgl</th>
+                                                    <th class="text-center align-middle" style="min-width: 100px">Poin</th>
+                                                    <th class="text-center align-middle" style="min-width: 100px">Pencairan</th>
+                                                    <th class="text-center align-middle" style="min-width: 100px">Poin Balance</th>
+                                                    <!-- <th class="text-center align-middle">Bonus Poin</th> -->
+                                                    <th class="text-center align-middle">Bonus Sponsor</th>
+                                                    <th class="text-center align-middle">Bonus Pasangan</th>
+                                                    <th class="text-center align-middle">Bonus Dibayar</th>
+                                                    <th class="text-center align-middle">Saldo Bonus</th>
+                                                    <th class="text-center align-middle">Keterangan</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
                                                 </tbody>
                                             </table>
 
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2"></div>
+                            <div class="col-md-3">&nbsp;</div>
 
                         </div>
                     </div>
@@ -95,6 +94,7 @@
                 </form>
             </div>
         </div>
+        <!-- ================================================= -->
 
         <div class="modal fade" id="remarks-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -110,7 +110,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="remark_input">Remarks</label>
-                                    <textarea class="form-control" id="remark_input" rows="5" readonly="readonly"></textarea>
+                                    <textarea class="form-control" id="remark_input" rows="5" readonly="readonly" style="font-size: 85%;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -136,9 +136,15 @@
             $('#end_date').pickadate({
                 format: 'dd-mmm-yyyy'
             });
+            
+            showBonusHistory();
         });
 
         $('#btn-show').click(function (e) {
+            showBonusHistory();
+        });
+
+        function showBonusHistory() {
             let _data = $('#form-history').serializeArray();
             _data.push({'name': '_acc_', 'value': $('#_acc_').val()});
             _data.push({'name': '_token', 'value': $('meta[name="csrf-token"]').attr('content')});
@@ -152,45 +158,44 @@
             });
 
             $.ajax({ data: _data })
-            .fail(function (e) {
-                hideSTJModal();
+                .fail(function (e) {
+                    hideSTJModal();
 
-                Swal.fire({
-                    title: "Warning!",
-                    text: "Terjadi kesalahan pada saat memproses.",
-                    type: "warning",
-                    confirmButtonClass: 'btn btn-primary',
-                    buttonsStyling: false,
-                    animation: false,
-                    customClass: 'animated tada',
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "Terjadi kesalahan pada saat memproses.",
+                        type: "warning",
+                        confirmButtonClass: 'btn btn-primary',
+                        buttonsStyling: false,
+                        animation: false,
+                        customClass: 'animated tada',
+                    });
+                })
+                .done(function( data ) {
+                    hideSTJModal();
+                    var histories = JSON.parse(data);
+
+                    $('#bonustable tbody').empty();
+                    for (let i = 0; i < histories.length; i++) {
+                        let item = histories[i];
+                        let _id = 'bonus_' + i;
+                        $('#bonustable tbody').append('<tr id="' + _id + '" style="cursor: pointer" onclick="showRemarks(\'' + _id + '\')">' +
+                            '<td>' + item.transaction_date + '</td>' +
+                            '<td class="text-center">' + $.number(item.left_point_in) + ' | ' + $.number(item.right_point_in) + '</td>' +
+                            '<td class="text-center">' + $.number(item.left_point_out) + ' | ' + $.number(item.right_point_out) + '</td>' +
+                            '<td class="text-center">' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
+                            //'<td class="text-right">' + $.number(item.bonus_point_amount) + '</td>' +
+                            '<td class="text-right">' + $.number(item.bonus_sponsor_amount) + '</td>' +
+                            '<td class="text-right">' + $.number(item.bonus_partner_amount) + '</td>' +
+                            '<td class="text-right">' + $.number(item.bonus_paid_amount) + '</td>' +
+                            '<td class="text-right">' + $.number(item.bonus_ending_balance) + '</td>' +
+                            '<td class="text-right"><button type="button" class="btn btn-info" onclick="showRemarks(\'' + _id + '\')">Keterangan</button></td>' +
+                            '</tr>');
+
+                        $("tr#" + _id).data('bonus', item);
+                    }
                 });
-            })
-            .done(function( data ) {
-                hideSTJModal();
-                var histories = JSON.parse(data);
-
-                $('#bonustable tbody').empty();
-                for (let i = 0; i < histories.length; i++) {
-                    let item = histories[i];
-                    let _id = 'bonus_' + i;
-                    $('#bonustable tbody').append('<tr id="' + _id + '" style="cursor: pointer" onclick="showRemarks(\'' + _id + '\')">' +
-                        '<td>' + item.transaction_date + '</td>' +
-                        '<td class="text-center">' + $.number(item.left_point_in) + ' | ' + $.number(item.right_point_in) + '</td>' +
-                        '<td class="text-center">' + $.number(item.left_point_out) + ' | ' + $.number(item.right_point_out) + '</td>' +
-                        '<td class="text-center">' + $.number(item.left_point_ending_balance) + ' | ' + $.number(item.right_point_ending_balance) + '</td>' +
-                        //'<td class="text-right">' + $.number(item.bonus_point_amount) + '</td>' +
-                        '<td class="text-right">' + $.number(item.bonus_sponsor_amount) + '</td>' +
-                        '<td class="text-right">' + $.number(item.bonus_partner_amount) + '</td>' +
-                        '<td class="text-right">' + $.number(item.bonus_paid_amount) + '</td>' +
-                        '<td class="text-right">' + $.number(item.bonus_ending_balance) + '</td>' +
-                        '<td class="text-right"><button type="button" class="btn btn-info" onclick="showRemarks(\'' + _id + '\')">Keterangan</button></td>' +
-                        '</tr>');
-
-                    $("tr#" + _id).data('bonus', item);
-                }
-            });
-
-        });
+        }
 
         function showRemarks(el) {
             let _bonus = $('tr#' + el).data('bonus');
