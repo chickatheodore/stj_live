@@ -109,7 +109,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="remark_input">Remarks</label>
+                                    <label for="remark_input">Keterangan</label>
                                     <textarea class="form-control" id="remark_input" rows="5" readonly="readonly" style="font-size: 85%;"></textarea>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
             $('#end_date').pickadate({
                 format: 'dd-mmm-yyyy'
             });
-            
+
             showBonusHistory();
         });
 
