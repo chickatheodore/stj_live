@@ -5,6 +5,7 @@
 @section('vendor-style')
     <!-- vendor css files -->
     <link rel="stylesheet" href="{{ asset(mix('vendors/css/pickers/pickadate/pickadate.css')) }}">
+    <link rel="stylesheet" href="{{ asset(mix('vendors/css/extensions/sweetalert2.min.css')) }}">
 @endsection
 
 @section('content')
@@ -15,8 +16,8 @@
 
         <!-- ================================================= -->
         <div class="row">
-            <div class="col-md-12">
-                <form class="form form-vertical" id="form-history" method="POST">
+            <div id="dinamis" class="col-md-12">
+                <form class="form form-vertical" id="form-history" action="{{ route('bonus.history') }}" method="POST">
                     @csrf
 
                     <div class="form-body">
@@ -54,7 +55,7 @@
                                             </div>
 
                                             <div class="form-group d-flex justify-content-center">
-                                                <button type="button" id="btn-show" class="btn btn-primary float-right btn-inline mb-50">Tampilkan Data</button>
+                                                <button type="submit" id="btn-show" class="btn btn-primary float-right btn-inline mb-50">Tampilkan Data</button>
                                                 <input type="hidden" id="_acc_" name="_acc_" value="{{ auth()->id() }}">
                                             </div>
 
@@ -62,7 +63,7 @@
 
                                         <div class="col-md-12 col-12 table-responsive">
 
-                                            <table id="bonustable" class="table table-sm table-striped table-bordered">
+                                            <table id="bonustable" class="table-sm table-striped table-bordered">
                                                 <thead class="thead-light">
                                                 <tr>
                                                     <th class="text-center align-middle" style="min-width:100px;">Tgl</th>
@@ -78,6 +79,23 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                @php $i = 0; @endphp
+                                                @foreach($data as $item)
+
+                                                <tr id="bonus_{{ $i }}" style="cursor: pointer" onclick="showRemarks('{{ $item['id'] }}')" data-bonus="{{ $item['remarks'] }}">
+                                                    <td>{{ $item['transaction_date'] }}</td>
+                                                    <td class="text-center">{{ number_format($item['left_point_in'], 0) . ' | ' . number_format($item['right_point_in'], 0) }}</td>
+                                                    <td class="text-center">{{ number_format($item['left_point_out'], 0) . ' | ' . number_format($item['right_point_out'], 0) }}</td>
+                                                    <td class="text-center">{{ number_format($item['left_point_ending_balance'], 0) . ' | ' . number_format($item['right_point_ending_balance'], 0) }}</td>
+                                                    <td class="text-right">{{ number_format($item['bonus_sponsor_amount'], 0) }}</td>
+                                                    <td class="text-right">{{ number_format($item['bonus_partner_amount'], 0) }}</td>
+                                                    <td class="text-right">{{ number_format($item['bonus_paid_amount'], 0) }}</td>
+                                                    <td class="text-right">{{ number_format($item['bonus_ending_balance'], 0) }}</td>
+                                                    <td class="text-right"><button type="button" class="btn btn-info" onclick="showRemarks('{{ $item['id'] }}')">Keterangan</button></td>
+                                                </tr>
+
+                                                @php $i = $i + 1; @endphp
+                                                @endforeach
                                                 </tbody>
                                             </table>
 
@@ -125,6 +143,7 @@
     <!-- vendor files -->
     <script src="{{ asset(mix('vendors/js/pickers/pickadate/picker.js')) }}"></script>
     <script src="{{ asset(mix('vendors/js/pickers/pickadate/picker.date.js')) }}"></script>
+    <script src="{{ asset(mix('vendors/js/extensions/sweetalert2.all.min.js')) }}"></script>
 @endsection
 @section('page-script')
     <!-- Page js files -->
@@ -137,12 +156,12 @@
                 format: 'dd-mmm-yyyy'
             });
 
-            showBonusHistory();
+            //showBonusHistory();
         });
 
-        $('#btn-show').click(function (e) {
+        /*$('#btn-show').click(function (e) {
             showBonusHistory();
-        });
+        });*/
 
         function showBonusHistory() {
             let _data = $('#form-history').serializeArray();
@@ -173,6 +192,7 @@
                 })
                 .done(function( data ) {
                     hideSTJModal();
+                    $('#dinamis').removeClass('col-md-12').addClass('col-md-6');
                     var histories = JSON.parse(data);
 
                     $('#bonustable tbody').empty();
@@ -194,12 +214,13 @@
 
                         $("tr#" + _id).data('bonus', item);
                     }
+                    $('#dinamis').removeClass('col-md-6').addClass('col-md-12');
                 });
         }
 
         function showRemarks(el) {
             let _bonus = $('tr#' + el).data('bonus');
-            $('#remark_input').html(_bonus.remarks);
+            $('#remark_input').html(_bonus);
             $('#remarks-modal').modal('show');
         }
     </script>

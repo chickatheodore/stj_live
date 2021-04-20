@@ -606,7 +606,22 @@ class PagesController extends Controller
 
     public function showBonusHistory()
     {
-        return view('members/bonus-history');
+        $id = auth()->id(); //$request->_acc_;
+
+        $current = Carbon::now();
+        $start_date = Carbon::create($current->year, $current->month, 1, 0);
+        $end_date = Carbon::create($current->year, $current->month, 1, 0)->addMonth()->subDay();
+
+        $lists = $this->processBonusHistory($id, $start_date,$end_date);
+
+        return view('members/bonus-history', [
+            'data' => $lists
+        ]);
+    }
+
+    public function showAllTransactions()
+    {
+        return view('members/transactions');
     }
 
     public function showExtendTUPO()
@@ -687,14 +702,45 @@ class PagesController extends Controller
         ]);
     }
 
+    private function processBonusHistory($id,$start_date,$end_date)
+    {
+        $transactions = Transaction::where('member_id', '=', $id)
+            ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
+            ->whereBetween('transaction_date', [$start_date, $end_date])->get();
+
+        $lists = [];
+        foreach ($transactions as $transaction)
+        {
+            $arr = $transaction->toArray();
+
+            $arr['transaction_date'] = Carbon::parse($transaction->transaction_date)->format('d-M-Y');
+            array_push($lists, $arr);
+        }
+        return $lists;
+    }
+
     public function getBonusHistory(Request $request)
     {
         $id = $request->_acc_;
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
 
+        $lists = $this->processBonusHistory($id, $start_date,$end_date);
+        //$data = json_encode($lists);
+        //return $data;
+
+        return view('members/bonus-history', [
+            'data' => $lists
+        ]);
+    }
+
+    public function getAllTransactions(Request $request)
+    {
+        $id = $request->_acc_;
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+
         $transactions = Transaction::where('member_id', '=', $id)
-            ->where(function ($query){ return $query->where('type', '=', 'all')->orWhere('type', '=', 'point');})
             ->whereBetween('transaction_date', [$start_date, $end_date])->get();
 
         $lists = [];

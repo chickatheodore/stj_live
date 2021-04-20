@@ -10,6 +10,12 @@
                     <div class="col-md-3">&nbsp;</div>
                     <div class="col-md-6">
                         @foreach($sponsors as $sponsor)
+                            @php
+                            if ($sponsor->upline_id === null)
+                            {
+                                continue;
+                            }
+                            @endphp
                         <div class="card">
                             <div class="card-body">
                                 <table style="width: 100%; text-align: center">

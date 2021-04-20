@@ -174,4 +174,5 @@ return [
     "Contact" => "Contact",
     "Member Login" => "Member Login",
     "PIN History" => "PIN History",
+    "All Transactions" => "All Transactions",
 ];

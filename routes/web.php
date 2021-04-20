@@ -101,6 +101,7 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
 
     Route::get('bonus', 'Members\PagesController@getBonus');
     Route::get('bonus-history', 'Members\PagesController@showBonusHistory');
+    Route::post('bonus-history', 'Members\PagesController@getBonusHistory')->name('bonus.history');
 
     Route::get('pin', 'Members\PagesController@showPin');
     Route::get('transfer-pin', 'Members\PagesController@showTransferPin');
@@ -110,6 +111,7 @@ Route::group(['prefix' => 'member', 'middleware' => ['auth:member', 'restrictMid
 
     Route::get('point-history', 'Members\PagesController@showPINHistory');
     Route::get('stockiest', 'Members\PagesController@stockiest');
+    Route::get('transactions', 'Members\PagesController@showAllTransactions');
 
     Route::post('ktp', 'Members\PagesController@checkValidKTP')->name('check.ktp');
 });
@@ -143,8 +145,9 @@ Route::group(['middleware' => ['stj_ajax', 'restrictMidnight', 'nodebugbar']], f
     Route::post('/member/getMemberTree/{id}', 'Members\TreeController@getMemberTree');
     Route::get('/member/getStockiest', 'Members\MemberController@getStockiest');
 
-    Route::post('/member/getBonusHistory', 'Members\PagesController@getBonusHistory');
+    //Route::post('/member/getBonusHistory', 'Members\PagesController@getBonusHistory');
     Route::post('/member/getPINHistory', 'Members\PagesController@getPINHistory');
+    Route::post('/member/getAllTransactions', 'Members\PagesController@getAllTransactions');
 
     Route::post('/member/transferPin', 'Members\MemberController@transferPin');
     Route::post('/member/upgradeLevel', 'Members\PagesController@upgradeLevel')->name('member.profile.upgrade');
