@@ -33,7 +33,7 @@
                                     </tr>
                                     <tr>
                                         <td>Member ID : {{ $sponsor->code }}</td>
-                                        @if ($sponsor->upline_id)
+                                        @if ($sponsor->upline_id !== null)
                                         <td>Member ID : {{ $sponsor->upLine->code }}</td>
                                         @else
                                         -
@@ -51,3 +51,4 @@
 
     </section>
 @endsection
+
