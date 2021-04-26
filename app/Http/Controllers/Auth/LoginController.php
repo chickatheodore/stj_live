@@ -108,10 +108,12 @@ class LoginController extends Controller
             'blankPage' => true
         ];
 
-        return view('auth.login', [
+        return response()->view('maintenance', [], 403);
+
+        /*return view('auth.login', [
             'pageConfigs' => $pageConfigs,
             'url' => Config::get('constants.guards.member')
-        ]);
+        ]);*/
     }
 
     /**

@@ -22,7 +22,8 @@ class RedirectIfAuthenticated
         }
 
         if ($guard === 'member' && Auth::guard($guard)->check()) {
-            return redirect('/member/home');
+            //return redirect('/member/home');
+            return response()->view('maintenance', [], 403);
         }
 
         if (Auth::guard($guard)->check()) {
